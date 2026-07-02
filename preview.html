@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>David Maguire — Quantitative Research (preview)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root{ --primary:#2c5f8a; --border:#e6e8eb; --muted:#57606a; --body:#1f2328; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; color:var(--body); font:18px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  a{ color:var(--primary); text-decoration:none; } a:hover{ text-decoration:underline; }
+  .wrap{ max-width:860px; margin:0 auto; padding:0 20px; }
+  nav{ position:sticky; top:0; background:rgba(255,255,255,.95); backdrop-filter:blur(6px); border-bottom:1px solid var(--border); z-index:10; }
+  nav .wrap{ display:flex; gap:22px; align-items:center; height:56px; }
+  nav .brand{ font-weight:700; }
+  nav .spacer{ flex:1; }
+  nav a{ color:var(--body); font-size:.95rem; }
+  .banner{ background:#f7f9fb; border-bottom:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+  .banner .wrap{ padding:8px 20px; }
+  .hero{ padding:2.6rem 0 1.4rem; }
+  .hero h1{ font-size:2.5rem; margin:.2rem 0; letter-spacing:-.02em; }
+  .hero .lead{ font-size:1.2rem; color:var(--muted); max-width:46rem; }
+  .btn{ display:inline-block; margin:.7rem .5rem 0 0; padding:.5rem .95rem; border-radius:7px; font-size:.95rem; border:1px solid var(--primary); }
+  .btn.primary{ background:var(--primary); color:#fff; } .btn.ghost{ color:var(--primary); }
+  h2{ margin-top:2.6rem; border-bottom:1px solid var(--border); padding-bottom:.3rem; letter-spacing:-.01em; }
+  h3{ margin-top:1.8rem; letter-spacing:-.01em; }
+  .meta{ color:var(--muted); font-size:.9rem; }
+  .tag{ display:inline-block; background:#eef2f6; color:#39536b; font-size:.75rem; padding:.1rem .5rem; border-radius:20px; margin-right:.3rem; }
+  blockquote{ border-left:3px solid var(--primary); background:#f7f9fb; color:#384049; margin:1.2rem 0; padding:.6rem 1rem; }
+  pre{ background:#f6f8fa; border:1px solid var(--border); border-radius:6px; padding:.8rem 1rem; overflow-x:auto; font-size:.86rem; }
+  code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  img{ max-width:100%; border:1px solid var(--border); border-radius:6px; margin:1rem 0; }
+  figcaption{ color:var(--muted); font-size:.85rem; margin-top:-.4rem; margin-bottom:1.2rem; }
+  table{ border-collapse:collapse; width:100%; font-size:.95rem; margin:1rem 0; }
+  th,td{ border:1px solid var(--border); padding:.45rem .7rem; text-align:left; }
+  th{ background:#f6f8fa; }
+  .card{ border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; margin:1rem 0; }
+  footer{ border-top:1px solid var(--border); color:var(--muted); font-size:.9rem; margin-top:3rem; }
+  footer .wrap{ padding:1.4rem 20px; display:flex; gap:12px; }
+  hr{ border:0; border-top:1px solid var(--border); margin:2.4rem 0; }
+</style>
+</head>
+<body>
+<div class="banner"><div class="wrap">Static preview of your Quarto site. The live build (<code>quarto render</code>) produces this look with working search, RSS, and per-page URLs.</div></div>
+<nav><div class="wrap">
+  <span class="brand">David Maguire</span>
+  <span class="spacer"></span>
+  <a href="#top">Home</a><a href="#research">Research</a><a href="#notes">Notes</a><a href="#about">About</a>
+</div></nav>
+
+<div class="wrap" id="top">
+  <section class="hero">
+    <h1>David Maguire</h1>
+    <p class="lead">Quantitative researcher working on systematic strategies, risk, and market microstructure. This site is my open lab notebook — the ideas, equations, and experiments I'm working through on the way to a PhD. I care most about work that is <em>reproducible</em>, honestly reported, and grounded in the literature.</p>
+    <a class="btn primary" href="#research">Research</a>
+    <a class="btn ghost" href="#notes">Reading notes</a>
+    <a class="btn ghost" href="#about">About &amp; interests</a>
+  </section>
+
+  <hr>
+
+  <!-- ================= RESEARCH ================= -->
+  <section id="research">
+    <h2>Research</h2>
+    <p class="meta">Featured piece — the full site lists these as cards with dates and tags.</p>
+
+    <h3 style="border:0;font-size:1.7rem;margin-top:1rem;">How Backtest Selection Inflates the Sharpe Ratio</h3>
+    <p class="meta">2026-06-20 &nbsp;·&nbsp; <span class="tag">backtesting</span><span class="tag">statistics</span><span class="tag">overfitting</span></p>
+
+    <h3>The problem in one sentence</h3>
+    <p>If you search over enough strategies, you are guaranteed to find one with an excellent in-sample Sharpe ratio — <em>even when none of them has any real edge</em> — because you are reporting the maximum of a large number of noisy estimates, and the maximum of noise is not zero.</p>
+
+    <h3>A minimal simulation</h3>
+    <p>Give every one of \(N\) candidate strategies <strong>zero true edge</strong>: daily returns i.i.d. \(\mathcal{N}(0,\sigma^2)\) with mean exactly zero. Compute each strategy's annualised in-sample Sharpe and keep the best — exactly what a naive strategy search does.</p>
+    <pre><code>import numpy as np
+RNG = np.random.default_rng(42)
+A, T = 252, 1260          # 252 trading days/yr; T = 5 years of daily data
+
+def ann_sharpe(returns):  # returns shape (T, N) -> (N,)
+    mu = returns.mean(axis=0); sd = returns.std(axis=0, ddof=1)
+    return np.sqrt(A) * mu / sd
+
+N = 1000
+sr = ann_sharpe(RNG.standard_normal((T, N)))   # every strategy has TRUE Sharpe 0
+print(sr.mean(), sr.max())   # ~0.01,  1.76</code></pre>
+    <p>The average strategy sits at ~0, as it should. But the <strong>best</strong> of the thousand posts an annualised Sharpe of <strong>1.76</strong> over a five-year backtest — purely from sampling noise.</p>
+    <figure>
+      <img src="research/backtest-overfitting/fig-sharpe-distribution.png" alt="Distribution of in-sample Sharpe">
+      <figcaption>1,000 strategies with zero true edge. The average is ~0; the cherry-picked maximum (red) is 1.76.</figcaption>
+    </figure>
+
+    <h3>Why it scales like √(2 ln N)</h3>
+    <p>Under the null of zero edge, the estimated Sharpe over \(T\) i.i.d. observations is approximately normal,</p>
+    <p>$$\widehat{SR}\sim\mathcal{N}\!\left(0,\tfrac{1}{T}\right)\ \text{(per-period)},\qquad \widehat{SR}_{\text{ann}}\sim\mathcal{N}\!\left(0,\tfrac{A}{T}\right),$$</p>
+    <p>so the standard error of an annualised Sharpe is \(\sqrt{A/T}\approx 0.45\) for \(T=1260\). The expected maximum of \(N\) i.i.d. standard normals grows like \(\sqrt{2\ln N}\), so the best spurious Sharpe scales as</p>
+    <p>$$\mathbb{E}\!\left[\max_{i\le N}\widehat{SR}^{(i)}_{\text{ann}}\right]\approx\sqrt{\tfrac{A}{T}}\,\sqrt{2\ln N}.$$</p>
+    <figure>
+      <img src="research/backtest-overfitting/fig-max-sharpe-vs-trials.png" alt="Best Sharpe vs number of trials">
+      <figcaption>Mean best-of-N Sharpe from pure noise (blue) vs the √(2 ln N)·√(A/T) approximation (red).</figcaption>
+    </figure>
+    <table>
+      <tr><th>Strategies tested N</th><th>Expected best annualised Sharpe</th></tr>
+      <tr><td>10</td><td>~0.6</td></tr><tr><td>100</td><td>~1.1</td></tr>
+      <tr><td>1,000</td><td>~1.4</td></tr><tr><td>10,000</td><td>~1.7</td></tr>
+    </table>
+
+    <h3>The correction: the Deflated Sharpe Ratio</h3>
+    <p>Judge an observed Sharpe against the best you'd expect under the null given how many things you tried. Bailey &amp; López de Prado formalise this via the expected maximum Sharpe across \(N\) trials,</p>
+    <p>$$\mathbb{E}\!\left[\max_n SR\right]\approx\sqrt{\operatorname{Var}(SR_n)}\Big[(1-\gamma)\,\Phi^{-1}\!\left(1-\tfrac1N\right)+\gamma\,\Phi^{-1}\!\left(1-\tfrac1{Ne}\right)\Big],$$</p>
+    <p>with \(\gamma\approx0.5772\) the Euler–Mascheroni constant. In practice: count every trial honestly (including discarded ones), hold out untouched data, prefer fewer hypothesis-driven tests, and report the deflated number.</p>
+    <p class="meta">Full references and the runnable script are in the live version.</p>
+  </section>
+
+  <hr>
+
+  <!-- ================= NOTES ================= -->
+  <section id="notes">
+    <h2>Reading notes</h2>
+    <h3 style="border:0;font-size:1.4rem;margin-top:1rem;">Ang, Hodrick, Xing &amp; Zhang (2006) — The Cross-Section of Volatility and Expected Returns</h3>
+    <p class="meta">2026-06-28 &nbsp;·&nbsp; <span class="tag">asset pricing</span><span class="tag">volatility</span></p>
+    <blockquote><strong>Takeaway.</strong> Stocks with high <em>idiosyncratic</em> volatility earn abnormally <em>low</em> average returns — the opposite of a risk-based story, and robust enough to launch a decade of follow-up work.</blockquote>
+    <p><strong>Key numbers.</strong> The high-minus-low idio-vol quintile spread is about −1.06% per month, staying large (~−1.3%/month) after FF3 adjustment and surviving controls for size, B/M, momentum, and liquidity.</p>
+    <p><strong>What I'd push on.</strong> Measurement fragility (Bali &amp; Cakici 2008: weighting/breakpoints matter); realised vs expected idio-vol (Fu 2009); lottery demand / the MAX effect (Bali–Cakici–Whitelaw 2011); arbitrage asymmetry (Stambaugh–Yu–Yuan 2015). The replication I'd run reports the <em>full</em> robustness grid, not the best cell — the same multiple-testing trap as the piece above.</p>
+  </section>
+
+  <hr>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <h2>About</h2>
+    <p>I build systematic trading models and work through the academic literature, testing ideas of my own. I'm preparing to apply for a PhD in <em>[TARGET FIELD]</em>, and this site keeps the trail of that work in the open.</p>
+    <div class="card">
+      <strong>Research interests</strong> (edit these to match target supervisors):
+      <ul>
+        <li>Selection bias and multiple testing in strategy discovery</li>
+        <li>Volatility and the cross-section of returns</li>
+        <li>Machine-learning methods for return prediction — and the backtest-to-live gap</li>
+      </ul>
+    </div>
+    <p><strong>How I work:</strong> reproducibility first, report the misses, cite the literature. Contact: <a href="mailto:davidolivermaguire@gmail.com">davidolivermaguire@gmail.com</a>.</p>
+  </section>
+</div>
+
+<footer><div class="wrap"><span>© 2026 David Maguire</span><span>·</span><span>Preview of davidmaguire.ai</span></div></footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  renderMathInElement(document.body, { delimiters:[
+    {left:"$$", right:"$$", display:true},
+    {left:"$",  right:"$",  display:false},
+    {left:"\\(", right:"\\)", display:false}
+  ]});
+});
+</script>
+</body>
+</html>

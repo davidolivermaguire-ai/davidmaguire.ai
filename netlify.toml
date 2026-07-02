@@ -1,0 +1,5 @@
+# Alternative host (Netlify / Cloudflare Pages both work the same way).
+# Quarto isn't preinstalled on the build image, so we fetch it, then render.
+[build]
+  publish = "_site"
+  command = "bash netlify-build.sh"

@@ -1,0 +1,56 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - CNAME
+
+website:
+  title: "David Maguire"
+  description: "Quantitative research, notes, and ideas — an open lab notebook."
+  site-url: "https://davidmaguire.ai"
+  favicon: assets/favicon.svg
+  search: true
+  navbar:
+    pinned: true
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Research"
+        href: research.qmd
+      - text: "Notes"
+        href: notes.qmd
+      - text: "About"
+        href: about.qmd
+    right:
+      - icon: github
+        href: "https://github.com/davidolivermaguire-ai"
+        aria-label: GitHub
+      - icon: envelope
+        href: "mailto:davidolivermaguire@gmail.com"
+        aria-label: Email
+  page-footer:
+    border: true
+    left: "© 2026 David Maguire"
+    center: "Built with [Quarto](https://quarto.org)"
+    right: "[GitHub](https://github.com/davidolivermaguire-ai) · [Email](mailto:davidolivermaguire@gmail.com)"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - styles/theme.scss
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    html-math-method: katex
+    highlight-style: github
+    link-external-newwindow: true
+    grid:
+      body-width: 860px
+
+# Code chunks in posts are shown, not executed at build time (figures are
+# pre-generated and committed), so the site builds with only Quarto installed —
+# no Python/Jupyter needed in CI. Flip this to true if you want live execution.
+execute:
+  enabled: false

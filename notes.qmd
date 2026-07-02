@@ -1,0 +1,18 @@
+---
+title: "Reading notes"
+description: "Structured annotations of papers I'm working through."
+listing:
+  contents: "notes/**/*.qmd"
+  type: table
+  sort: "date desc"
+  fields: [date, title, categories]
+  field-display-names:
+    title: "Paper"
+  categories: true
+  table-striped: true
+toc: false
+---
+
+Short, structured notes on papers I read — what the paper claims, how it shows
+it, what I'd push on, and how I'd try to replicate it. Reading critically in the
+open is half the point of this site.

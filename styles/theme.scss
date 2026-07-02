@@ -1,0 +1,46 @@
+/*-- scss:defaults --*/
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+$primary:      #2c5f8a;
+$body-color:   #1f2328;
+$link-color:   #2c5f8a;
+$border-color: #e6e8eb;
+
+$font-size-root:      18px;
+$headings-font-weight: 600;
+$code-bg:             #f6f8fa;
+
+/*-- scss:rules --*/
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3 { letter-spacing: -0.01em; }
+h1.title  { font-weight: 700; }
+h2 { margin-top: 2.2rem; border-bottom: 1px solid $border-color; padding-bottom: .3rem; }
+
+.navbar { border-bottom: 1px solid $border-color; }
+.navbar-brand { font-weight: 700; }
+
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.hero { padding: 2.5rem 0 1.25rem; }
+.hero .lead { font-size: 1.2rem; color: #57606a; max-width: 46rem; }
+.hero .btn { margin-right: .5rem; margin-top: .5rem; }
+
+.quarto-listing { margin-top: 1.5rem; }
+div.quarto-post { border-bottom: 1px solid $border-color; padding: 1rem 0; }
+.quarto-post .listing-title { font-weight: 600; }
+
+pre.sourceCode { border: 1px solid $border-color; border-radius: 6px; }
+code { font-size: .9em; }
+
+blockquote {
+  border-left: 3px solid $primary;
+  color: #384049; background: #f7f9fb;
+  padding: .6rem 1rem; margin: 1.2rem 0;
+}
+
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+table { font-size: .95em; }
+.nav-footer { border-top: 1px solid $border-color; font-size: .9rem; color: #6b7280; }

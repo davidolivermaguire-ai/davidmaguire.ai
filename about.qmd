@@ -1,0 +1,58 @@
+---
+title: "About"
+description: "Background, research interests, and how to reach me."
+toc: true
+---
+
+## Short version
+
+I'm David Maguire, a quantitative researcher based in [CITY / COUNTRY]. I build
+systematic trading models and spend my spare cycles working through the academic
+literature and testing ideas of my own. I'm preparing to apply for a PhD in
+[TARGET FIELD — e.g. financial econometrics / machine learning for finance /
+market microstructure], and this site is where I keep the trail of that work in
+the open.
+
+> Replace the bracketed placeholders throughout this page with your own details.
+> The structure is deliberately close to what a supervisor scans for: *interests,
+> evidence you can do research, and fit with their group.*
+
+## Research interests
+
+I'm currently most interested in:
+
+- **[Interest 1]** — e.g. selection bias and multiple testing in strategy
+  discovery; how to report performance honestly.
+- **[Interest 2]** — e.g. volatility and the cross-section of returns; the
+  idiosyncratic-volatility puzzle and its competing explanations.
+- **[Interest 3]** — e.g. machine-learning methods for return prediction and the
+  gap between backtested and realised performance.
+
+If you supervise in these areas, the [Research](research.qmd) page is the fastest
+way to see how I think. I try to keep this list narrow and aligned with the
+groups I'd want to work with, rather than long.
+
+## Background
+
+- **[Role / employer or "independent researcher"]**, [dates]. [One line on what
+  you do — the quant modelling, the stack, the scale.]
+- **[Degree, institution, year]**. [Relevant coursework, thesis, or result.]
+- Tools I work in daily: Python (NumPy/pandas, scikit-learn, PyTorch),
+  [SQL / kdb+ / R], and a lot of careful backtesting.
+
+## How I work
+
+Three principles run through everything here. **Reproducibility first** — if a
+result isn't backed by code someone else can run, I treat it as a hypothesis,
+not a finding. **Report the misses** — negative results and failed replications
+are published alongside the wins. **Cite the literature** — new ideas are framed
+against what's already known, not in a vacuum.
+
+## Contact
+
+- Email: [davidolivermaguire@gmail.com](mailto:davidolivermaguire@gmail.com)
+- GitHub: [github.com/davidolivermaguire-ai](https://github.com/davidolivermaguire-ai)
+- [LinkedIn / Google Scholar / X — optional]
+
+If you're a prospective PhD supervisor, I'd be glad to send a short research
+proposal tailored to your group's work.

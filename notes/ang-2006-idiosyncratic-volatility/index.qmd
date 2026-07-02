@@ -1,0 +1,89 @@
+---
+title: "Ang, Hodrick, Xing & Zhang (2006) — The Cross-Section of Volatility and Expected Returns"
+description: "The idiosyncratic-volatility puzzle: high-idio-vol stocks earn abnormally LOW returns. Notes, critique, and how it held up."
+date: 2026-06-28
+author: "David Maguire"
+categories: [asset pricing, volatility, cross-section]
+toc: true
+---
+
+**Citation.** Ang, A., Hodrick, R. J., Xing, Y., & Zhang, X. (2006). *The
+Cross-Section of Volatility and Expected Returns.* The Journal of Finance,
+61(1), 259–299.
+
+> **One-line takeaway.** Stocks with high *idiosyncratic* volatility earn
+> abnormally *low* average returns — the opposite of what a risk-based story
+> predicts, and robust enough to launch a decade of follow-up work.
+
+## What the paper claims
+
+Two related results. First, stocks with high sensitivity to **aggregate
+volatility innovations** (proxied by changes in the VIX) earn low average
+returns — consistent with aggregate volatility being a priced state variable
+investors will pay to hedge. Second, and more famously, stocks with high
+**idiosyncratic volatility relative to the Fama–French three-factor model** earn
+low average returns. The second result is the puzzle: idiosyncratic risk is
+diversifiable, so standard theory says it shouldn't be priced at all — and if
+anything, under-diversification would predict a *positive* premium, not a
+negative one.
+
+## How they show it
+
+Idiosyncratic volatility is measured as the standard deviation of residuals from
+a Fama–French 3-factor regression on **daily** returns within each month. Stocks
+are sorted into quintile portfolios on this measure and held the next month
+(value-weighted); the strategy is rebuilt monthly. Aggregate volatility risk is
+measured by sorting on stocks' loadings on $\Delta \text{VIX}$ (a factor they
+label FVIX). The headline is a spread portfolio: quintile 5 (high idio-vol)
+minus quintile 1 (low).
+
+## Key numbers
+
+The high-minus-low idiosyncratic-volatility quintile spread is about
+**−1.06% per month**, and it stays large and significant — on the order of
+**−1.3% per month** — after adjusting for the FF3 factors. It survives controls
+for size, book-to-market, momentum, liquidity, volume, turnover, and leverage.
+The aggregate-volatility result is a similarly-sized negative premium on the
+$\Delta$VIX loading.
+
+## What I'd push on
+
+- **Measurement fragility.** The result is sensitive to design choices. Bali &
+  Cakici (2008) show that switching between value- and equal-weighting, using
+  different breakpoints (e.g. NYSE vs all stocks), or screening out low-priced /
+  micro-cap names materially weakens or removes the spread. A replication has to
+  fix these knobs *before* looking at returns.
+- **Realised vs expected idio-vol.** The sort uses *last month's realised*
+  idiosyncratic volatility as the conditioning variable. Fu (2009) argues that
+  *expected* idiosyncratic volatility (EGARCH-modelled) is positively priced, and
+  that the negative result is partly a mechanical consequence of using lagged
+  realised vol when idio-vol is time-varying. This is the critique I find most
+  interesting and would test first.
+- **Microstructure.** Han & Lesmond (2011) attribute much of the effect to
+  liquidity and bid-ask bounce contaminating the idio-vol estimate — a bias, not
+  a premium.
+- **Is it really idio-vol, or lottery demand?** Bali, Cakici & Whitelaw (2011)
+  show a closely related **MAX** effect (low returns to stocks with extreme
+  recent daily returns); controlling for MAX substantially reduces the idio-vol
+  spread, pointing to a behavioural lottery-preference channel rather than
+  volatility per se.
+- **Arbitrage asymmetry.** Stambaugh, Yu & Yuan (2015) reconcile the sign: idio
+  vol proxies for arbitrage risk, and because shorting is harder than buying,
+  overpricing dominates — so high-idio-vol stocks are net overpriced and earn
+  low returns, strongest among hard-to-short names and in high-sentiment periods.
+
+## How I'd replicate it
+
+1. CRSP daily returns → monthly FF3 residual volatility per stock; form
+   value-weighted quintiles; compute the 5−1 spread and its FF3 alpha.
+2. Robustness grid: value vs equal weight × NYSE vs all-stock breakpoints ×
+   with/without a $5 price and micro-cap screen. Report the full grid, not the
+   best cell — this is exactly the multiple-testing trap from my
+   [backtest-overfitting note](../../research/backtest-overfitting/index.qmd).
+3. Horse-race realised idio-vol against an EGARCH expected-idio-vol measure
+   (Fu) and against MAX (Bali–Cakici–Whitelaw) in the same regression.
+
+## Related work to read next
+
+Bali & Cakici (2008); Fu (2009); Han & Lesmond (2011); Bali, Cakici & Whitelaw
+(2011, *MAX*); Stambaugh, Yu & Yuan (2015, arbitrage asymmetry).
