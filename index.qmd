@@ -1,52 +1,65 @@
 ---
-pagetitle: "David Maguire — Quantitative Research"
+pagetitle: "David Maguire — Quantitative & AI Research Notebook"
 page-layout: full
 toc: false
-listing:
-  - id: featured
-    contents: "research/**/*.qmd"
-    type: default
-    max-items: 3
-    sort: "date desc"
-    fields: [date, title, description, reading-time, categories]
-  - id: latest-notes
-    contents: "notes/**/*.qmd"
-    type: table
-    max-items: 6
-    sort: "date desc"
-    fields: [date, title]
-    field-display-names:
-      title: "Paper"
 ---
 
 ::: {.hero}
 # David Maguire
 
 ::: {.lead}
-Quantitative researcher working on systematic strategies, risk, and market
-microstructure. This site is my open lab notebook — the ideas, equations, and
-experiments I'm working through on the way to a PhD. I care most about work that
-is *reproducible*, honestly reported, and grounded in the literature.
+A public research notebook documenting the mathematics, models, and experiments
+behind my work in quantitative finance, machine learning, and AI. The aim is
+simple: to demonstrate understanding rather than claim it — a record of research
+capability I am building as I develop a PhD proposal.
+:::
 :::
 
-[Research](research.qmd){.btn .btn-primary}
-[Reading notes](notes.qmd){.btn .btn-outline-secondary}
-[About & interests](about.qmd){.btn .btn-outline-secondary}
+## The libraries
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [About](about.qmd)
+Background in banking analytics, my quant-finance interests, and the AI research direction I'm heading toward.
 :::
 
-## Featured research
-
-::: {#featured}
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [Equation Library](equations/index.qmd)
+The mathematical foundations of quant finance and machine learning — each concept taken from equation to plain English to Python.
 :::
 
-## Latest reading notes
-
-::: {#latest-notes}
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [Machine Learning Library](ml/index.qmd)
+Models explained from first principles: their assumptions, how they learn, where they fail, and how they apply to markets.
 :::
 
-## What you'll find here
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [Quant Research Lab](quant-lab/index.qmd)
+Reproducible strategy experiments with explicit hypotheses, methods, and honestly reported results — including the ones that don't work.
+:::
 
-Longer **research** write-ups pair the maths with runnable code and honest
-limitations — including negative results, which I think are the most useful
-things to publish. Shorter **notes** are structured annotations of papers I'm
-reading. Everything that involves data ships with the code to reproduce it.
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [AI Trading Systems](ai-systems/index.qmd)
+How LLMs and AI agents could support market decision-making — and the risk controls that make such a system credible.
+:::
+
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [PhD Research](phd/index.qmd)
+Developing a research proposal in the open: research questions, literature notes, methodology, and supervisor alignment.
+:::
+
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### [Code Repository](code.qmd)
+GitHub repositories and reproducible notebooks behind every experiment on this site.
+:::
+
+:::
+
+## How I decide what to publish
+
+Nothing goes on this site until I can answer six questions about it without notes:
+what it means in plain English, why it matters in quant finance, what the equation
+or model is actually doing, what it assumes, where it can fail, and how I would
+implement it in Python. If I can't answer those, the material stays private until
+I can. The goal is demonstrated understanding, not coverage.

@@ -79,7 +79,7 @@ $\Delta$VIX loading.
 2. Robustness grid: value vs equal weight × NYSE vs all-stock breakpoints ×
    with/without a $5 price and micro-cap screen. Report the full grid, not the
    best cell — this is exactly the multiple-testing trap from my
-   [backtest-overfitting note](../../research/backtest-overfitting/index.qmd).
+   [backtest-overfitting note](../../../quant-lab/backtest-overfitting/index.qmd).
 3. Horse-race realised idio-vol against an EGARCH expected-idio-vol measure
    (Fu) and against MAX (Bali–Cakici–Whitelaw) in the same regression.
 

@@ -1,0 +1,39 @@
+---
+title: "AI Trading Systems"
+description: "How LLMs and AI agents could support market decision-making — with the risk controls that make it credible."
+toc: true
+---
+
+This section develops the research direction behind my proposed PhD: how large
+language models and AI agents might support market decision-making. The emphasis
+is on **transparency and control** — an agent should be a testable, auditable
+component of a system, never an unsupervised black box placing trades.
+
+## Topics
+
+- What is an AI agent?
+- LLMs versus conventional machine-learning models
+- Retrieval-Augmented Generation (RAG)
+- Sentiment analysis and news interpretation
+- Tool-using agents
+- Multi-agent systems
+- Agent memory and planning
+- AI risk controls
+- Hallucination risk when LLMs meet financial data
+- Why an LLM should never directly place trades without hard controls
+
+## A proposed multi-agent architecture
+
+A concrete system I want to study — deliberately decomposed so each component can
+be tested and evaluated on its own, rather than trusting a single model end to end:
+
+- **Market Regime Agent** — classifies the current trend, volatility, and liquidity state.
+- **News Agent** — reads and summarises the prevailing market narrative from text.
+- **Risk Agent** — sets and adjusts position size within hard, pre-defined limits.
+- **Execution Agent** — manages entries and exits against the chosen signal.
+- **Review Agent** — evaluates, after the fact, whether each decision was justified given the information available at the time.
+
+The **Review Agent** matters most: without a rigorous, honest evaluation loop, a
+system like this is just automation of overconfidence. The
+[PhD Research](../phd/index.qmd) section develops the formal proposal around this
+architecture.

@@ -1,0 +1,51 @@
+---
+title: "Equation Library"
+description: "The mathematical foundations of quant finance and machine learning — each concept from equation to Python."
+toc: true
+---
+
+The mathematical foundations behind everything else on this site. This is my
+*proof of work*: rather than assume the standard formulas, I re-derive and
+re-implement them so I understand exactly what each one assumes and where it
+breaks.
+
+**Every entry follows the same template:**
+
+- the equation itself,
+- what each symbol means,
+- a plain-English explanation,
+- why it matters in markets,
+- a simple worked numerical example,
+- a Python implementation,
+- a manual / Excel calculation,
+- a real financial-market example,
+- and the common mistakes people make with it.
+
+::: {.status-note}
+Entries are being written and published one at a time, to the standard on the home page. The map below is the plan.
+:::
+
+::: {.roadmap}
+
+### Core statistics
+Mean return · variance · standard deviation · covariance · correlation ·
+skewness · kurtosis · Z-score · normal distribution · t-statistic · p-value ·
+confidence interval.
+
+### Quant finance
+Simple return · log return · cumulative return · volatility · annualised return ·
+annualised volatility · Sharpe ratio · Sortino ratio · maximum drawdown ·
+Value at Risk · Expected Shortfall · beta · alpha · CAPM · Kelly criterion ·
+CAGR · profit factor · win rate · expectancy.
+
+### Time series
+Autocorrelation · moving average · exponential moving average · AR model ·
+MA model · ARIMA · GARCH · Hurst exponent · cointegration · stationarity ·
+Augmented Dickey–Fuller test.
+
+### Machine-learning mathematics
+Cost function · gradient descent · mean squared error · cross-entropy loss ·
+sigmoid · softmax · entropy · information gain · Gini impurity · regularisation ·
+L1 and L2 penalties · backpropagation.
+
+:::

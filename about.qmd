@@ -1,58 +1,41 @@
 ---
 title: "About"
-description: "Background, research interests, and how to reach me."
+description: "Background in banking analytics, quant-finance interests, and my AI research direction."
 toc: true
 ---
 
-## Short version
+> This page is an outline; I'm filling in the detail. The structure reflects what
+> a prospective PhD supervisor scans for: background, focus, and direction.
 
-I'm David Maguire, a quantitative researcher based in [CITY / COUNTRY]. I build
-systematic trading models and spend my spare cycles working through the academic
-literature and testing ideas of my own. I'm preparing to apply for a PhD in
-[TARGET FIELD — e.g. financial econometrics / machine learning for finance /
-market microstructure], and this site is where I keep the trail of that work in
-the open.
+## Professional background
 
-> Replace the bracketed placeholders throughout this page with your own details.
-> The structure is deliberately close to what a supervisor scans for: *interests,
-> evidence you can do research, and fit with their group.*
+[Short professional summary — your current role and what you do day to day.]
 
-## Research interests
+## Banking analytics
 
-I'm currently most interested in:
+[Your analytics work in banking — the data, methods, scale, and the kinds of
+problems you solve. This is concrete evidence of applied quantitative skill.]
 
-- **[Interest 1]** — e.g. selection bias and multiple testing in strategy
-  discovery; how to report performance honestly.
-- **[Interest 2]** — e.g. volatility and the cross-section of returns; the
-  idiosyncratic-volatility puzzle and its competing explanations.
-- **[Interest 3]** — e.g. machine-learning methods for return prediction and the
-  gap between backtested and realised performance.
+## Quantitative finance interests
 
-If you supervise in these areas, the [Research](research.qmd) page is the fastest
-way to see how I think. I try to keep this list narrow and aligned with the
-groups I'd want to work with, rather than long.
+I work on systematic strategies, risk, and the statistics of financial markets.
+My focus is on doing this *rigorously* — reproducible research, honest evaluation
+(walk-forward, out-of-sample), and a clear-eyed view of where methods break down.
 
-## Background
+- [Interest 1 — e.g. selection bias and multiple testing in strategy discovery]
+- [Interest 2 — e.g. volatility, regimes, and the cross-section of returns]
+- [Interest 3 — e.g. machine learning for return prediction and the backtest-to-live gap]
 
-- **[Role / employer or "independent researcher"]**, [dates]. [One line on what
-  you do — the quant modelling, the stack, the scale.]
-- **[Degree, institution, year]**. [Relevant coursework, thesis, or result.]
-- Tools I work in daily: Python (NumPy/pandas, scikit-learn, PyTorch),
-  [SQL / kdb+ / R], and a lot of careful backtesting.
+## AI research direction
 
-## How I work
-
-Three principles run through everything here. **Reproducibility first** — if a
-result isn't backed by code someone else can run, I treat it as a hypothesis,
-not a finding. **Report the misses** — negative results and failed replications
-are published alongside the wins. **Cite the literature** — new ideas are framed
-against what's already known, not in a vacuum.
+My developing research interest is in how **AI agents and large language models**
+could support market decision-making under proper risk controls — not as black-box
+signal generators, but as transparent, testable components of a trading system.
+The [AI Trading Systems](ai-systems/index.qmd) and [PhD Research](phd/index.qmd)
+sections develop this direction.
 
 ## Contact
 
 - Email: [davidolivermaguire@gmail.com](mailto:davidolivermaguire@gmail.com)
 - GitHub: [github.com/davidolivermaguire-ai](https://github.com/davidolivermaguire-ai)
-- [LinkedIn / Google Scholar / X — optional]
-
-If you're a prospective PhD supervisor, I'd be glad to send a short research
-proposal tailored to your group's work.
+- [LinkedIn / Google Scholar — optional]

@@ -1,0 +1,24 @@
+---
+title: "Code Repository"
+description: "GitHub repositories and reproducible notebooks behind every experiment on this site."
+toc: true
+---
+
+Every data-driven claim on this site is backed by code that can be run and checked.
+Reproducibility is the first principle here: a result isn't a finding until someone
+else can reproduce it.
+
+## This website
+The full source for davidmaguire.ai is public and built with Quarto:
+[github.com/davidolivermaguire-ai/davidmaguire.ai](https://github.com/davidolivermaguire-ai/davidmaguire.ai)
+
+## Research code
+Each [Quant Research Lab](quant-lab/index.qmd) experiment links to its own
+reproducible script or notebook. For example, the Monte-Carlo behind
+[How Backtest Selection Inflates the Sharpe Ratio](quant-lab/backtest-overfitting/index.qmd)
+lives in `code/backtest_overfitting.py` in the repository above.
+
+## Principles
+- **Reproducibility first** — code is published alongside the result it produces.
+- **Versioned** — everything is tracked in Git, so results can be traced to the exact code that generated them.
+- **Honest** — the code shows the full method, including the parts that didn't work.

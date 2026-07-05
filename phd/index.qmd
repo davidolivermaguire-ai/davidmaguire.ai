@@ -1,0 +1,59 @@
+---
+title: "PhD Research"
+description: "Developing a research proposal in the open — questions, literature, methodology, and supervisor alignment."
+listing:
+  - id: literature
+    contents: "literature/**/*.qmd"
+    type: table
+    fields: [date, title, categories]
+    sort: "date desc"
+    categories: false
+toc: true
+---
+
+I'm developing a PhD proposal in the open. This section documents that process so
+it reads the way a supervisor would want it to: a candidate who is already
+thinking like a researcher — framing questions, engaging the literature, and
+being honest about gaps and limitations.
+
+## Proposed research title
+[Working title — refined as the proposal develops.]
+
+## Research problem
+[The core problem, in a few sentences: what is not yet understood or not yet done,
+and why it matters.]
+
+## Research questions
+[The specific, answerable questions the thesis would address.]
+
+## Literature review notes
+Structured notes on the papers I'm reading — what each claims, how it shows it,
+what I'd push on, and how it connects to the proposal.
+
+::: {#literature}
+:::
+
+## Key academic papers
+[A curated, growing reading list with one-line relevance notes.]
+
+## Research gaps
+[Where the current literature stops — the openings a thesis could occupy.]
+
+## Methodology ideas
+[Candidate methods and study designs, with their trade-offs.]
+
+## Supervisor alignment
+[How the proposed work aligns with the research of the groups and supervisors I'm
+targeting — matched to specific interests rather than stated in general terms.]
+
+## Datasets
+[The data the work would require, and how it would be sourced and handled.]
+
+## Experimental roadmap
+[A sequenced plan of experiments from proposal to thesis.]
+
+## Ethics and limitations
+[Ethical considerations, data governance, and the honest limitations of the approach.]
+
+## Publication targets
+[Candidate venues for the work.]

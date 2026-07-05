@@ -1,0 +1,51 @@
+---
+title: "Quant Research Lab"
+description: "Reproducible strategy experiments — explicit hypotheses, sound methods, and honestly reported results."
+listing:
+  contents: "*/index.qmd"
+  type: default
+  sort: "date desc"
+  fields: [date, title, description, categories, reading-time]
+  categories: true
+  feed: true
+toc: true
+---
+
+Self-contained research experiments on market data. The purpose is not to publish
+profitable strategies — it is to ask well-posed questions and answer them
+rigorously. A negative result, analysed carefully, is as valuable here as a
+positive one.
+
+**Every experiment follows the same structure:**
+
+1. Research question
+2. Hypothesis
+3. Dataset
+4. Methodology
+5. Code
+6. Results
+7. Limitations
+8. What I learned
+9. Next experiment
+
+The tone is deliberately that of a researcher, not a signal seller. Not "this
+model predicts Tesla with 80% accuracy," but: *this experiment tests whether
+lagged return, volatility, and volume features contain statistically useful
+information for short-horizon directional classification, evaluated with
+walk-forward validation to reduce look-ahead bias.*
+
+## Experiments
+
+::: {.status-note}
+Published experiments appear below. More are in progress.
+:::
+
+## Planned experiments
+
+- Can short-horizon Tesla returns be predicted from lagged return, volatility, and volume features?
+- Does the volatility regime materially change a strategy's performance?
+- Can a Hidden Markov Model identify distinct market states out-of-sample?
+- Does volume confirm momentum, or add nothing once price is known?
+- Does regime-filtering improve a simple RSI rule, or just overfit it?
+- Does news sentiment improve entry timing beyond price-based features?
+- Can reinforcement learning improve position sizing under a fixed signal?

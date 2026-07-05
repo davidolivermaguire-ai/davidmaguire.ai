@@ -44,3 +44,10 @@ blockquote {
 .katex-display { overflow-x: auto; overflow-y: hidden; }
 table { font-size: .95em; }
 .nav-footer { border-top: 1px solid $border-color; font-size: .9rem; color: #6b7280; }
+
+/* section cards on the home page */
+.section-card { border: 1px solid $border-color; border-radius: 8px; padding: 1rem 1.25rem; height: 100%; transition: border-color .15s ease; }
+.section-card h4 { margin-top: 0; margin-bottom: .4rem; }
+.section-card:hover { border-color: $primary; }
+.roadmap h3 { margin-top: 2rem; }
+.status-note { color: #6b7280; font-size: .9rem; font-style: italic; }

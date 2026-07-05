@@ -1,0 +1,43 @@
+---
+title: "Machine Learning Library"
+description: "Models explained from first principles — assumptions, learning, weaknesses, and market relevance."
+toc: true
+---
+
+Machine-learning models explained from first principles. The point of this
+section is to show that I understand *model logic*, not just how to call a library
+function.
+
+**Every model page answers the same nine questions:**
+
+1. What problem does this model solve?
+2. What assumptions does it make?
+3. What data does it need?
+4. How does it learn?
+5. What are its strengths?
+6. What are its weaknesses?
+7. How could it apply to markets?
+8. What does the Python code look like?
+9. How would I explain it to a supervisor?
+
+::: {.status-note}
+Model pages are added one at a time. The map below is the plan.
+:::
+
+::: {.roadmap}
+
+### Foundation models
+Linear regression · logistic regression · decision trees · random forests ·
+XGBoost · LightGBM · support vector machines · K-means clustering ·
+Principal Component Analysis · Gaussian Mixture Models.
+
+### Deep learning
+Neural networks · activation functions · backpropagation · CNNs · RNNs · LSTMs ·
+transformers · attention · embeddings.
+
+### Quant-specific machine learning
+Feature engineering for returns · walk-forward validation · time-series
+cross-validation · avoiding data leakage · overfitting in trading systems ·
+model explainability · SHAP values · regime-aware modelling.
+
+:::

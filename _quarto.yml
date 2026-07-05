@@ -6,21 +6,27 @@ project:
 
 website:
   title: "David Maguire"
-  description: "Quantitative research, notes, and ideas — an open lab notebook."
+  description: "A public research notebook in quantitative finance, machine learning, and AI."
   site-url: "https://davidmaguire.ai"
   favicon: assets/favicon.svg
   search: true
   navbar:
     pinned: true
     left:
-      - text: "Home"
-        href: index.qmd
-      - text: "Research"
-        href: research.qmd
-      - text: "Notes"
-        href: notes.qmd
       - text: "About"
         href: about.qmd
+      - text: "Equations"
+        href: equations/index.qmd
+      - text: "Machine Learning"
+        href: ml/index.qmd
+      - text: "Quant Lab"
+        href: quant-lab/index.qmd
+      - text: "AI Systems"
+        href: ai-systems/index.qmd
+      - text: "PhD"
+        href: phd/index.qmd
+      - text: "Code"
+        href: code.qmd
     right:
       - icon: github
         href: "https://github.com/davidolivermaguire-ai"
@@ -31,8 +37,8 @@ website:
   page-footer:
     border: true
     left: "© 2026 David Maguire"
-    center: "Built with [Quarto](https://quarto.org)"
-    right: "[GitHub](https://github.com/davidolivermaguire-ai) · [Email](mailto:davidolivermaguire@gmail.com)"
+    center: "A public research notebook · [GitHub](https://github.com/davidolivermaguire-ai)"
+    right: "Built with [Quarto](https://quarto.org)"
 
 format:
   html:
@@ -47,10 +53,7 @@ format:
     highlight-style: github
     link-external-newwindow: true
     grid:
-      body-width: 860px
+      body-width: 900px
 
-# Code chunks in posts are shown, not executed at build time (figures are
-# pre-generated and committed), so the site builds with only Quarto installed —
-# no Python/Jupyter needed in CI. Flip this to true if you want live execution.
 execute:
   enabled: false
