@@ -1,41 +1,33 @@
 ---
 title: "About"
-description: "Background in banking analytics, quant-finance interests, and my AI research direction."
-toc: true
+description: "Who I am, and why I'm working through quantitative finance from first principles."
+toc: false
 ---
 
-> This page is an outline; I'm filling in the detail. The structure reflects what
-> a prospective PhD supervisor scans for: background, focus, and direction.
+I'm David Maguire. I work in data and analytics in banking, and in my own time
+I've become increasingly absorbed by quantitative finance — markets as a problem
+in statistics and machine learning. This site is my open notebook for working
+through that interest properly: the mathematics, the models, and the experiments,
+from first principles.
 
-## Professional background
+What draws me in is the honesty the subject demands. Financial data is mostly
+noise, so the real question is never "does this work on the backtest?" but "would
+it survive out-of-sample, on data it has never seen?" I'm less interested in
+clever strategies than in understanding *why* something works or fails — the
+assumptions underneath a model, and where they break down.
 
-[Short professional summary — your current role and what you do day to day.]
+So I'm learning it from the ground up: re-deriving the equations, re-implementing
+the models, and testing ideas honestly rather than taking results on faith. I'm
+also studying the field formally, through an MSc in Financial Services and a
+Professional Diploma in AI Models and Programming in Financial Services.
 
-## Banking analytics
-
-[Your analytics work in banking — the data, methods, scale, and the kinds of
-problems you solve. This is concrete evidence of applied quantitative skill.]
-
-## Quantitative finance interests
-
-I work on systematic strategies, risk, and the statistics of financial markets.
-My focus is on doing this *rigorously* — reproducible research, honest evaluation
-(walk-forward, out-of-sample), and a clear-eyed view of where methods break down.
-
-- [Interest 1 — e.g. selection bias and multiple testing in strategy discovery]
-- [Interest 2 — e.g. volatility, regimes, and the cross-section of returns]
-- [Interest 3 — e.g. machine learning for return prediction and the backtest-to-live gap]
-
-## AI research direction
-
-My developing research interest is in how **AI agents and large language models**
-could support market decision-making under proper risk controls — not as black-box
-signal generators, but as transparent, testable components of a trading system.
-The [AI Trading Systems](ai-systems/index.qmd) and [PhD Research](phd/index.qmd)
-sections develop this direction.
+The direction I'm most curious about is where AI meets markets — how large
+language models and agents might support decision-making, provided they can be
+made transparent and kept under proper control.
 
 ## Contact
 
 - Email: [davidolivermaguire@gmail.com](mailto:davidolivermaguire@gmail.com)
 - GitHub: [github.com/davidolivermaguire-ai](https://github.com/davidolivermaguire-ai)
-- [LinkedIn / Google Scholar — optional]
+- LinkedIn: [LinkedIn](https://www.linkedin.com/)
+<!-- LinkedIn: replace the URL above with your profile once it's live, e.g. https://www.linkedin.com/in/your-handle -->
