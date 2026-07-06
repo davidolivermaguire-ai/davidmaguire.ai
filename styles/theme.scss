@@ -51,3 +51,16 @@ table { font-size: .95em; }
 .section-card:hover { border-color: $primary; }
 .roadmap h3 { margin-top: 2rem; }
 .status-note { color: #6b7280; font-size: .9rem; font-style: italic; }
+
+/* hero layout + line-art motif */
+.hero-row { display:flex; flex-wrap:wrap; align-items:center; gap:1.25rem 2rem; justify-content:space-between; }
+.hero-text { flex:1 1 340px; min-width:260px; }
+.hero-motif { flex:0 0 auto; opacity:.9; }
+.hero-motif svg { display:block; max-width:100%; height:auto; }
+@media (max-width:640px){ .hero-motif { display:none; } }
+
+/* library card icons + hover polish */
+.section-card h4 { display:flex; align-items:center; }
+.card-ic { color:$primary; margin-right:.5rem; font-size:1.05em; line-height:1; }
+.card-ic.sigma { font-weight:700; font-size:1.2em; }
+.section-card:hover { box-shadow:0 2px 12px rgba(44,95,138,.08); }
