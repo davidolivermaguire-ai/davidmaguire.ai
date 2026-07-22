@@ -1,6 +1,16 @@
 ---
 title: "Equation Library"
 description: "The mathematical foundations of quant finance and machine learning — each concept from equation to Python."
+listing:
+  id: published-equations
+  contents: "*/index.qmd"
+  type: default
+  sort: "date desc"
+  fields: [date, title, description, categories, reading-time]
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  feed: true
 toc: true
 ---
 
@@ -21,14 +31,21 @@ breaks.
 - a real financial-market example,
 - and the common mistakes people make with it.
 
+## Published entries
+
 ::: {.status-note}
-Entries are being written and published one at a time, to the standard on the home page. The map below is the plan.
+Published one at a time, to the standard above. The roadmap below is the plan.
 :::
+
+::: {#published-equations}
+:::
+
+## The roadmap
 
 ::: {.roadmap}
 
 ### Core statistics
-Mean return · variance · standard deviation · covariance · correlation ·
+[Mean return](mean-return/) · variance · standard deviation · covariance · correlation ·
 skewness · kurtosis · Z-score · normal distribution · t-statistic · p-value ·
 confidence interval.
 
