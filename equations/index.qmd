@@ -45,7 +45,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 ::: {.roadmap}
 
 ### Core statistics
-[Mean return](mean-return/) · variance · standard deviation · covariance · correlation ·
+[Mean return](mean-return/) · [variance](variance-standard-deviation/) · [standard deviation](variance-standard-deviation/) · covariance · correlation ·
 skewness · kurtosis · Z-score · normal distribution · t-statistic · p-value ·
 confidence interval.
 
