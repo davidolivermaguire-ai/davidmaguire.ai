@@ -31,6 +31,7 @@ a:hover { text-decoration: underline; }
 .quarto-listing { margin-top: 1.5rem; }
 div.quarto-post { border-bottom: 1px solid $border-color; padding: 1rem 0; }
 .quarto-post .listing-title { font-weight: 600; }
+.quarto-post .listing-title a, .quarto-post a.listing-title { color: $primary; }
 
 pre.sourceCode { border: 1px solid $border-color; border-radius: 6px; }
 code { font-size: .9em; }
