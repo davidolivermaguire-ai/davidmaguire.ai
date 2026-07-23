@@ -52,7 +52,7 @@ confidence interval.
 ### Quant finance
 Simple return · log return · cumulative return · volatility · annualised return ·
 annualised volatility · [Sharpe ratio](sharpe-ratio/) · [Sortino ratio](sortino-ratio/) · [maximum drawdown](maximum-drawdown/) ·
-Value at Risk · Expected Shortfall · [beta](beta-capm/) · [alpha](beta-capm/) · [CAPM](beta-capm/) · Kelly criterion ·
+[Value at Risk](value-at-risk/) · [Expected Shortfall](value-at-risk/) · [beta](beta-capm/) · [alpha](beta-capm/) · [CAPM](beta-capm/) · Kelly criterion ·
 CAGR · profit factor · win rate · expectancy.
 
 ### Time series
