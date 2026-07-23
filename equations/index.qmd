@@ -50,7 +50,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 confidence interval.
 
 ### Quant finance
-Simple return · log return · cumulative return · volatility · annualised return ·
+[Simple return](returns/) · [log return](returns/) · [cumulative return](returns/) · volatility · annualised return ·
 annualised volatility · [Sharpe ratio](sharpe-ratio/) · [Sortino ratio](sortino-ratio/) · [maximum drawdown](maximum-drawdown/) ·
 [Value at Risk](value-at-risk/) · [Expected Shortfall](value-at-risk/) · [beta](beta-capm/) · [alpha](beta-capm/) · [CAPM](beta-capm/) · [Kelly criterion](kelly-criterion/) ·
 [CAGR](cagr/) · profit factor · win rate · expectancy.
