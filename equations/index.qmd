@@ -46,8 +46,8 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 
 ### Core statistics
 [Mean return](mean-return/) · [variance](variance-standard-deviation/) · [standard deviation](variance-standard-deviation/) · [covariance](covariance-correlation/) · [correlation](covariance-correlation/) ·
-[skewness](skewness-kurtosis/) · [kurtosis](skewness-kurtosis/) · Z-score · normal distribution · t-statistic · p-value ·
-confidence interval.
+[skewness](skewness-kurtosis/) · [kurtosis](skewness-kurtosis/) · [Z-score](z-score-normal/) · [normal distribution](z-score-normal/) · [t-statistic](t-stat-p-value/) · [p-value](t-stat-p-value/) ·
+[confidence interval](t-stat-p-value/).
 
 ### Quant finance
 [Simple return](returns/) · [log return](returns/) · [cumulative return](returns/) · [volatility](variance-standard-deviation/) · [annualised return](annualisation/) ·
