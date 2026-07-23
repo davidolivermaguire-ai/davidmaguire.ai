@@ -53,7 +53,7 @@ confidence interval.
 [Simple return](returns/) · [log return](returns/) · [cumulative return](returns/) · volatility · annualised return ·
 annualised volatility · [Sharpe ratio](sharpe-ratio/) · [Sortino ratio](sortino-ratio/) · [maximum drawdown](maximum-drawdown/) ·
 [Value at Risk](value-at-risk/) · [Expected Shortfall](value-at-risk/) · [beta](beta-capm/) · [alpha](beta-capm/) · [CAPM](beta-capm/) · [Kelly criterion](kelly-criterion/) ·
-[CAGR](cagr/) · profit factor · win rate · expectancy.
+[CAGR](cagr/) · [profit factor](trading-metrics/) · [win rate](trading-metrics/) · [expectancy](trading-metrics/).
 
 ### Time series
 Autocorrelation · moving average · exponential moving average · AR model ·
