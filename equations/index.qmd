@@ -57,8 +57,8 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 
 ### Time series
 [Autocorrelation](autocorrelation/) · [moving average](moving-averages/) · [exponential moving average](moving-averages/) · AR model ·
-MA model · ARIMA · GARCH · Hurst exponent · cointegration · stationarity ·
-Augmented Dickey–Fuller test.
+MA model · ARIMA · GARCH · Hurst exponent · cointegration · [stationarity](stationarity-adf/) ·
+[Augmented Dickey–Fuller test](stationarity-adf/).
 
 ### Machine-learning mathematics
 Cost function · gradient descent · mean squared error · cross-entropy loss ·
