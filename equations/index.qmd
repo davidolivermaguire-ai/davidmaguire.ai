@@ -56,7 +56,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 [CAGR](cagr/) · [profit factor](trading-metrics/) · [win rate](trading-metrics/) · [expectancy](trading-metrics/).
 
 ### Time series
-[Autocorrelation](autocorrelation/) · moving average · exponential moving average · AR model ·
+[Autocorrelation](autocorrelation/) · [moving average](moving-averages/) · [exponential moving average](moving-averages/) · AR model ·
 MA model · ARIMA · GARCH · Hurst exponent · cointegration · stationarity ·
 Augmented Dickey–Fuller test.
 
