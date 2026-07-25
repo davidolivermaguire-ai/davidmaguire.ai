@@ -57,7 +57,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 
 ### Time series
 [Autocorrelation](autocorrelation/) · [moving average](moving-averages/) · [exponential moving average](moving-averages/) · [AR model](ar-model/) ·
-[MA model](ma-model/) · ARIMA · GARCH · Hurst exponent · [cointegration](cointegration/) · [stationarity](stationarity-adf/) ·
+[MA model](ma-model/) · [ARIMA](arima/) · GARCH · Hurst exponent · [cointegration](cointegration/) · [stationarity](stationarity-adf/) ·
 [Augmented Dickey–Fuller test](stationarity-adf/).
 
 ### Machine-learning mathematics
