@@ -62,7 +62,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 
 ### Machine-learning mathematics
 [Cost function](cost-function/) · [gradient descent](gradient-descent/) · [mean squared error](mean-squared-error/) · [cross-entropy loss](cross-entropy/) ·
-[sigmoid](sigmoid/) · [softmax](softmax/) · [entropy](entropy/) · information gain · Gini impurity · regularisation ·
+[sigmoid](sigmoid/) · [softmax](softmax/) · [entropy](entropy/) · [information gain](information-gain/) · Gini impurity · regularisation ·
 L1 and L2 penalties · backpropagation.
 
 :::
