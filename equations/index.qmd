@@ -61,7 +61,7 @@ Published one at a time, to the standard above. The roadmap below is the plan.
 [Augmented Dickey–Fuller test](stationarity-adf/).
 
 ### Machine-learning mathematics
-[Cost function](cost-function/) · gradient descent · mean squared error · cross-entropy loss ·
+[Cost function](cost-function/) · [gradient descent](gradient-descent/) · mean squared error · cross-entropy loss ·
 sigmoid · softmax · entropy · information gain · Gini impurity · regularisation ·
 L1 and L2 penalties · backpropagation.
 
