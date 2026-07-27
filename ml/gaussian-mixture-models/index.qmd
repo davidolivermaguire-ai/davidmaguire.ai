@@ -1,0 +1,154 @@
+---
+title: "Gaussian Mixture Models"
+subtitle: "Soft, probabilistic clustering — and the model that explains fat tails as calm plus crisis"
+description: "A GMM models data as a mixture of Gaussians, fit by EM, giving each point a probability of membership rather than a hard label. It generalises K-means. On Nasdaq returns a two-component mixture — a calm Gaussian and a crisis Gaussian — reproduces the fat tails a single Gaussian misses."
+date: 2026-07-27
+author: "David Maguire"
+categories: [foundation models, clustering]
+image: fig-gmm.png
+image-alt: "A log-scale return histogram fit by a two-component mixture that captures the fat tails a single Gaussian misses, beside a BIC curve rejecting a single component"
+toc: true
+---
+
+The last of the foundation models, and the one that completes the clustering story. [K-means](../k-means/)
+drew hard, round boundaries and forced every point into exactly one group. A Gaussian mixture model
+relaxes both restrictions: it fits **elliptical** clusters of different shapes and sizes, and it
+assigns each point **softly** — a set of probabilities across the clusters rather than a single
+label. It does this by treating the data as having been *generated* by a mixture of Gaussian
+distributions and working backwards to recover them. That generative view makes it more than a
+clustering tool: it is a full model of the data's distribution, and on financial returns it delivers
+the cleanest explanation of fat tails you will find — the market is a calm Gaussian most of the time
+and a wild one the rest.
+
+## 1. What problem does it solve?
+
+**Soft clustering and density estimation.** Like K-means it groups unlabelled data, but instead of a
+hard assignment it returns each point's **probability** of belonging to each cluster — and, because
+it models the full probability distribution, it can also *score* how likely any new point is and
+*generate* synthetic samples. Reach for it when clusters overlap or aren't round, when you want
+calibrated membership probabilities rather than a crisp partition, or when you want to model a
+distribution as a blend of simpler ones (multimodal or fat-tailed data).
+
+## 2. What assumptions does it make?
+
+The central one: the data was drawn from a **mixture of `k` Gaussians**, each with its own mean,
+covariance, and mixing weight. Each cluster is therefore **elliptical** — with a *full* covariance
+matrix it can be stretched and tilted, a real gain over K-means's implicit spheres — but it is still
+Gaussian, so genuinely non-Gaussian cluster shapes (crescents, rings) are modelled poorly. You still
+choose `k` in advance, though here you can do it principledly with an information criterion rather
+than by eye.
+
+## 3. What data does it need?
+
+Numeric, continuous features, and **enough of them per cluster** to estimate covariances reliably —
+a full covariance has $d(d+1)/2$ parameters per component, so high dimensions or small clusters
+strain it (you then restrict the covariance to diagonal or spherical). It is more flexible than
+K-means about scale because a full covariance adapts to each feature's spread, but standardising
+still helps conditioning. Its notorious failure mode is a component collapsing onto a handful of
+points, where the likelihood runs to infinity — guarded against with a small covariance floor
+(`reg_covar`).
+
+## 4. How does it learn?
+
+By **maximum likelihood**, via the **Expectation-Maximisation (EM)** algorithm — a soft echo of
+K-means's two-step loop. Each iteration:
+
+1. **E-step.** With the current Gaussians fixed, compute each point's **responsibilities** — the posterior probability that it came from each component, $\gamma_{ij} = \dfrac{\pi_j\,\mathcal{N}(x_i\mid \mu_j,\Sigma_j)}{\sum_l \pi_l\,\mathcal{N}(x_i\mid \mu_l,\Sigma_l)}$. This is the soft assignment.
+2. **M-step.** With responsibilities fixed, update each component's weight, mean, and covariance as responsibility-weighted averages of the data.
+
+Repeat until the log-likelihood stops improving. The parallel to K-means is exact and worth stating,
+because it's the cleanest way to understand both: **K-means is a GMM with hard responsibilities (0 or
+1) and spherical, equal covariances.** Relax those two constraints — let assignments be fractional
+and covariances be full ellipses — and Lloyd's algorithm *becomes* EM. Like K-means, EM only reaches
+a **local** optimum, so it's initialised from a K-means run and restarted (`n_init`), and the number
+of components is chosen by minimising the **BIC** (or AIC), which trades fit against parameter count.
+
+A single responsibility calculation makes the "soft" concrete. Using the two components fitted below
+(a calm Gaussian and a wider crisis one), a $-1.8\%$ day works out to a **63% probability of belonging
+to the crisis component** and 37% to the calm one. K-means would shove that day entirely into one
+cluster; the GMM preserves the genuine ambiguity — and a $-5\%$ day, by contrast, is assigned to the
+crisis component with probability $\approx 1$.
+
+## 5. What are its strengths?
+
+- **Soft, calibrated assignments.** Membership probabilities express uncertainty a hard label throws away — a boundary point is honestly 60/40, not arbitrarily 100/0.
+- **Elliptical clusters.** Full covariances fit stretched, tilted, unequal clusters that K-means splits wrongly.
+- **A generative density model.** It models the whole distribution, so you can score new points' likelihood and sample from it.
+- **Principled `k`.** BIC/AIC give an objective way to choose the number of components.
+- **Captures multimodality and fat tails.** A mixture of Gaussians represents distributions no single Gaussian can.
+
+## 6. What are its weaknesses?
+
+- **You still choose `k`** (though BIC helps), and the answer can be ambiguous.
+- **Assumes Gaussian components.** Non-elliptical clusters are modelled badly; it's not a universal density estimator.
+- **Singularities.** A component can collapse onto a few points and blow up the likelihood — needs a covariance floor.
+- **Local optima and init-sensitivity.** EM only finds a local maximum; different starts give different fits.
+- **More parameters, slower.** Full covariances cost far more than K-means's centroids, and it can overfit in high dimensions.
+
+## 7. How could it apply to markets?
+
+This is where the generative view pays off. Rather than cluster days, model the **distribution of
+returns itself** as a mixture — the canonical quant use. Fitting a two-component GMM to ~2,900
+daily Nasdaq-100 returns (which have an [excess kurtosis](../../equations/skewness-kurtosis/) of
+**7.6** — dramatically fatter tails than a Gaussian's zero) recovers exactly the structure every
+risk manager assumes:
+
+![Left: the daily-return distribution on a log density scale. A single Gaussian (dashed) collapses far below the data in the tails; the two-component mixture (dark) — a narrow "calm" Gaussian plus a wide, flat "crisis" Gaussian — tracks the fat tails the single Gaussian misses. Right: BIC by number of components. One Gaussian is decisively rejected (BIC falls 506 from k=1 to k=2); the second component is the essential one.](fig-gmm.png){fig-alt="A log-scale return histogram fit by a two-component mixture that captures the fat tails a single Gaussian misses, beside a BIC curve rejecting a single component"}
+
+The mixture splits the market into two regimes on its own: a **calm** component covering 74% of days
+(σ = 0.84%, a slight positive drift) and a **crisis** component covering the other 26% (σ = 2.29% —
+almost three times as volatile). And BIC is emphatic that this second component is real: a single
+Gaussian scores 506 BIC points worse, a decisive rejection. The payoff is in the tails. A single
+Gaussian says a day worse than −4% should occur 0.17% of the time — about once every 590 days; in
+reality it happened on 0.93% of days, five times as often, and the mixture puts the figure at 1.34%,
+the right order of magnitude. That gap is precisely why a Gaussian
+[value-at-risk](../../equations/value-at-risk/) understates crash risk, and why modelling returns as
+*calm-plus-crisis* is standard practice. Unlike K-means's hard regime labels, the GMM also gives each
+day a **probability** of being in the crisis regime — soft, honest, and exactly the
+[volatility-clustering](../../equations/garch/) structure this site keeps finding, now expressed as a
+generative distribution rather than a forecast. What it still won't tell you, of course, is the *sign*
+of tomorrow's move.
+
+## 8. What does the Python code look like?
+
+```python
+from sklearn.mixture import GaussianMixture
+import numpy as np
+
+X = returns.reshape(-1, 1)            # or multi-feature; full covariance by default
+
+# choose k by BIC
+bic = {k: GaussianMixture(k, covariance_type="full", random_state=0).fit(X).bic(X)
+       for k in range(1, 7)}
+
+gmm = GaussianMixture(n_components=2, covariance_type="full",
+                      n_init=5, reg_covar=1e-6, random_state=0).fit(X)
+gmm.weights_, gmm.means_, gmm.covariances_   # the mixture: π, μ, Σ per component
+gmm.predict_proba(X)                          # SOFT responsibilities per point
+gmm.score_samples(X)                          # log-likelihood of each point (it's generative)
+```
+
+`predict_proba` is the whole point — the soft assignment K-means can't give you; `covariance_type`
+trades flexibility for parameters (`"full"` → `"diag"` → `"spherical"`); `reg_covar` is the floor
+that prevents a component collapsing onto a few points.
+
+## 9. How would I explain it to a supervisor?
+
+"A Gaussian mixture models the data as coming from several Gaussians, each with its own weight, mean,
+and covariance, and fits them by EM: an E-step that computes each point's probability of belonging to
+each component, and an M-step that re-estimates the components from those weighted points, iterated to
+maximise likelihood. It's the soft, elliptical generalisation of K-means — in fact K-means is a GMM
+with hard assignments and spherical covariances — and you pick the number of components with BIC. It's
+generative, so it also estimates the density. The clean market example is fitting two components to
+Nasdaq returns: a calm Gaussian at 74% of days with 0.84% volatility and a crisis Gaussian at 26% with
+2.29%, which reproduces the fat tails a single Gaussian badly understates — BIC rejects the single
+Gaussian by 506 points. It's the generative version of the volatility-clustering story: it captures
+the tails and gives soft regime probabilities, while direction stays unpredictable."
+
+::: {.status-note}
+Nasdaq-100 daily returns from the same `multi_daily.csv` as the Equation Library (yfinance, adjusted
+closes), 2,903 observations. Two-component `scikit-learn` `GaussianMixture` (full covariance,
+`n_init=5`); component weights/means/σ, BIC by `k`, the tail probabilities, and the −1.8% responsibility
+were computed directly and checked. BIC's shallow minimum is at k=4, but the decisive, robust jump is
+k=1→k=2, so the interpretable two-regime model is shown.
+:::
