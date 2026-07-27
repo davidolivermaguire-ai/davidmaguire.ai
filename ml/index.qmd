@@ -45,7 +45,7 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 ::: {.roadmap}
 
 ### Foundation models
-[Linear regression](linear-regression/) · [logistic regression](logistic-regression/) · decision trees · random forests ·
+[Linear regression](linear-regression/) · [logistic regression](logistic-regression/) · [decision trees](decision-trees/) · random forests ·
 XGBoost · LightGBM · support vector machines · K-means clustering ·
 Principal Component Analysis · Gaussian Mixture Models.
 
