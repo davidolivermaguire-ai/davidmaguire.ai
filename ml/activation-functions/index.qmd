@@ -1,0 +1,143 @@
+---
+title: "Activation Functions"
+subtitle: "The nonlinearity that makes depth work — and why ReLU unlocked deep learning"
+description: "Activation functions inject the nonlinearity without which a deep network collapses to a single linear map. Sigmoid, tanh, ReLU and its variants, the vanishing-gradient problem that stalled deep learning, and why ReLU fixed it."
+date: 2026-07-27
+author: "David Maguire"
+categories: [deep learning, neural networks]
+image: fig-activation-functions.png
+image-alt: "The sigmoid, tanh, ReLU and leaky-ReLU curves beside a log-scale plot of gradient magnitude collapsing with depth for sigmoid but holding for ReLU"
+toc: true
+---
+
+The [neural network](../neural-networks/) page made one claim it left unproven: the nonlinear
+**activation** is "what makes it work — without it, a stack of linear layers collapses into a single
+linear map." This page is about that function. It is a small choice with outsized consequences: the
+activation is simultaneously the reason a deep network can represent complex functions *and*, for the
+wrong choice, the reason it won't train at all. The history of deep learning is in large part the
+story of one activation — sigmoid — quietly strangling gradients for two decades, and another — ReLU —
+setting them free.
+
+## 1. What problem does it solve?
+
+It supplies the **nonlinearity** a network needs to be more than a linear model. The proof is one
+line: a linear layer computes $W x$; stack two and you get $W_2(W_1 x) = (W_2 W_1)x$, which is just
+another linear map. Without a nonlinear function between layers, *any* depth collapses to a single
+linear transformation — no amount of stacking buys expressiveness. Insert a nonlinearity between each
+layer and the composition can bend into arbitrary shapes (the universal approximation theorem). A
+second, separate job belongs to the **output** activation, which shapes the final prediction to the
+task: a [sigmoid](../../equations/sigmoid/) for a probability, a [softmax](../../equations/softmax/)
+for a class distribution, or nothing (linear) for a real-valued target.
+
+## 2. What does a good activation need to be?
+
+Five properties, usually in tension. It must be **nonlinear** (or the layers collapse) and
+**differentiable** almost everywhere (backpropagation needs a gradient). It should be **cheap** —
+it's evaluated billions of times — and, ideally, **non-saturating** (its derivative shouldn't vanish
+for large inputs) and **zero-centred** (so gradients don't all share a sign). Sigmoid satisfies the
+first two and fails the last two; ReLU sacrifices smoothness and zero-centring to nail cheapness and
+non-saturation. There is no free lunch, only trade-offs.
+
+## 3. Where is each one used?
+
+Position decides. In **hidden layers**, the modern default is **ReLU** (or a variant — leaky ReLU,
+ELU, GELU), because it trains deep stacks reliably; tanh survives in some recurrent architectures.
+In the **output layer**, the activation is dictated by the task and its loss: **sigmoid** for binary
+classification (with binary cross-entropy), **softmax** for multi-class (with categorical
+cross-entropy), and **identity/linear** for regression. Choosing a hidden-layer activation is about
+*trainability*; choosing the output activation is about *matching the prediction to the problem*.
+
+## 4. How does it work?
+
+The intuition lives in the **derivative**, because backpropagation multiplies by it at every layer.
+Consider the three classics and their slopes:
+
+$$\sigma'(z) = \sigma(z)\,(1-\sigma(z)) \le 0.25,\qquad \tanh'(z) = 1-\tanh^2(z)\le 1,\qquad
+\mathrm{ReLU}'(z) = \begin{cases}1 & z>0\\ 0 & z<0\end{cases}.$$
+
+Sigmoid's derivative peaks at just **0.25** (at $z=0$) and decays toward zero in both tails — at
+$z=4$ it is already $0.018$. This is **saturation**: once a neuron's input is even moderately large,
+its output flattens and its gradient nearly vanishes. Now recall that
+[backpropagation](../../equations/backpropagation/) sends the gradient backwards by *multiplying* by
+each layer's activation derivative. Chain $L$ sigmoid layers and the gradient reaching the first is
+scaled by at most $0.25^L$ — for ten layers, $0.25^{10}\approx 9.5\times10^{-7}$, a millionfold
+shrink in the *best* case, and far worse once units saturate. This is the **vanishing gradient
+problem**, and it is not hypothetical: in a 15-layer network the gradient arriving at the input layer
+measures about $2\times10^{-11}$ for sigmoid — the early layers are effectively frozen and never
+learn.
+
+![Left: the functions. Sigmoid and tanh flatten (saturate) for large inputs, so their derivatives fall to zero; ReLU and leaky ReLU stay linear on the positive side. Right: the gradient magnitude at each layer of a 15-layer network, log scale. With sigmoid it collapses roughly nine orders of magnitude toward the input; with tanh and ReLU it stays in a workable band. The consequence: a 6-hidden-layer network on the "moons" data reaches just 50% (chance) with sigmoid but 98% with ReLU.](fig-activation-functions.png){fig-alt="The sigmoid, tanh, ReLU and leaky-ReLU curves beside a log-scale plot of gradient magnitude collapsing with depth for sigmoid but holding for ReLU"}
+
+**ReLU** breaks the curse. Its derivative is exactly **1** wherever the unit is active, so gradients
+pass backward undiminished — no shrink factor, no saturation on the positive side. That single change
+is what made training deep networks practical. **tanh** is a partial fix (its derivative reaches 1 and
+it is zero-centred, so it decays more gently than sigmoid), but it still saturates. ReLU's own flaw is
+the mirror image: for negative inputs its gradient is **0**, so a unit that gets pushed permanently
+negative stops learning entirely — the **"dying ReLU"** — which is exactly what **leaky ReLU** (a
+small negative slope, $0.1z$ above) and ELU/GELU are designed to prevent.
+
+## 5. What are its strengths?
+
+- **Non-saturating (ReLU).** A derivative of 1 on the active side keeps gradients alive through many layers — the key to trainable depth.
+- **Cheap.** ReLU is a single `max`; even sigmoid/tanh are inexpensive. This matters at billions of evaluations.
+- **Enables universal approximation.** Any of them, inserted between linear layers, gives the network its nonlinear expressiveness.
+- **Task-shaping outputs.** Sigmoid and softmax turn raw scores into calibrated probabilities that pair cleanly with cross-entropy.
+- **Sparsity (ReLU).** Zeroing negative activations yields sparse, often more robust representations.
+
+## 6. What are its weaknesses?
+
+- **Vanishing gradients (sigmoid, tanh).** Saturating derivatives throttle learning in deep stacks — the historical roadblock.
+- **Dying ReLU.** Units stuck in the negative region have zero gradient and never recover (mitigated by leaky ReLU/ELU/GELU).
+- **Not zero-centred (sigmoid).** All-positive outputs bias the gradient signal, slowing convergence.
+- **No universal best.** The right choice depends on depth, architecture, and layer position — it's an empirical decision.
+- **Output/loss must match.** A softmax output demands cross-entropy, not squared error; mismatches train badly.
+
+## 7. How could it apply to markets?
+
+Here the activation choice is about **trainability, not signal** — it won't conjure predictability
+that isn't there, but the wrong choice stops a model learning even the structure that *is*. For a
+market network you'd use a **sigmoid** output for an up/down probability, a **softmax** output for a
+regime classifier (calm / sell-off / rally), or a **linear** output for a volatility magnitude — and
+**ReLU** in the hidden layers so that a deep model actually trains rather than freezing on vanished
+gradients. The [volatility model](../neural-networks/) that reached 0.57 AUC would, built deep with
+sigmoids, simply fail to train — not because the signal vanished, but because the *gradient* did. The
+efficient-market verdict is unchanged; the activation just determines whether the network can reach it.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+
+def sigmoid(z): return 1 / (1 + np.exp(-z))     # output: probability  (with BCE loss)
+def relu(z):    return np.maximum(0, z)          # hidden default: non-saturating
+def leaky(z, a=0.01): return np.where(z > 0, z, a * z)   # fixes "dying ReLU"
+
+# derivatives — what backprop multiplies by at each layer
+d_sigmoid = lambda z: sigmoid(z) * (1 - sigmoid(z))      # <= 0.25  -> vanishes in depth
+d_relu    = lambda z: (z > 0).astype(float)              # 1 or 0   -> gradients survive
+```
+
+In a framework you just name it: `MLPClassifier(activation="relu")` in scikit-learn, or
+`nn.ReLU()` / `nn.GELU()` between linear layers in PyTorch. The **output** activation is usually
+implicit in the loss — `BCEWithLogitsLoss` and `CrossEntropyLoss` apply sigmoid and softmax
+internally for numerical stability, so you feed them raw logits.
+
+## 9. How would I explain it to a supervisor?
+
+"The activation function is the nonlinearity between layers — without it a deep network is
+algebraically just one linear layer, so it's what makes depth mean anything. The subtlety is in the
+derivative, because backprop multiplies by it layer after layer. Sigmoid's derivative maxes at 0.25
+and saturates to zero, so across many layers the gradient shrinks like 0.25 to the power of the depth
+— in a 15-layer net the input-layer gradient is around 1e-11 and the early layers never learn. That's
+the vanishing-gradient problem that stalled deep learning, and ReLU fixed it: its derivative is 1 for
+active units, so gradients pass through. I showed it directly — a six-layer network gets 50%, pure
+chance, with sigmoid but 98% with ReLU. So ReLU (or a variant) in the hidden layers, and the output
+activation matched to the task: sigmoid for probabilities, softmax for classes, linear for
+regression."
+
+::: {.status-note}
+Derivative bounds are exact; the per-layer gradient magnitudes come from a 15-layer, width-64 network
+with identical initialisation across activations, so the difference is the activation alone. The
+deep-network moons comparison uses `scikit-learn` `MLPClassifier` (six hidden layers) with `logistic`
+versus `relu`. All figures were computed and checked.
+:::
