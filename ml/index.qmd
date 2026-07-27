@@ -47,7 +47,7 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 ### Foundation models
 [Linear regression](linear-regression/) · [logistic regression](logistic-regression/) · [decision trees](decision-trees/) · [random forests](random-forests/) ·
 [XGBoost](xgboost/) · [LightGBM](lightgbm/) · [support vector machines](support-vector-machines/) · [K-means clustering](k-means/) ·
-Principal Component Analysis · Gaussian Mixture Models.
+[Principal Component Analysis](principal-component-analysis/) · Gaussian Mixture Models.
 
 ### Deep learning
 Neural networks · activation functions · backpropagation · CNNs · RNNs · LSTMs ·
