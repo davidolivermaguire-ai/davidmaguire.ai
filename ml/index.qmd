@@ -54,7 +54,7 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 [transformers](transformers/) · [attention](attention/) · [embeddings](embeddings/).
 
 ### Quant-specific machine learning
-[Feature engineering for returns](feature-engineering/) · walk-forward validation · time-series
+[Feature engineering for returns](feature-engineering/) · [walk-forward validation](walk-forward-validation/) · time-series
 cross-validation · avoiding data leakage · overfitting in trading systems ·
 model explainability · SHAP values · regime-aware modelling.
 
