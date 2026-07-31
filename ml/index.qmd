@@ -63,10 +63,10 @@ cross-validation](time-series-cross-validation/) · [avoiding data leakage](data
 [policy gradients & actor-critic](policy-gradients/) · [proximal policy optimisation (PPO)](ppo/) · [risk-sensitive
 & constrained RL](risk-constrained-rl/) · [Bayesian change-point detection](change-point-detection/) · [Markov-switching regression](markov-switching-regression/) ·
 [probability calibration & conformal prediction](probability-calibration/) · [multi-agent systems & credit
-assignment](multi-agent-systems/) · market microstructure & execution modelling.
+assignment](multi-agent-systems/) · [market microstructure & execution modelling](market-microstructure/).
 
-*This tier builds the remaining methodological foundations of my
-[PhD research proposal](../phd/index.qmd) — entries added one at a time, to the same
+*This tier builds the methodological foundations of my
+[PhD research proposal](../phd/index.qmd) — now complete, every entry to the same
 verified standard as everything above.*
 
 :::

@@ -58,7 +58,7 @@ Background in banking analytics, my quant-finance interests, and the AI research
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-diagram-3 card-ic" aria-hidden="true"></i> [Machine Learning Library](ml/index.qmd)
-**Complete — 27 models.** From linear regression to transformers to regime-aware modelling: assumptions, mechanics, failure modes, and an honest market test for every one.
+**Complete — 37 models.** From linear regression to transformers to a full reinforcement-learning and decision-systems tier: assumptions, mechanics, failure modes, and an honest market test for every one.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
