@@ -56,6 +56,6 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 ### Quant-specific machine learning
 [Feature engineering for returns](feature-engineering/) · [walk-forward validation](walk-forward-validation/) · [time-series
 cross-validation](time-series-cross-validation/) · [avoiding data leakage](data-leakage/) · [overfitting in trading systems](overfitting-trading/) ·
-[model explainability](model-explainability/) · SHAP values · regime-aware modelling.
+[model explainability](model-explainability/) · [SHAP values](shap-values/) · regime-aware modelling.
 
 :::
