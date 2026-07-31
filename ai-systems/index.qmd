@@ -27,13 +27,15 @@ component of a system, never an unsupervised black box placing trades.
 A concrete system I want to study — deliberately decomposed so each component can
 be tested and evaluated on its own, rather than trusting a single model end to end:
 
-- **Market Regime Agent** — classifies the current trend, volatility, and liquidity state.
-- **News Agent** — reads and summarises the prevailing market narrative from text.
-- **Risk Agent** — sets and adjusts position size within hard, pre-defined limits.
-- **Execution Agent** — manages entries and exits against the chosen signal.
-- **Review Agent** — evaluates, after the fact, whether each decision was justified given the information available at the time.
+- **Market Regime Agent** — identifies the current market state and estimates regime probabilities (HMMs, mixtures, change-point detection — foundations [already built](../ml/regime-aware-modelling/index.qmd)).
+- **News & Narrative Agent** — converts unstructured text into bounded, schema-constrained, timestamp-safe market features; never free-form trading instructions.
+- **RL Trading Agent** — selects exposure, timing, and position-management actions from the combined state, trained on risk-adjusted outcomes.
+- **Risk Management Agent** — approves, scales, or rejects any proposed action against hard, pre-defined limits (exposure, drawdown, Expected Shortfall).
+- **Review & Learning Agent** — evaluates, after the fact, whether each decision was justified given the information available at the time, and attributes outcomes per agent.
+- *Behaviour Detection Agent (exploratory)* — flags microstructure patterns consistent with elevated systematic activity.
 
-The **Review Agent** matters most: without a rigorous, honest evaluation loop, a
-system like this is just automation of overconfidence. The
-[PhD Research](../phd/index.qmd) section develops the formal proposal around this
-architecture.
+The **Review & Learning Agent** matters most: without a rigorous, honest evaluation
+loop, a system like this is just automation of overconfidence. The
+[PhD Research](../phd/index.qmd) page presents the full formal proposal built around
+this architecture — objectives, hypotheses, methodology, and the evidence already
+in place across this site.

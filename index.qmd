@@ -78,7 +78,7 @@ How LLMs and AI agents could support market decision-making — and the risk con
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-mortarboard card-ic" aria-hidden="true"></i> [PhD Research](phd/index.qmd)
-Developing a research proposal in the open: research questions, literature notes, methodology, and supervisor alignment.
+**Full proposal published.** Adaptive multi-agent AI for regime-aware market decision-making — with a tracker mapping every proposed method to the evidence already built on this site.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}

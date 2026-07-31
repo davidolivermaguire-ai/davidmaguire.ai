@@ -1,6 +1,6 @@
 ---
-title: "PhD Research"
-description: "Developing a research proposal in the open — questions, literature, methodology, and supervisor alignment."
+title: "PhD Research Proposal"
+description: "Adaptive multi-agent AI for regime-aware financial market decision-making — the full proposal, the evidence already built for it, and the road ahead."
 listing:
   - id: literature
     contents: "literature/**/*.qmd"
@@ -9,51 +9,256 @@ listing:
     sort: "date desc"
     categories: false
 toc: true
+toc-depth: 2
 ---
 
-I'm developing a PhD proposal in the open. This section documents that process so
-it reads the way a supervisor would want it to: a candidate who is already
-thinking like a researcher — framing questions, engaging the literature, and
-being honest about gaps and limitations.
+::: {.status-note}
+**Working title:** *Adaptive Multi-Agent Artificial Intelligence for Real-Time Financial Market
+Decision-Making Using Reinforcement Learning, Large Language Models and Regime Detection*
+(academic alternative: *…for Regime-Aware Financial Market Decision-Making under Non-Stationarity
+and Uncertainty*). Proposed award: PhD, three years. This page is the proposal in full, developed in
+the open; the formatted document is available as a
+[PDF for supervisors](David-Maguire-PhD-Proposal-Outline.pdf).
+:::
 
-## Proposed research title
-[Working title — refined as the proposal develops.]
+## Executive summary
 
-## Research problem
-[The core problem, in a few sentences: what is not yet understood or not yet done,
-and why it matters.]
+This research investigates whether a **coordinated system of specialised AI agents** can make
+financial-market decisions that are more *adaptive, robust and auditable* than conventional static
+models. The system combines probabilistic **market-regime detection**, **large-language-model
+interpretation** of financial narratives, **reinforcement learning** for sequential decisions, and
+**deterministic risk controls** that can scale, reject or override any proposed action.
 
-## Research questions
-[The specific, answerable questions the thesis would address.]
+The motivation is the non-stationarity of markets. Relationships between price, volatility,
+liquidity, macroeconomic conditions and investor behaviour change over time, and a model developed
+in one environment deteriorates when the market transitions to another — a fact this site has
+[measured repeatedly](../capstone.qmd). The proposed architecture therefore treats regime awareness,
+uncertainty and controlled adaptation as **central design requirements**, not optional features.
+
+> **Central proposition.** Financial-market decision systems should not rely on one static
+> predictive model. They should operate as adaptive systems in which specialised agents identify
+> market regimes, interpret new information, select actions, control risk, and learn from outcomes.
+
+Two things distinguish this proposal from a speculative pitch. First, its academic positioning is
+deliberately modest: the contribution is **not** a claim of a profitable autonomous trading system —
+this site's own [64-entry empirical record](../capstone.qmd) shows why no such claim would be
+credible — but controlled integration, incremental evidence, and rigorous evaluation of whether
+regime awareness, structured text, sequential learning and agent coordination improve *robustness
+and decision quality* under changing conditions. Second, a substantial fraction of its methodological
+foundations is **already built and verified** on this site, entry by entry — see the
+[evidence tracker](#what-is-already-built-the-evidence-tracker) below.
+
+## The research problem
+
+Existing financial-market decision models exhibit five related weaknesses: **static behaviour**
+(relationships learned in one period applied after the environment changes), **limited regime
+awareness** (patterns identified without estimating whether the market is trending, mean-reverting,
+volatile or stressed), **fragmented information processing** (prices, macro data, news and
+disclosures analysed separately), **weak adaptation** (supervised models never learn which
+*sequences* of decisions improve long-run risk-adjusted outcomes), and **poor coordination between
+specialised functions** (forecasting, interpretation, sizing, risk and review concentrated in one
+model or a loose pipeline).
+
+> **Central research question.** Can an adaptive multi-agent AI system combining probabilistic
+> regime detection, LLM interpretation and risk-constrained reinforcement learning improve the
+> robustness and adaptability of financial-market decisions under non-stationary conditions?
+
+## Aim and objectives
+
+The aim is to design, develop and evaluate an adaptive multi-agent AI framework combining
+regime detection, LLM interpretation, reinforcement learning and formal risk controls for
+market decision-making.
+
+| # | Objective |
+|---|-----------|
+| 1 | Develop a **market-regime detection** framework identifying latent and observable market states using statistical and machine-learning methods. |
+| 2 | Develop an **LLM-based news and narrative agent** converting unstructured information into structured, timestamp-safe market features. |
+| 3 | Develop a **reinforcement-learning agent** that adapts exposure, position size, timing and holding decisions from risk-adjusted outcomes. |
+| 4 | Design a **multi-agent coordination framework** governing information access, communication, confidence, conflict resolution and credit assignment. |
+| 5 | Incorporate **deterministic risk management** capable of scaling, rejecting or overriding proposed actions. |
+| 6 | **Evaluate** the complete architecture against transparent econometric, supervised-learning, single-agent and regime-unaware benchmarks. |
+| *E* | *Exploratory extension:* investigate whether market-microstructure and high-frequency features can identify periods of elevated systematic or algorithmic activity. |
+
+: Objectives. The microstructure objective is deliberately positioned as an exploratory extension: attributing observed behaviour specifically to algorithmic activity is close to unfalsifiable with accessible data, so it is a stretch goal rather than a pillar. {.striped}
+
+## Research questions and hypotheses
+
+| Ref. | Research question |
+|------|-------------------|
+| RQ1 | Which statistical and ML methods most reliably identify market regimes and structural changes out of sample? |
+| RQ2 | Does conditioning forecasting and decision models on estimated regime probabilities improve predictive calibration and economic performance? |
+| RQ3 | Can LLMs extract structured, time-sensitive information from financial text that adds value beyond price, volume and volatility data? |
+| RQ4 | Can risk-constrained reinforcement learning improve position sizing, exposure management or execution versus transparent deterministic policies? |
+| RQ5 | Does a modular multi-agent architecture outperform equivalent single-model and single-agent systems after transaction costs and risk? |
+| RQ6 | How stable are the system's decisions across assets, regimes, periods and repeated trials? |
+| RQ7 | Can agent contributions and final decisions be made sufficiently explainable, reproducible and auditable for financial applications? |
+| *RQ-E* | *Exploratory:* can microstructure and high-frequency features identify periods of elevated algorithmic activity? |
+
+: {.striped}
+
+The testable hypotheses follow directly: **H1** regime-conditioned models are more stable out of
+sample than regime-unaware equivalents; **H2** LLM-structured text adds incremental predictive or
+risk value beyond market data; **H3** risk-constrained RL improves dynamic exposure management over
+static sizing rules; **H4** a coordinated multi-agent system delivers better risk-adjusted
+performance than an equivalent single-agent system; **H5** the multi-agent benefit concentrates at
+**regime transitions** rather than stable periods; and **H6** hard risk constraints improve
+stability and practical viability even where they reduce gross returns. H4 and H5 are the heart of
+the thesis; the others are its scaffolding.
+
+## The proposed architecture
+
+Each agent has a bounded function, defined data access, and an auditable output. The LLM is never
+permitted to place trades directly; every action requires risk approval and is evaluated against
+deterministic baselines.
+
+| Agent | Role | Illustrative methods and outputs |
+|-------|------|----------------------------------|
+| **Market Regime Agent** | Identifies the current market state and estimates regime probabilities. | [HMMs](../ml/regime-aware-modelling/index.qmd), Markov-switching models, Bayesian change-point detection, [clustering](../ml/k-means/index.qmd), [GARCH states](../equations/garch/index.qmd). |
+| **News & Narrative Agent** | Transforms unstructured text into bounded, auditable market features. | Event class, direction, sentiment, novelty, urgency, affected assets, horizon, source reliability — schema-constrained, timestamp-safe. |
+| **RL Trading Agent** | Selects exposure, timing and position-management actions from the combined state. | Discrete/continuous actions, risk-sensitive rewards, PPO, actor-critic, constrained RL. |
+| **Risk Management Agent** | Approves, scales or rejects proposed actions. | Exposure, leverage, volatility, [drawdown](../equations/maximum-drawdown/index.qmd), concentration, [Expected Shortfall](../equations/value-at-risk/index.qmd) and cost controls. |
+| **Review & Learning Agent** | Attributes outcomes, tests compliance, informs future learning. | Agent contribution, regime accuracy, post-trade review, decision audit trail. |
+| *Behaviour Detection Agent* | *Exploratory:* flags unusual activity consistent with systematic flows. | Order-book imbalance, trade intensity, spread changes, liquidity withdrawal. |
+
+: {.striped .hover}
+
+The decision flow: market, macro and textual data → regime + news (+ behaviour) agents → a
+**combined state representation with uncertainty** → the RL agent proposes an action → the **risk
+agent approves, scales or rejects** → trade, allocation or no action → review, attribution and
+learning. The [AI Trading Systems](../ai-systems/index.qmd) section develops the design principles
+behind this architecture — above all that the review loop is what separates a research system from
+automated overconfidence.
+
+## Methodology: a staged, ablation-first design
+
+Every component is evaluated **independently first, then integrated incrementally**, so performance
+is attributable — gains are never credited to the full system when one component is responsible.
+The stages: literature review → data with strict *available-at* timestamps (market, fundamental,
+macro, textual, cross-asset) → **transparent baselines** (buy-and-hold, rules,
+[linear](../ml/linear-regression/index.qmd)/[logistic](../ml/logistic-regression/index.qmd)
+regression, [ARIMA](../equations/arima/index.qmd), [GARCH](../equations/garch/index.qmd),
+[random forests](../ml/random-forests/index.qmd), [XGBoost](../ml/xgboost/index.qmd)/[LightGBM](../ml/lightgbm/index.qmd),
+[LSTMs](../ml/lstms/index.qmd)) → **regime modelling**
+([K-means](../ml/k-means/index.qmd), [GMMs](../ml/gaussian-mixture-models/index.qmd),
+[HMMs](../ml/regime-aware-modelling/index.qmd), Markov-switching, Bayesian change-point) →
+**LLM narrative modelling** (bounded structured outputs, never free-form trading instructions) →
+**RL development** with a risk-sensitive reward that penalises variance, drawdown, costs and
+turnover rather than maximising raw profit,
+
+$$R_t \;=\; r_t \;-\; \lambda_1 \sigma_t^2 \;-\; \lambda_2\,\mathrm{DD}_t \;-\; \lambda_3\,\mathrm{TC}_t \;-\; \lambda_4\,\mathrm{TO}_t,$$
+
+→ **incremental multi-agent integration** (regime only; + supervised prediction; + news; + RL;
++ risk; + review) → evaluation under the full honesty toolkit this site has already documented:
+[purged walk-forward](../ml/walk-forward-validation/index.qmd),
+[combinatorial cross-validation](../ml/time-series-cross-validation/index.qmd), transaction costs
+and delayed execution, regime-specific stress tests, repeated seeds,
+[multiple-testing corrections, PBO and the deflated Sharpe ratio](../ml/overfitting-trading/index.qmd).
+Because the true regime is latent, the formal setting is a partially observable MDP: the agent
+maintains a belief $b_t(s) = P(S_t = s \mid o_{1:t}, a_{1:t-1})$ over hidden states.
+
+**Evaluation** spans four layers: predictive (AUC, log loss, Brier score, calibration), financial
+([Sharpe](../equations/sharpe-ratio/index.qmd), [Sortino](../equations/sortino-ratio/index.qmd),
+Calmar, [maximum drawdown](../equations/maximum-drawdown/index.qmd), Expected Shortfall, turnover
+and implementation shortfall), robustness (performance by regime and asset, block-bootstrap
+intervals, sensitivity, PBO, deflated Sharpe, reality-check tests), and **agent-specific** measures
+that are themselves a contribution: incremental contribution per agent, decision consistency under
+repeated trials, disagreement and conflict-resolution outcomes, frequency and value of risk
+overrides, and full ablation attribution.
+
+## What is already built: the evidence tracker
+
+This proposal is not aspirational scaffolding — its foundations exist on this site as verified,
+tested entries. The tracker below maps every methodological component of the proposal to the
+evidence, and states plainly what remains.
+
+| Proposal component | Status | Evidence on this site |
+|--------------------|:------:|-----------------------|
+| Regime detection — clustering | ✅ Built | [K-means](../ml/k-means/index.qmd) recovers calm/sell-off/rally regimes unsupervised |
+| Regime detection — mixtures | ✅ Built | [GMM](../ml/gaussian-mixture-models/index.qmd): calm + crisis Gaussians explain the fat tails |
+| Regime detection — HMMs | ✅ Built | [Regime-aware modelling](../ml/regime-aware-modelling/index.qmd): 2-state HMM, 0.98 persistence, point-in-time filter |
+| Volatility dynamics | ✅ Built | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
+| Every proposed baseline model | ✅ Built | The [ML Library](../ml/index.qmd): linear → logistic → trees → forests → boosting → SVM → MLP → LSTM, all market-tested |
+| NLP foundations for the News Agent | ✅ Built | [Transformers](../ml/transformers/index.qmd), [attention](../ml/attention/index.qmd), [embeddings](../ml/embeddings/index.qmd) |
+| Validation & anti-overfitting toolkit | ✅ Built | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged/combinatorial CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [backtest overfitting/PBO/DSR](../ml/overfitting-trading/index.qmd) |
+| Explainability & audit | ✅ Built | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
+| Risk measures for the Risk Agent | ✅ Built | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [Sharpe](../equations/sharpe-ratio/index.qmd)/[Sortino](../equations/sortino-ratio/index.qmd) |
+| Reinforcement learning (MDPs → PPO, risk-sensitive RL) | 🔜 Next | The largest gap — now the ML Library's [next roadmap tier](../ml/index.qmd#the-roadmap) |
+| Bayesian change-point detection; Markov-switching regression | 🔜 Next | Planned alongside the RL tier |
+| Probability calibration (Brier, ECE, conformal) | 🔜 Next | Planned |
+| Multi-agent systems (Markov games, credit assignment) | 🔜 Next | Planned |
+| Market microstructure & execution modelling | 🔜 Next | Planned (supports the exploratory objective) |
+
+: Built vs. next. Roughly two-thirds of the proposal's methodological base is already implemented, verified and published; the remaining tier is scheduled in the [ML Library roadmap](../ml/index.qmd#the-roadmap). {.striped .hover}
+
+Just as important, the site's **empirical findings de-risk the proposal's positioning**. The
+[capstone](../capstone.qmd) shows every model from linear regression to a transformer agreeing that
+next-day *direction* is unpredictable (AUC ≈ 0.50) while *volatility and regimes* are genuinely
+structured and forecastable — which is precisely why this proposal targets **robustness, adaptation
+and risk-governed decision quality**, not return prediction. The research question survives the
+efficient-market evidence because it does not depend on beating it.
+
+## Three-year plan, scope and risks
+
+**Year 1** — literature, data with temporal controls, baselines, regime models, first paper.
+**Year 2** — News Agent development and evaluation; RL environment, reward design and risk
+constraints; second paper. **Year 3** — multi-agent integration, ablations, robustness, governance
+and explainability analysis; thesis. Scope controls: begin with a small number of liquid markets;
+the LLM is an information processor, never an execution authority; exposure management before any
+autonomous ambitions; robustness and attribution prioritised over backtest return.
+
+The principal risks all have named mitigations already demonstrated on this site: **look-ahead
+bias** (available-at timestamps, [point-in-time feature discipline](../ml/feature-engineering/index.qmd)),
+**backtest overfitting** (baselines, purged walk-forward,
+[trial-counting, PBO and deflated Sharpe](../ml/overfitting-trading/index.qmd)),
+**agent complexity without value** (incremental integration with mandatory ablation evidence),
+**unstable RL** (constrained actions, hard limits, conservative rewards), **LLM hallucination**
+(schema-constrained outputs, evidence retrieval, deterministic validation), and **weak
+explainability** (full logging of inputs, confidence, overrides and reasons —
+the [audit tooling](../ml/shap-values/index.qmd) already exists).
+
+## Beyond the PhD: the applied trajectory
+
+I am open about the intended impact: this research programme is designed to produce not only a
+thesis but the validated core of a **professional-grade, risk-governed quantitative decision
+system** — the foundation for a future quantitative research practice or firm. That ambition is a
+feature of the proposal, not a hidden agenda: it is why the architecture insists on auditability,
+deterministic risk overrides, governance and reproducibility — properties an academic prototype can
+ignore but a real institution cannot. The applied trajectory also disciplines the science: every
+component must justify itself after transaction costs, under regime change, and against the
+multiple-testing corrections that separate genuine improvements from artefacts.
+
+The academic and commercial aims are kept compatible by design: the thesis contributions
+(methodology, evaluation framework, governance approach) are publishable; the applied value lies in
+the engineering, integration and operational discipline built around them. One consequential item
+belongs on the critical path *before* enrolment, not after: **agreeing the intellectual-property
+position with the host university** — IP ownership of PhD outputs varies by institution, and a
+candidate intending to commercialise must resolve this explicitly (standard routes exist, from IP
+carve-outs to industry-partnered PhDs).
+
+## Current status and next steps
+
+The proposal document is complete as a working draft for supervisor discussion. The active next
+steps, in order: **(1)** build the remaining technical tier on this site — reinforcement learning
+from MDPs to PPO, change-point detection, calibration, multi-agent foundations — so the evidence
+tracker reads fully green; **(2)** shortlist target institutions and supervisors whose groups work
+on ML for finance, RL, or multi-agent systems, and tailor the proposal's framing to each;
+**(3)** resolve the IP and funding position with shortlisted institutions (including
+industry-linked routes); **(4)** secure data access commitments (market, news and — for the
+exploratory objective — order-book data); **(5)** expand the literature review below toward the
+formal Chapter 2 base.
 
 ## Literature review notes
-Structured notes on the papers I'm reading — what each claims, how it shows it,
-what I'd push on, and how it connects to the proposal.
+
+Structured notes on the papers I'm reading — what each claims, how it shows it, what I'd push on,
+and how it connects to the proposal.
 
 ::: {#literature}
 :::
 
-## Key academic papers
-[A curated, growing reading list with one-line relevance notes.]
-
-## Research gaps
-[Where the current literature stops — the openings a thesis could occupy.]
-
-## Methodology ideas
-[Candidate methods and study designs, with their trade-offs.]
-
-## Supervisor alignment
-[How the proposed work aligns with the research of the groups and supervisors I'm
-targeting — matched to specific interests rather than stated in general terms.]
-
-## Datasets
-[The data the work would require, and how it would be sourced and handled.]
-
-## Experimental roadmap
-[A sequenced plan of experiments from proposal to thesis.]
-
-## Ethics and limitations
-[Ethical considerations, data governance, and the honest limitations of the approach.]
-
-## Publication targets
-[Candidate venues for the work.]
+::: {.status-note}
+The full formatted proposal (including the ten-chapter thesis structure, the complete evaluation
+framework, and the appendix of formal definitions) is available as a
+[PDF](David-Maguire-PhD-Proposal-Outline.pdf). Institution-specific requirements, the final
+literature base, data-access arrangements and formal ethics sections will be completed during
+proposal development with supervisors.
+:::
