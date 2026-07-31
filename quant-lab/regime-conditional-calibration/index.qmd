@@ -1,0 +1,135 @@
+---
+title: "Does Regime-Conditioning Improve Probabilistic Forecasts?"
+subtitle: "Closing RQ2 — regime adds nothing to position sizing, but it sharpens the odds of a dangerous day"
+description: >
+  The companion to the regime-sizing test. That experiment found a discrete regime adds
+  nothing beyond volatility for sizing, and pointed to calibration as the place its value
+  might really lie. This tests exactly that: does conditioning a tail-probability forecast on
+  regime improve it out-of-sample? By a proper score and its resolution/reliability
+  decomposition, the answer is yes — and here the regime edges volatility.
+date: 2026-07-31
+author: "David Maguire"
+categories: [regime, calibration, out-of-sample, probabilistic-forecasting]
+image: fig-regime-conditional-calibration.png
+image-alt: "Regime-conditional tail-probability forecasts have more resolution and better within-regime calibration than unconditional or volatility-conditional forecasts"
+toc: true
+---
+
+## Research question
+
+The [regime-sizing experiment](../regime-conditioning-oos/index.qmd) split the proposal's central
+question, RQ2, in two and answered the first half with a partial null: a discrete regime adds nothing
+statistically distinguishable beyond a volatility signal *for sizing a position*. But it pointed
+somewhere specific for the second half — **probabilistic calibration** — as the place regime-conditioning
+might genuinely earn its keep. This experiment tests exactly that. A [News Agent or Risk
+Agent](../../phd/index.qmd) does not size positions; it emits **probabilities** — "how likely is a large
+adverse move tomorrow?" — and those probabilities are only useful if they are *sharp* (they discriminate
+dangerous days from calm ones) and *calibrated* (a stated 40% means 40%). So: does conditioning a
+tail-probability forecast on the estimated regime make it a better probabilistic forecast, out of sample?
+
+## Hypothesis
+
+I expected this to be where regime-conditioning *works*, precisely because it failed for sizing. Sizing
+only needs a scalar exposure, which volatility already provides; a **probability** forecast needs
+resolution — the ability to move away from the base rate toward the true conditional odds — and a
+persistent regime is a natural conditioning variable for it. **H:** conditioning on regime improves the
+forecast by a proper score (Brier), chiefly by adding *resolution* while staying calibrated, and improves
+calibration *within* each regime. Whether the discrete regime beats a continuous volatility signal — as it
+did *not* for sizing — was the genuinely open question.
+
+## Data & method
+
+Daily Nasdaq-100 returns, 2015–2026 (`multi_daily.csv`). The forecasting target is a **big adverse-move
+day** — primarily $r_{t+1} < -1\%$ (base rate 16%), with the two-sided $|r_{t+1}| > 1.5\%$ (base rate 21%)
+as a robustness check. Three probability forecasts, each estimated **online on an expanding window** (so
+every probability uses only past data — no look-ahead, and the conditional rates adapt to a shifting
+market):
+
+- **Unconditional** — the running base rate $\hat p_t = \overline{y}_{<t}$; calibrated by construction, but blind to conditions.
+- **Volatility-conditional** — the expanding event rate within today's trailing-volatility tercile; the regime-blind benchmark that still uses volatility.
+- **Regime-conditional** — the expanding event rate within today's estimated regime (the same real-time, no-look-ahead HMM state as the [sizing experiment](../regime-conditioning-oos/index.qmd): calm vs turbulent).
+
+The forecasts are judged the *right* way — not by calibration error alone, which a lazy constant forecast
+trivially minimises, but by the **Brier score** (a proper scoring rule) and its **Murphy decomposition**,
+$\text{Brier} = \text{Reliability} - \text{Resolution} + \text{Uncertainty}$: **reliability** is
+calibration error (lower is better), **resolution** is how far the forecast usefully moves from the base
+rate (higher is better), and uncertainty is fixed by the target. I also report **within-regime**
+calibration error — the conditional-calibration lens, the same one the
+[conformal experiment](../volatility-managed-portfolios/index.qmd) applied to intervals.
+
+## Results
+
+**Conditioning strictly improves the forecast, and the gain is resolution.** For the big-move target the
+Brier score falls from **0.167** (unconditional) to **0.155** (volatility) to **0.153** (regime) — an 8%
+improvement. The decomposition shows why: the unconditional forecast has **essentially zero resolution**
+(0.0001) — it cannot leave the base rate, its probabilities trapped in [0.11, 0.21] — while the
+regime-conditional forecast has the **most resolution** (0.0149) *and* the **least calibration error**
+(reliability 0.0005 vs 0.0019). Its probabilities range from **~0.10 on a calm day to ~0.40 in
+turbulence**: it genuinely tells a dangerous day from a safe one, and its stated odds hold up. The
+reliability diagram makes it visible — the unconditional forecast is a stationary cluster; the
+regime-conditional forecast spreads along the diagonal.
+
+**And it fixes conditional miscalibration.** The unconditional forecast looks fine on *average* (its
+overall calibration error is tiny — it *is* the base rate) but is badly miscalibrated *inside* regimes:
+its within-turbulent-regime ECE is **0.20**, because it quotes ~16% for a big-down day when the true rate
+in turbulence is far higher. Volatility-conditioning cuts that, and regime-conditioning cuts it most — a
+within-regime ECE of **0.019**, a roughly **5× improvement** over unconditional. A forecast can be
+calibrated on average and dangerously wrong exactly when it matters; conditioning on regime is what
+restores calibration *where the risk is*.
+
+![Top-left: reliability diagram for P(big move) — the unconditional forecast is stuck near the base rate (no resolution), while volatility- and regime-conditional forecasts spread along the diagonal, the regime widest. Top-right: Brier decomposition — the regime forecast has the highest resolution and the lowest calibration error. Bottom-left: within-regime calibration error — the unconditional forecast is badly miscalibrated inside the turbulent regime (ECE 0.20); regime-conditioning cuts it to 0.037. Bottom-right: the regime-conditional probability over time, rising from ~0.10 in calm periods to ~0.40 in turbulent clusters (red ticks mark actual big-move days) versus the flat unconditional 0.21.](fig-regime-conditional-calibration.png){fig-alt="Regime-conditional tail-probability forecasts have more resolution and better within-regime calibration than unconditional or volatility-conditional forecasts"}
+
+**The twist: for calibration, the regime edges volatility.** In the sizing test, the discrete regime
+tied a continuous volatility signal exactly. Here it does not — the regime-conditional forecast beats the
+volatility-conditional one on Brier (0.153 vs 0.155), on reliability (0.0005 vs 0.0017), and clearly on
+within-regime calibration (0.019 vs 0.052). The persistent, filtered regime state is a cleaner
+conditioning variable for a *probability* than a point-in-time volatility bucket. The downside target
+($r<-1\%$) tells the same story (Brier 0.135 → 0.132; within-regime ECE 0.053 → 0.014).
+
+## The verdict — RQ2, closed
+
+Put the two experiments together and RQ2 resolves cleanly, in a way neither half could alone.
+**Regime-conditioning does not improve position sizing** — there a discrete regime is worth no more than
+volatility, and no edge is significant. **But it does improve probabilistic forecasts** — it makes the
+odds of a dangerous day sharper and better calibrated, especially *within* the turbulent regime where a
+risk system most needs to be right, and for this purpose the regime is at least as good as, and here
+marginally better than, volatility. This is precisely the split the sizing experiment predicted, and it
+is the evidence behind the [proposal's revised framing](../../phd/index.qmd): the Regime Agent's value is
+in **assessment and detection** — sharper, better-calibrated risk probabilities and online change
+detection — **not in sizing alpha**. A well-calibrated "40% chance of a rough day tomorrow" is worth more
+to a Risk Agent than any exposure multiplier the same signal could have set.
+
+## Limitations
+
+- **A proper score, but a noisy proxy.** Tail events are rare, so even 2,600 out-of-sample days give bins of modest size; the regime-vs-volatility gap, while consistent across both targets, is small in absolute Brier terms and I would not over-read it.
+- **The regime is a binary switch.** The forecast inherits the regime's abrupt calm/turbulent jumps; a smoother forecast conditioned on the regime *probability* (rather than the thresholded state) would likely calibrate even better and is the natural refinement.
+- **Volatility conditioning is deliberately simple.** Terciles, not a fitted model; a GARCH- or HAR-based volatility forecast (see the [horizon experiment](../volatility-forecasting-horizon/index.qmd)) might close the small gap to the regime — the honest claim is "regime ≥ volatility," not "regime ≫ volatility."
+- **One index, one decade.** As everywhere in the lab, a single market over a single sample; cross-asset replication would sharpen the confidence in the ranking.
+
+## What I learned
+
+The lesson that will stay with me is **why the right metric matters**: judged by calibration error alone,
+the useless unconditional forecast looks *best* (it is trivially calibrated), and I would have concluded
+regime-conditioning hurts — which is what a naive first pass showed. Only a proper score and its
+resolution/reliability decomposition reveals the truth: the unconditional forecast is calibrated but has
+no resolution, and conditioning buys exactly the resolution a probabilistic forecast exists to provide.
+The second lesson is that **the same tool can pass one test and fail another for principled reasons** —
+regime helps forecasting and not sizing because a probability needs resolution that a scalar exposure does
+not — and noticing *why* is more valuable than either result on its own. That is the whole purpose of
+testing a proposal's hypotheses instead of asserting them.
+
+## References
+
+- Brier, G. W. (1950). *Verification of Forecasts Expressed in Terms of Probability.* Monthly Weather Review, 78(1).
+- Murphy, A. H. (1973). *A New Vector Partition of the Probability Score.* Journal of Applied Meteorology, 12(4).
+- Gneiting, T., Balabdaoui, F., & Raftery, A. E. (2007). *Probabilistic Forecasts, Calibration and Sharpness.* Journal of the Royal Statistical Society B, 69(2).
+- Ang, A., & Bekaert, G. (2002). *International Asset Allocation with Regime Shifts.* Review of Financial Studies, 15(4).
+
+::: {.callout-note appearance="simple"}
+Targets: $r_{t+1}<-1\%$ (base 16%) and $|r_{t+1}|>1.5\%$ (base 21%). Forecasts estimated online on an
+expanding window (no look-ahead); regime is the real-time filtered HMM state from the
+[sizing experiment](../regime-conditioning-oos/index.qmd). Big-move results — Brier: unconditional 0.167,
+volatility 0.155, regime 0.153; resolution ×10³: 0.1 / 13.8 / 14.9; reliability ×10³: 1.9 / 1.7 / 0.5;
+within-regime ECE: 0.102 / 0.056 / 0.019. Judged by Brier and its Murphy decomposition. Computed from
+`equations/multi_daily.csv`, verified in the sandbox.
+:::
