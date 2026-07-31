@@ -52,7 +52,7 @@ and out of sample, whether they actually do.
 | Experiment | The question it settles | Tests | Status |
 |---|---|:--:|:--:|
 | [Volatility-managed portfolios](volatility-managed-portfolios/index.qmd) | If volatility is forecastable, can you trade it? | Finding 2 | ✅ Done |
-| Volatility-forecasting horizon (HAR vs GARCH vs random walk) | How many days ahead is volatility actually predictable? | Finding 2 | 🔜 Next |
+| [Volatility-forecasting horizon (HAR vs GARCH vs random walk)](volatility-forecasting-horizon/index.qmd) | How many days ahead is volatility actually predictable? | Finding 2 | ✅ Done |
 | Regime-conditioning, out-of-sample | Does conditioning on regime beat a regime-blind strategy, net of costs? | H4 | 🔜 Planned |
 | Benefit concentration at transitions | Do the gains cluster around regime changes rather than in calm periods? | H5 | 🔜 Planned |
 | Hard risk limits, net of their cost | Do deterministic risk caps help *after* the return they sacrifice? | H6 | 🔜 Planned |
@@ -60,5 +60,6 @@ and out of sample, whether they actually do.
 
 : Each experiment maps to a proposal hypothesis (H4–H6) or a [capstone finding](../capstone.qmd), and reports honestly whether it holds. {.striped .hover}
 
-The first verdict is in: forecastable volatility buys **risk control, not alpha** — the proposal's
-positioning, tested and confirmed rather than assumed.
+The first verdicts are in, and both sharpen the proposal rather than flatter it: forecastable volatility
+buys **risk control, not alpha**, and that foresight is **short — a roughly one-month half-life**. Tested
+and confirmed, not assumed.
