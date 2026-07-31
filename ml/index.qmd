@@ -61,7 +61,7 @@ cross-validation](time-series-cross-validation/) · [avoiding data leakage](data
 ### Decision systems & reinforcement learning — *the PhD tier*
 [Markov decision processes & Bellman equations](markov-decision-processes/) · [Q-learning & deep Q-networks](q-learning/) ·
 [policy gradients & actor-critic](policy-gradients/) · [proximal policy optimisation (PPO)](ppo/) · [risk-sensitive
-& constrained RL](risk-constrained-rl/) · Bayesian change-point detection · Markov-switching regression ·
+& constrained RL](risk-constrained-rl/) · [Bayesian change-point detection](change-point-detection/) · Markov-switching regression ·
 probability calibration & conformal prediction · multi-agent systems & credit
 assignment · market microstructure & execution modelling.
 

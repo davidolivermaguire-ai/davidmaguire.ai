@@ -113,7 +113,7 @@ deterministic baselines.
 
 | Agent | Role | Illustrative methods and outputs |
 |-------|------|----------------------------------|
-| **Market Regime Agent** | Identifies the current market state and estimates regime probabilities. | [HMMs](../ml/regime-aware-modelling/index.qmd), Markov-switching models, Bayesian change-point detection, [clustering](../ml/k-means/index.qmd), [GARCH states](../equations/garch/index.qmd). |
+| **Market Regime Agent** | Identifies the current market state and estimates regime probabilities. | [HMMs](../ml/regime-aware-modelling/index.qmd), Markov-switching models, [Bayesian change-point detection](../ml/change-point-detection/index.qmd), [clustering](../ml/k-means/index.qmd), [GARCH states](../equations/garch/index.qmd). |
 | **News & Narrative Agent** | Transforms unstructured text into bounded, auditable market features. | Event class, direction, sentiment, novelty, urgency, affected assets, horizon, source reliability — schema-constrained, timestamp-safe. |
 | **RL Trading Agent** | Selects exposure, timing and position-management actions from the combined state. | Discrete/continuous actions, risk-sensitive rewards, PPO, actor-critic, constrained RL. |
 | **Risk Management Agent** | Approves, scales or rejects proposed actions. | Exposure, leverage, volatility, [drawdown](../equations/maximum-drawdown/index.qmd), concentration, [Expected Shortfall](../equations/value-at-risk/index.qmd) and cost controls. |
@@ -183,7 +183,8 @@ evidence, and states plainly what remains.
 | Explainability & audit | ✅ Built | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
 | Risk measures for the Risk Agent | ✅ Built | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [Sharpe](../equations/sharpe-ratio/index.qmd)/[Sortino](../equations/sortino-ratio/index.qmd) |
 | Reinforcement learning (MDPs → PPO, risk-sensitive RL) | ✅ Built | [MDPs](../ml/markov-decision-processes/index.qmd), [Q-learning & DQNs](../ml/q-learning/index.qmd), [policy gradients](../ml/policy-gradients/index.qmd), [PPO](../ml/ppo/index.qmd) and [risk-sensitive & constrained RL](../ml/risk-constrained-rl/index.qmd) — the regime problem solved exactly, re-learned model-free, with continuous actions, stably at scale, and under a hard risk budget (the Risk Agent, formalised) |
-| Bayesian change-point detection; Markov-switching regression | 🔜 Next | Planned alongside the RL tier |
+| Online regime detection for the Regime Agent | ✅ Built | [Bayesian change-point detection](../ml/change-point-detection/index.qmd) — the run-length posterior run online on the Nasdaq, flagging the COVID crash and 2022 onset point-in-time, complementing the HMM's hindsight labels |
+| Markov-switching regression | 🔜 Next | Planned alongside the RL tier |
 | Probability calibration (Brier, ECE, conformal) | 🔜 Next | Planned |
 | Multi-agent systems (Markov games, credit assignment) | 🔜 Next | Planned |
 | Market microstructure & execution modelling | 🔜 Next | Planned (supports the exploratory objective) |
