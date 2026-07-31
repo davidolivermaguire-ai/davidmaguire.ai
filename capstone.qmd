@@ -1,21 +1,25 @@
 ---
 title: "Capstone — One Market, Every Model"
-subtitle: "What 64 entries add up to: the findings of the Equation and Machine Learning Libraries"
-description: "The synthesis of both libraries: 37 equations and 27 models, every one tested against the same Nasdaq-100 data. The consistent verdicts — direction is unpredictable at every level of sophistication, volatility is structured and forecastable — and the research discipline that emerged along the way."
+subtitle: "What 74 entries add up to: the findings of the two libraries, and the risk-governed decision system built on them"
+description: "The synthesis of the whole site: 37 equations and 37 machine-learning models, every one tested against the same Nasdaq-100 data. The consistent verdicts — direction is unpredictable at every level of sophistication, volatility is structured and forecastable — the constructive decision-systems tier built on them, and a reading path through it all."
 toc: true
 ---
 
 Between them, the [Equation Library](equations/index.qmd) and the
-[Machine Learning Library](ml/index.qmd) now contain **64 entries** — 37 mathematical
-concepts and 27 machine-learning models and methods, each built to the same standard: explained from
+[Machine Learning Library](ml/index.qmd) now contain **74 entries** — 37 mathematical
+concepts and 37 machine-learning models and methods, each built to the same standard: explained from
 first principles, implemented in Python, illustrated with an original figure, and **tested honestly
 against the same real dataset** — a decade of daily Nasdaq-100 data. Every number cited anywhere on
 this site was computed and verified before it was written down.
 
 That shared dataset was a deliberate choice, and it is what makes a synthesis possible. Because every
 model faced the same market and the same two questions — *can you predict tomorrow's direction?* and
-*can you predict tomorrow's volatility?* — the library is not a collection of isolated demos but a
-single controlled experiment, run 64 times with escalating firepower. This page is what it found.
+*can you predict tomorrow's volatility?* — the libraries are not a collection of isolated demos but a
+single controlled experiment, run with escalating firepower from a sample mean to a transformer.
+**Findings one to three** are what that experiment measured; **finding four** is the site's
+constructive turn — a ten-entry decision-systems tier that asks what to *do* about the findings, and
+proves each component against a known answer before trusting it. A [reading path](#a-reading-path)
+at the end walks through the whole thing in order. This page is what it all adds up to.
 
 ## Finding one: direction is unpredictable at every level of sophistication
 
@@ -86,17 +90,76 @@ share. The defences — point-in-time features, pipelines inside the CV loop, pu
 permutation importance — are not pedantry. In each demonstration they were the difference between a
 publishable-looking illusion and the truth.
 
+## Finding four: given all this, a decision system — every component checked against a known answer
+
+Findings one through three are, in the end, *negative*: what you cannot predict, and the ways you can
+fool yourself into thinking you can. The site's final arc — a ten-entry
+[decision-systems and reinforcement-learning tier](ml/index.qmd#the-roadmap) — is the constructive
+reply to the same evidence. If direction is unpredictable and only risk is structured, the task is not
+to forecast the market but to make **risk-governed decisions** under that reality, and to prove each
+component works before trusting it. That proof took one repeatable form: **every learner was validated
+against a known analytic optimum** — the reinforcement-learning counterpart of the verification
+discipline the empirical libraries applied to measurement. [Value iteration](ml/markov-decision-processes/index.qmd)
+converged to the exact optimal value function; [Q-learning](ml/q-learning/index.qmd) recovered the same
+policy model-free; [policy gradients](ml/policy-gradients/index.qmd) and [PPO](ml/ppo/index.qmd) hit the
+closed-form optimal exposure $w^*=\mu/(2\lambda\sigma^2)$ from samples alone; [risk-constrained
+RL](ml/risk-constrained-rl/index.qmd) drove a leverage-hungry agent from 6.3× to the exact CVaR cap of
+1.41×; [Almgren–Chriss execution](ml/market-microstructure/index.qmd) matched its closed form to twelve
+decimals; the [Hamilton filter](ml/markov-switching-regression/index.qmd) and the
+[Shapley efficiency axiom](ml/multi-agent-systems/index.qmd) checked out the same way. A learner that
+cannot recover an answer you already know cannot be trusted with one you don't.
+
+And the empirical findings *survive* into the decision tier rather than being wished away. Regime
+awareness still manages risk without manufacturing alpha — the
+[regime MDP](ml/markov-decision-processes/index.qmd) and the risk overlays cut drawdown sharply while
+costing return in the decade's bull market, exactly as finding two warned. Honesty still is not skill —
+a deliberately over-confident direction model was [recalibrated](ml/probability-calibration/index.qmd)
+from 0.105 to 0.062 calibration error while its AUC stayed pinned at the coin flip of finding one. And
+naïve intuition still misleads — [credit assignment](ml/multi-agent-systems/index.qmd) revealed that a
+reactive drawdown-stop *destroys* Sharpe, and that a leave-one-out audit gets the most valuable agent's
+sign wrong. The tier maps one-to-one onto the [proposal's](phd/index.qmd) six agents — regime, news,
+trading, risk, review and behaviour — giving each a formal, working, verified foundation. The
+constructive turn does not overturn the thesis; it builds honestly on top of it.
+
 ## The thesis, in one paragraph
 
-A decade of daily data, 64 entries, and every model from a sample mean to a transformer converge on
+A decade of daily data, 74 entries, and every model from a sample mean to a transformer converge on
 one statement: **the return dimension of a near-efficient market is essentially unpredictable, the
 risk dimension is genuinely structured, and most apparent exceptions are your own methodology lying
 to you.** The skill this site set out to demonstrate is not finding a magic model — none exists in
 this data — but building the mathematical foundations, implementing every model honestly, testing
-each claim against reality, and being disciplined enough to report 0.50 as 0.50. That discipline —
-volatility and regimes for risk, deflated skepticism for returns, explanation before trust — is the
-foundation the [Quant Lab](quant-lab/index.qmd) experiments and the
-[PhD research direction](phd/index.qmd) build on.
+each claim against reality, being disciplined enough to report 0.50 as 0.50, and then building a
+decision system that respects all of it. That discipline — volatility and regimes for risk, deflated
+skepticism for returns, explanation before trust, and every learner checked against a known optimum —
+is the foundation the [Quant Lab](quant-lab/index.qmd) experiments and the
+[PhD research proposal](phd/index.qmd) build on.
+
+## A reading path
+
+The site is large; here is the order I would read it in.
+
+**In ten minutes** — read this page (the [four findings](#finding-one-direction-is-unpredictable-at-every-level-of-sophistication)
+and the [thesis](#the-thesis-in-one-paragraph)), then the [PhD proposal](phd/index.qmd). That is the whole
+argument.
+
+**The empirical case** — follow the controlled experiment where it is sharpest: the return/risk split in
+[regime-aware modelling](ml/regime-aware-modelling/index.qmd) (the HMM), the fat tails in the
+[Gaussian mixture](ml/gaussian-mixture-models/index.qmd), and the ways a backtest lies in
+[data leakage](ml/data-leakage/index.qmd) and [overfitting in trading systems](ml/overfitting-trading/index.qmd) —
+the four entries that most change how you read every other result on the site.
+
+**The constructive arc** — read the [decision-systems tier](ml/index.qmd#the-roadmap) in build order,
+because each entry is motivated by the last: [MDPs](ml/markov-decision-processes/index.qmd) →
+[Q-learning](ml/q-learning/index.qmd) → [policy gradients](ml/policy-gradients/index.qmd) →
+[PPO](ml/ppo/index.qmd) → [risk-constrained RL](ml/risk-constrained-rl/index.qmd) build the trading and
+risk agents; [change-point detection](ml/change-point-detection/index.qmd) and
+[Markov-switching regression](ml/markov-switching-regression/index.qmd) complete the regime agent;
+[calibration & conformal prediction](ml/probability-calibration/index.qmd) make its outputs trustworthy;
+[credit assignment](ml/multi-agent-systems/index.qmd) and [market microstructure](ml/market-microstructure/index.qmd)
+add the review and execution layers.
+
+**The destination** — the [PhD proposal](phd/index.qmd) ties every entry to a specific agent through its
+[evidence tracker](phd/index.qmd#what-is-already-built-the-evidence-tracker), now complete.
 
 ::: {.status-note}
 All figures cited here are drawn from the individual library entries, where each is computed,

@@ -13,9 +13,10 @@ toc: false
 A public research notebook documenting the mathematics, models, and experiments
 behind my work in quantitative finance, machine learning, and AI. The aim is
 simple: to demonstrate understanding rather than claim it — a record of research
-capability I am building as I develop a PhD proposal. The two core libraries —
-64 entries, every number verified against real market data — are now
-[complete](capstone.qmd).
+capability I am building as I develop a PhD proposal. The two core libraries and a
+full decision-systems tier — 74 entries, every number verified against real market
+data — are now [complete](capstone.qmd), and together they build the entire
+methodological foundation of the proposal.
 :::
 :::
 
@@ -63,7 +64,7 @@ Background in banking analytics, my quant-finance interests, and the AI research
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-clipboard-data card-ic" aria-hidden="true"></i> [Capstone — the findings](capstone.qmd)
-What 64 entries add up to: one market, every model, and the consistent verdict on what is predictable, what isn't, and how backtests lie.
+What 74 entries add up to: one market, every model, the verdict on what is predictable and what isn't, and the risk-governed decision system built on it — with a reading path through the whole site.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}

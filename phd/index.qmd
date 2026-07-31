@@ -41,11 +41,12 @@ uncertainty and controlled adaptation as **central design requirements**, not op
 
 Two things distinguish this proposal from a speculative pitch. First, its academic positioning is
 deliberately modest: the contribution is **not** a claim of a profitable autonomous trading system —
-this site's own [64-entry empirical record](../capstone.qmd) shows why no such claim would be
+this site's own [74-entry empirical record](../capstone.qmd) shows why no such claim would be
 credible — but controlled integration, incremental evidence, and rigorous evaluation of whether
 regime awareness, structured text, sequential learning and agent coordination improve *robustness
-and decision quality* under changing conditions. Second, a substantial fraction of its methodological
-foundations is **already built and verified** on this site, entry by entry — see the
+and decision quality* under changing conditions. Second, and unusually for a proposal, its **entire
+methodological foundation is already built and verified** on this site, entry by entry — from regime
+detection through reinforcement learning, credit assignment and execution — see the
 [evidence tracker](#what-is-already-built-the-evidence-tracker) below.
 
 ## The research problem
