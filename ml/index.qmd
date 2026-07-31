@@ -51,7 +51,7 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 
 ### Deep learning
 [Neural networks](neural-networks/) · [activation functions](activation-functions/) · [backpropagation](backpropagation/) · [CNNs](cnns/) · [RNNs](rnns/) · [LSTMs](lstms/) ·
-[transformers](transformers/) · [attention](attention/) · embeddings.
+[transformers](transformers/) · [attention](attention/) · [embeddings](embeddings/).
 
 ### Quant-specific machine learning
 Feature engineering for returns · walk-forward validation · time-series
