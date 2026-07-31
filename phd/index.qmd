@@ -182,7 +182,7 @@ evidence, and states plainly what remains.
 | Validation & anti-overfitting toolkit | ✅ Built | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged/combinatorial CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [backtest overfitting/PBO/DSR](../ml/overfitting-trading/index.qmd) |
 | Explainability & audit | ✅ Built | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
 | Risk measures for the Risk Agent | ✅ Built | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [Sharpe](../equations/sharpe-ratio/index.qmd)/[Sortino](../equations/sortino-ratio/index.qmd) |
-| Reinforcement learning (MDPs → PPO, risk-sensitive RL) | 🔜 Next | The largest gap — now the ML Library's [next roadmap tier](../ml/index.qmd#the-roadmap) |
+| Reinforcement learning (MDPs → PPO, risk-sensitive RL) | 🚧 In progress | [MDPs & Bellman equations](../ml/markov-decision-processes/index.qmd) built — a regime MDP solved exactly by value iteration; Q-learning → PPO next in the [roadmap tier](../ml/index.qmd#the-roadmap) |
 | Bayesian change-point detection; Markov-switching regression | 🔜 Next | Planned alongside the RL tier |
 | Probability calibration (Brier, ECE, conformal) | 🔜 Next | Planned |
 | Multi-agent systems (Markov games, credit assignment) | 🔜 Next | Planned |
