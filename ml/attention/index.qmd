@@ -1,0 +1,147 @@
+---
+title: "Attention"
+subtitle: "Content-based retrieval — the mechanism, the √d scaling, and self vs cross"
+description: "Attention is a differentiable, content-based lookup: a query retrieves a similarity-weighted blend of values. Scaled dot-product attention and why the √d matters, multi-head attention, and the difference between self- and cross-attention."
+date: 2026-07-27
+author: "David Maguire"
+categories: [deep learning, neural networks]
+image: fig-attention.png
+image-alt: "A plot showing unscaled attention saturating with dimension while √d-scaled attention stays stable, beside a soft-dictionary-lookup bar chart of attention weights"
+toc: true
+---
+
+The [transformer](../transformers/) page used self-attention as a black box: "every position attends to
+every other." This page opens the box. Attention is a **general mechanism**, older than the transformer
+— it began as a fix for recurrent translation models, letting a decoder *look back* at an entire source
+sentence instead of a single compressed vector — and it is worth understanding on its own terms. At
+heart it is a **differentiable, content-based retrieval**: a query pulls information from wherever it is
+relevant, weighted by learned similarity. Understanding three things — the scaled dot-product, the
+reason for that mysterious $\sqrt{d}$, and the split between self- and cross-attention — is understanding
+most of modern deep learning's core.
+
+## 1. What problem does it solve?
+
+The "**look anywhere**" problem: letting a model draw on the most relevant parts of its input rather
+than forcing everything through a fixed-size bottleneck. It was born solving exactly that — early
+recurrent [sequence-to-sequence](../rnns/) translators crushed a whole sentence into one hidden vector
+and choked on long inputs; attention let the decoder access *all* the encoder's positions and focus on
+the relevant ones. Generalised, it is **content-based, differentiable information retrieval**: a
+learnable way to fetch and blend information by relevance.
+
+## 2. What assumptions does it make?
+
+That **relevance can be measured by a learned similarity** — specifically the dot product between a
+query and a key — and that a **soft, weighted average of values** is a sensible way to aggregate what
+was retrieved. Implicitly it assumes the representations are rich enough that dot-product similarity
+means something useful, and (because attention alone is order-blind) that any needed notion of position
+is supplied separately.
+
+## 3. Where is it used?
+
+Anywhere dynamic, content-based routing helps. **Within** a sequence (self-attention — relate each
+element to the others), **between** two sequences (cross-attention — translation, retrieval,
+multimodal models), or over an external **memory**. It is not tied to a data type; it is a building
+block that appears in transformers, in older RNN translators, in retrieval systems, and in
+vision/audio models alike.
+
+## 4. How does it work?
+
+Three roles per element: a **query** (what am I looking for), a **key** (what do I offer), and a
+**value** (what I hand over if chosen). The attention weight from a query $q$ to each key $k_j$ is the
+scaled dot product passed through a [softmax](../../equations/softmax/), and the output is the
+weight-blended sum of values:
+
+$$\text{Attention}(q,K,V) = \sum_j \text{softmax}_j\!\Big(\tfrac{q\cdot k_j}{\sqrt{d}}\Big)\,v_j.$$
+
+It is a **soft dictionary lookup**: a hard lookup returns the one value whose key matches the query;
+attention returns a *similarity-weighted blend* of all values. The right panel works an example — a
+query aligned with the first key retrieves mostly its value (weight 0.39) while an orthogonal key
+contributes least (0.14), producing a blended output.
+
+**Why the $\sqrt{d}$?** This is the detail the transformer page skipped, and it matters. The dot product
+of two $d$-dimensional vectors is a sum of $d$ terms, so its variance grows with $d$ and its standard
+deviation grows as $\sqrt{d}$. Feed those ever-larger scores into a softmax and it **saturates** —
+collapsing onto a single key, nearly one-hot — and a saturated softmax has almost no gradient (its
+slope is $p(1-p)$, which vanishes as $p\to 1$). The left panel measures it: with no scaling, the mean
+top attention weight climbs from 0.37 to **0.93** as $d$ grows from 2 to 256 (attention freezing onto
+one key) and the softmax gradient shrinks about **7-fold**; dividing by $\sqrt{d}$ normalises the score
+variance back to ~1, so the attention distribution and its gradients stay healthy at *any* dimension.
+It is a one-symbol fix for a real training pathology.
+
+![Left: mean maximum attention weight versus key/query dimension. Unscaled, attention saturates toward a one-hot spike as $d$ grows (and its gradient collapses ~7×); scaled by $\sqrt{d}$ it stays stable at any dimension. Right: attention as a soft dictionary lookup — a query retrieves a similarity-weighted blend of values (aligned key 0.39, orthogonal key 0.14), and the self-vs-cross distinction.](fig-attention.png){fig-alt="A plot showing unscaled attention saturating with dimension while √d-scaled attention stays stable, beside a soft-dictionary-lookup bar chart of attention weights"}
+
+Two elaborations complete the picture. **Multi-head attention** runs several attention operations in
+parallel on different learned projections of the same inputs and concatenates them — each *head*
+specialises in a different kind of relationship (one might track syntax, another long-range reference).
+And the **self- vs cross-** distinction is simply where the three roles come from: in **self-attention**
+the queries, keys, and values are all projections of the *same* sequence (each token relates to its
+context); in **cross-attention** the queries come from one sequence and the keys and values from
+*another* (a decoder querying an encoder — the original translation use).
+
+## 5. What are its strengths?
+
+- **Dynamic, content-based routing.** It draws from wherever is relevant, decided per input, not from a fixed window or position.
+- **Differentiable retrieval.** The whole lookup is learned end-to-end by gradient descent.
+- **Long-range and variable-length.** Any position is directly accessible, regardless of distance or sequence length.
+- **Interpretable.** The attention weights show what each query drew on.
+- **A universal building block.** Self, cross, and multi-head variants compose into almost every modern architecture.
+
+## 6. What are its weaknesses?
+
+- **Quadratic cost.** Every query scores every key — $O(n^2)$ — expensive for long sequences.
+- **Needs the $\sqrt{d}$ (and normalisation).** Without careful scaling it saturates and stops learning, as above.
+- **Order-blind.** Attention is permutation-invariant; sequence order must be injected separately.
+- **Correlational, not causal.** Attention weights show *where* the model looked, not *why* it decided — a caveat for interpretation.
+- **Blur.** A soft average can smear information when a sharp, discrete choice would be better.
+
+## 7. How could it apply to markets?
+
+Attention lets a model decide, dynamically, **which inputs matter** for a given prediction — which past
+days, which peer assets, which features — rather than weighting them all fixedly. The honest caveat is
+the one the [transformer](../transformers/) already delivered: on a plain Nasdaq return series the
+learned attention comes out *diffuse* and the verdict is unchanged (volatility ≈ 0.56, direction ≈
+0.50), because there is no exploitable relevance structure in signed returns to route. But the mechanism
+is genuinely useful in quant work *where* such structure exists — **cross-attention across a
+cross-section of assets** (which peers inform this one's move), attention over **news or filings** tied
+to a ticker, or as an **interpretable attribution** layer showing which features a signal leaned on. The
+mechanism is sound and general; it simply cannot attend to a relevance that the market does not contain.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+
+def attention(Q, K, V):                       # Q:(nq,d)  K,V:(nk,d)
+    d = Q.shape[-1]
+    scores = Q @ K.T / np.sqrt(d)             # the sqrt(d) is not optional
+    W = np.exp(scores - scores.max(-1, keepdims=True))
+    W /= W.sum(-1, keepdims=True)             # softmax over keys
+    return W @ V, W                            # blended values, and the attention weights
+
+# self-attention: Q, K, V are projections of the SAME sequence X
+# cross-attention: Q from X (decoder), K and V from Y (encoder)
+# multi-head: split d into h heads, attend in parallel, concatenate
+```
+
+In frameworks this is `torch.nn.functional.scaled_dot_product_attention` or `nn.MultiheadAttention`;
+the essential lines are the $\sqrt{d}$ scaling and the softmax over keys.
+
+## 9. How would I explain it to a supervisor?
+
+"Attention is a differentiable dictionary lookup: a query is compared to a set of keys by scaled dot
+product, softmaxed into weights, and used to take a weighted average of the corresponding values — so a
+model retrieves information by content rather than by fixed position. The $\sqrt{d}$ scaling is
+essential: dot products grow like $\sqrt{d}$ with dimension, and without dividing them down the softmax
+saturates to one-hot and its gradient dies — I measured the top weight hitting 0.93 and the gradient
+dropping about sevenfold by 256 dimensions, both fixed by the scaling. Multi-head runs several in
+parallel for different relationships, and it's self-attention when query, key, and value come from one
+sequence, cross-attention when the query reads a different one. On plain return series the learned
+attention is diffuse and adds nothing, but for routing across assets or over text it's a genuinely
+useful, interpretable mechanism."
+
+::: {.status-note}
+The $\sqrt{d}$ saturation curves are Monte Carlo over random unit-Gaussian queries and keys (10 keys,
+3,000 trials per dimension), measuring mean maximum attention weight and the softmax gradient proxy
+$p(1-p)$ with and without $\sqrt{d}$ scaling. The worked retrieval example is exact. This page is the
+mechanism companion to the [transformer](../transformers/) entry. Every number was checked.
+:::
