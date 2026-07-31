@@ -1,0 +1,139 @@
+---
+title: "Long Short-Term Memory (LSTM)"
+subtitle: "The gated cell state that lets gradients flow across hundreds of steps"
+description: "LSTMs fix the RNN's vanishing gradient with a cell state whose additive, gated updates make the gradient through time a product of forget gates rather than repeated weight multiplication. The cell, the gates, the constant error carousel, and why longer memory still finds nothing in returns."
+date: 2026-07-27
+author: "David Maguire"
+categories: [deep learning, neural networks]
+image: fig-lstms.png
+image-alt: "An LSTM cell with forget, input and output gates on a cell-state highway beside a plot where the LSTM's gradient survives far longer through time than an RNN's"
+toc: true
+---
+
+The [RNN](../rnns/) ended on a flaw: its gradient through time scales like the recurrent weight raised
+to the number of steps, so it vanishes after a few dozen and the network forgets. The LSTM is the fix,
+and an elegant one. Alongside the ordinary hidden state it carries a separate **cell state** — a
+conveyor belt that runs the length of the sequence, altered only by gentle, *gated* additions and
+erasures. Because those edits are additive rather than a fresh matrix multiplication at every step,
+the gradient can ride the cell state across hundreds of timesteps without dying. Three learned gates
+decide what to forget, what to write, and what to read. That mechanism — the "constant error
+carousel" — made LSTMs the backbone of sequence modelling (translation, speech recognition, time
+series) for the better part of two decades, until transformers.
+
+## 1. What problem does it solve?
+
+The same sequence tasks as an RNN — classification, forecasting, sequence-to-sequence — but with the
+**long-range dependencies** a plain RNN cannot capture. When the signal at one step depends on
+information from far earlier (the subject of a sentence agreeing with a verb clauses later; a regime
+set weeks ago), the LSTM can carry that information forward where an RNN's memory has already decayed.
+It learns *when* something is worth remembering and for how long.
+
+## 2. What assumptions does it make?
+
+All of the RNN's assumptions — the data is sequential, a fixed-size state can summarise the past, and
+one shared transition governs every step — plus the architectural bet that a **gated, additive cell
+state** is the right way to route information across long gaps. Crucially the gates are *learned*, so
+rather than assuming a fixed memory span the model **discovers** what to retain and what to discard
+from the data itself.
+
+## 3. What data does it need?
+
+Sequences, and it earns its keep specifically on **long** ones where distant context matters — long
+sentences, speech, extended time series. It has roughly **four times an RNN's parameters** (three
+gates plus a candidate, each with its own weights), so it needs more data and compute, but in return
+it models dependencies an RNN structurally cannot. On short sequences with only local structure, the
+extra machinery is overkill.
+
+## 4. How does it learn?
+
+The cell is the whole idea. Beside the hidden state $h_t$, the LSTM maintains a **cell state** $c_t$.
+At each step it computes three sigmoid **gates** and a tanh **candidate** from the concatenation of
+the previous hidden state and the current input $[\,h_{t-1}, x_t\,]$: a **forget** gate $f$, an
+**input** gate $i$, a candidate $g$, and an **output** gate $o$ (the [sigmoid](../../equations/sigmoid/)
+squashes each gate to $[0,1]$, a soft switch). Then:
+
+$$c_t = f \odot c_{t-1} + i \odot g, \qquad h_t = o \odot \tanh(c_t).$$
+
+The cell state is **erased** a little (multiply by $f$) and **written** to a little (add $i \odot g$);
+the hidden state is a **gated read** of it. Here is why it fixes the RNN. The cell update is
+*additive*, so $\partial c_t / \partial c_{t-1} = f$ — the gradient through time is a **product of
+forget gates**, not repeated multiplication by one shared weight matrix. When the forget gates sit
+near 1 (a $+1$ forget-bias at initialisation encourages exactly this), the gradient passes across many
+steps essentially undiminished — the **constant error carousel**.
+
+![Left: the LSTM cell. The cell state $c$ runs across the top as an additive highway, edited by a forget gate (×) and an input gate (+); the output gate reads out $h_t = o\cdot\tanh(c_t)$. Because $c_t = f\,c_{t-1} + i\,g$, the gradient through time is a product of forget gates, not $W_h^{\,k}$. Right: that changes everything — where the RNN's gradient ($w=0.8$) is dead by ~21 steps, the LSTM's ($f=0.98$) survives to ~228, and at $f=1.0$ it is preserved indefinitely: roughly a 10× longer memory.](fig-lstms.png){fig-alt="An LSTM cell with forget, input and output gates on a cell-state highway beside a plot where the LSTM's gradient survives far longer through time than an RNN's"}
+
+The figure makes the contrast concrete: the RNN's gradient collapses below 1% of its value in about 21
+steps, while the LSTM's holds for roughly 228 — an order of magnitude further back in time. It is still
+trained by [backpropagation through time](../backpropagation/) exactly like an RNN; only the cell's
+architecture is new. (I checked that the implementation genuinely learns long range: a task whose label
+depends on the input **50 steps** earlier, which it solves to 100% accuracy.)
+
+## 5. What are its strengths?
+
+- **Long-range memory.** The defining fix: gradients survive across hundreds of steps, so it learns dependencies an RNN forgets.
+- **Learned gating.** It adaptively decides what to remember, overwrite, and expose — a data-driven memory rather than a fixed span.
+- **Robust to vanishing gradients.** The additive cell path sidesteps the RNN's core pathology.
+- **Variable-length sequences.** Like any recurrent net, one cell processes sequences of any length.
+- **A proven workhorse.** For two decades LSTMs were state of the art in translation, speech, and sequence modelling.
+
+## 6. What are its weaknesses?
+
+- **Heavier than an RNN.** Four sets of gate weights mean more parameters, more compute, and more data needed.
+- **Still sequential.** Each step waits for the previous one, so it can't parallelise across time — the bottleneck transformers removed.
+- **Finite reach.** It stretches memory to hundreds of steps, not thousands; very long-range and global context still strain it.
+- **Fiddly to train and tune.** Gates, initialisation (the forget bias), and gradient clipping all matter.
+- **Superseded.** Transformers deliver long-range dependencies *and* parallel training via attention, and have largely replaced LSTMs.
+
+## 7. How could it apply to markets?
+
+An LSTM is the natural model for a long-memory financial sequence — and the honest test is the most
+telling result in this section. Trained on the same Nasdaq tasks as the RNN, it matches it **exactly**:
+a test **AUC of 0.53 on volatility**, identical to the RNN's 0.53 — despite the LSTM carrying **1,169
+parameters to the RNN's 305** and a memory ten times longer — and **0.50 on direction** against the
+RNN's 0.51, both a coin flip. The extra memory buys *nothing*, and the reason is the thesis this whole
+site keeps confirming. The one real signal — [volatility persistence](../../equations/garch/) — is
+**short-range**: tomorrow's volatility depends on the last few days, which the RNN's short memory
+already captures fully, so the LSTM's long reach adds nothing. And **direction** has no predictable
+structure at *any* range, so no amount of memory helps. LSTMs solved a genuine, important problem —
+long-range dependency — that transformed language and speech; markets simply have no long-range
+predictable structure to remember. A strictly more powerful tool, arriving at the identical verdict.
+
+## 8. What does the Python code look like?
+
+```python
+import torch.nn as nn
+
+lstm = nn.LSTM(input_size=1, hidden_size=16, batch_first=True)   # forget/input/output gates built in
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__(); self.lstm = lstm; self.head = nn.Linear(16, 1)
+    def forward(self, x):                       # x: (batch, T, 1)
+        out, (h_T, c_T) = self.lstm(x)          # h_T: final hidden state; c_T: final cell state
+        return self.head(h_T.squeeze(0))
+# tip: initialise the forget-gate bias to +1 so the cell REMEMBERS by default (constant error carousel)
+```
+
+`nn.LSTM` packs all four gate weight-matrices into one call; `c_T` is the cell state that carries the
+long memory. The forget-bias trick is standard — start the network biased toward remembering, and let
+it learn to forget only when useful.
+
+## 9. How would I explain it to a supervisor?
+
+"An LSTM fixes the RNN's vanishing gradient by adding a cell state — a memory that's edited additively
+through gates rather than overwritten by a matrix each step. Because the cell update is
+$c_t = f\,c_{t-1} + i\,g$, the derivative back through time is a product of forget gates, so when those
+gates are near 1 the gradient is preserved across hundreds of steps instead of dying in twenty — the
+constant error carousel. Three learned gates decide what to forget, write, and read. On the Nasdaq it's
+the cleanest no-free-lunch result I have: it ties the RNN exactly, 0.53 AUC on volatility and 0.50 on
+direction, despite four times the parameters and ten times the memory — because the volatility signal is
+short-range and direction has none at any range. LSTMs genuinely solved long-range memory, which
+transformed NLP; markets just have no long-range structure to remember."
+
+::: {.status-note}
+LSTM and RNN (16 hidden units) implemented and trained by hand with backpropagation through time and an
+Adam optimiser in NumPy, on the same Nasdaq `multi_daily.csv` tasks and 70/30 split as the earlier
+models. Memory-horizon curves are the exact $f^{\,k}$ vs $w^{\,k}$ scaling; the implementation was
+validated on a synthetic 50-step memory task (100% accuracy). Volatility/direction AUCs and parameter
+counts were computed and checked.
+:::
