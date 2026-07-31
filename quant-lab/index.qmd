@@ -16,6 +16,11 @@ profitable strategies — it is to ask well-posed questions and answer them
 rigorously. A negative result, analysed carefully, is as valuable here as a
 positive one.
 
+::: {.callout-note appearance="simple"}
+**In a hurry?** [**Read the synthesis →**](findings.qmd) — what the eight experiments found, on one
+screen, and how they resolve the proposal's central hypotheses.
+:::
+
 **Every experiment follows the same structure:**
 
 1. Research question
