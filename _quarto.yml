@@ -19,6 +19,8 @@ website:
         href: equations/index.qmd
       - text: "Machine Learning"
         href: ml/index.qmd
+      - text: "Capstone"
+        href: capstone.qmd
       - text: "Quant Lab"
         href: quant-lab/index.qmd
       - text: "AI Systems"

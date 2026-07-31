@@ -1,0 +1,106 @@
+---
+title: "Capstone — One Market, Every Model"
+subtitle: "What 64 entries add up to: the findings of the Equation and Machine Learning Libraries"
+description: "The synthesis of both libraries: 37 equations and 27 models, every one tested against the same Nasdaq-100 data. The consistent verdicts — direction is unpredictable at every level of sophistication, volatility is structured and forecastable — and the research discipline that emerged along the way."
+toc: true
+---
+
+Between them, the [Equation Library](equations/index.qmd) and the
+[Machine Learning Library](ml/index.qmd) now contain **64 entries** — 37 mathematical
+concepts and 27 machine-learning models and methods, each built to the same standard: explained from
+first principles, implemented in Python, illustrated with an original figure, and **tested honestly
+against the same real dataset** — a decade of daily Nasdaq-100 data. Every number cited anywhere on
+this site was computed and verified before it was written down.
+
+That shared dataset was a deliberate choice, and it is what makes a synthesis possible. Because every
+model faced the same market and the same two questions — *can you predict tomorrow's direction?* and
+*can you predict tomorrow's volatility?* — the library is not a collection of isolated demos but a
+single controlled experiment, run 64 times with escalating firepower. This page is what it found.
+
+## Finding one: direction is unpredictable at every level of sophistication
+
+The central empirical result of the entire site. Asked to predict whether the Nasdaq closes up or
+down tomorrow, every model — from a linear regression to a transformer — lands at a coin flip:
+
+| Model | Direction (test AUC) | Volatility (test AUC) |
+|---|:---:|:---:|
+| [Logistic regression](ml/logistic-regression/index.qmd) | 0.51 | 0.56 |
+| [Decision tree](ml/decision-trees/index.qmd) (unpruned) | ~0.50 | 0.50 |
+| [Random forest](ml/random-forests/index.qmd) | 0.52 | 0.57 |
+| [Gradient boosting](ml/xgboost/index.qmd) / [LightGBM](ml/lightgbm/index.qmd) | — | 0.57–0.58 |
+| [Support vector machine](ml/support-vector-machines/index.qmd) | 0.51 | 0.57 |
+| [Neural network](ml/neural-networks/index.qmd) (MLP) | 0.48 | 0.56 |
+| [1D CNN](ml/cnns/index.qmd) (41 parameters) | 0.49 | 0.57 |
+| [RNN](ml/rnns/index.qmd) / [LSTM](ml/lstms/index.qmd) | 0.50–0.52 | 0.53–0.57 |
+| [Transformer](ml/transformers/index.qmd) (self-attention) | 0.50 | 0.56 |
+
+: Every model, same market, same two questions. Direction hugs 0.50; volatility sits reliably above it. {.striped .hover}
+
+The pattern is not a failure of any model — it is the models *agreeing*. The
+[entropy](equations/entropy/index.qmd) of the daily up/down sequence is ~0.99 of a bit (near-maximal
+uncertainty); its [autocorrelation](equations/autocorrelation/index.qmd) is negligible; the
+[Hurst exponent](equations/hurst-exponent/index.qmd) sits near 0.5 (random walk); and the most
+powerful architecture in the library, given every advantage, [attends diffusely](ml/transformers/index.qmd)
+because there is no relevance structure to find. The deep-learning entries sharpen the point into a
+cautionary tale: the MLP drove its **training** accuracy past 80% on direction while its test accuracy
+*fell* to 0.50 — a universal approximator's capacity buys memorisation, not signal. A near-efficient
+index keeps its secret at every level of model sophistication.
+
+## Finding two: volatility is structured, persistent, and forecastable
+
+The same models, asked about *risk* instead of *return*, all find signal — and the structure runs
+deep. [Volatility clusters](equations/garch/index.qmd): every capable supervised model extracts
+roughly the same 0.56–0.58 AUC from it. The unsupervised models discover it without labels:
+[K-means](ml/k-means/index.qmd) recovers calm, sell-off, and rally day-clusters whose regimes persist
+(1.8× next-day volatility after a turbulent day); the [Gaussian mixture](ml/gaussian-mixture-models/index.qmd)
+explains the fat tails ([excess kurtosis](equations/skewness-kurtosis/index.qmd) 7.6) as a calm
+Gaussian plus a crisis Gaussian, rejecting a single Gaussian by 506 BIC points. The
+[hidden Markov model](ml/regime-aware-modelling/index.qmd) makes it dynamic: a 12%-volatility calm
+state and a 33%-volatility turbulent state, each persisting for weeks (stay-probabilities 0.98), whose
+dated turbulent spells are 2018, COVID, and the 2022 bear market — recovered from returns alone.
+
+Two refinements are worth carrying forward. The volatility signal is **short-range** — the
+[LSTM](ml/lstms/index.qmd), with ten times an RNN's memory and four times its parameters, ties it
+exactly, because tomorrow's volatility depends on the last few days. And the best *predictors* of
+volatility are **trend features**, not volatility itself — the moving-average ratio and momentum reach
+0.60–0.63 univariate AUC via the leverage effect (volatility rises after prices fall), a fact
+[SHAP](ml/shap-values/index.qmd) confirms day by day: the model's most turbulent-day flag decomposed
+into +0.114 from a −4.7% twenty-day drawdown. Volatility knowledge is *risk* knowledge: the
+regime-scaled strategy cut maximum drawdown from −23% to −14% — while costing return in a bull window.
+**Regime awareness manages risk; it does not manufacture alpha.**
+
+## Finding three: the ways a backtest lies — measured
+
+The quant-specific section turned the site's skepticism on the research process itself, and put
+numbers on each failure mode. **Leakage manufactures signal from nothing**: selecting the 20 "best"
+of 2,000 random features on the full sample produced a cross-validated AUC of
+[0.81 on pure noise](ml/data-leakage/index.qmd) (0.53 done correctly); shuffled k-fold on an
+overlapping-label task reported [0.87 where honest walk-forward showed 0.60](ml/walk-forward-validation/index.qmd).
+**Multiple testing manufactures Sharpe from luck**: the best of 10,000 random, edgeless strategies
+posts an in-sample Sharpe of [1.63](ml/overfitting-trading/index.qmd), while in-sample and
+out-of-sample rank are uncorrelated (r = 0.01) — and a Sharpe of 1.31 that is "significant" for one
+test is worthless after adjusting for a thousand trials. Even the standard diagnostics mislead: the
+default [impurity importance](ml/model-explainability/index.qmd) handed a planted noise feature a 20%
+share. The defences — point-in-time features, pipelines inside the CV loop, purged and
+[combinatorial cross-validation](ml/time-series-cross-validation/index.qmd), deflated Sharpe ratios,
+permutation importance — are not pedantry. In each demonstration they were the difference between a
+publishable-looking illusion and the truth.
+
+## The thesis, in one paragraph
+
+A decade of daily data, 64 entries, and every model from a sample mean to a transformer converge on
+one statement: **the return dimension of a near-efficient market is essentially unpredictable, the
+risk dimension is genuinely structured, and most apparent exceptions are your own methodology lying
+to you.** The skill this site set out to demonstrate is not finding a magic model — none exists in
+this data — but building the mathematical foundations, implementing every model honestly, testing
+each claim against reality, and being disciplined enough to report 0.50 as 0.50. That discipline —
+volatility and regimes for risk, deflated skepticism for returns, explanation before trust — is the
+foundation the [Quant Lab](quant-lab/index.qmd) experiments and the
+[PhD research direction](phd/index.qmd) build on.
+
+::: {.status-note}
+All figures cited here are drawn from the individual library entries, where each is computed,
+sourced, and verified against the shared `multi_daily.csv` Nasdaq-100 dataset (yfinance, adjusted
+closes, ~2,900 daily observations). Minor variation between entries (e.g. RNN volatility 0.53 vs
+0.57) reflects independent implementations and feature sets, documented in each entry's notes.
+:::

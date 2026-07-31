@@ -13,7 +13,9 @@ toc: false
 A public research notebook documenting the mathematics, models, and experiments
 behind my work in quantitative finance, machine learning, and AI. The aim is
 simple: to demonstrate understanding rather than claim it — a record of research
-capability I am building as I develop a PhD proposal.
+capability I am building as I develop a PhD proposal. The two core libraries —
+64 entries, every number verified against real market data — are now
+[complete](capstone.qmd).
 :::
 :::
 
@@ -51,12 +53,17 @@ Background in banking analytics, my quant-finance interests, and the AI research
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <span class="card-ic sigma" aria-hidden="true">&#8721;</span> [Equation Library](equations/index.qmd)
-The mathematical foundations of quant finance and machine learning — each concept taken from equation to plain English to Python.
+**Complete — 37 entries.** The mathematical foundations of quant finance and machine learning, each taken from equation to plain English to Python, and tested on real Nasdaq data.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-diagram-3 card-ic" aria-hidden="true"></i> [Machine Learning Library](ml/index.qmd)
-Models explained from first principles: their assumptions, how they learn, where they fail, and how they apply to markets.
+**Complete — 27 models.** From linear regression to transformers to regime-aware modelling: assumptions, mechanics, failure modes, and an honest market test for every one.
+:::
+
+::: {.g-col-12 .g-col-md-4 .section-card}
+#### <i class="bi bi-clipboard-data card-ic" aria-hidden="true"></i> [Capstone — the findings](capstone.qmd)
+What 64 entries add up to: one market, every model, and the consistent verdict on what is predictable, what isn't, and how backtests lie.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
