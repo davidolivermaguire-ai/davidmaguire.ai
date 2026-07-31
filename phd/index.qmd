@@ -87,7 +87,7 @@ market decision-making.
 | Ref. | Research question |
 |------|-------------------|
 | RQ1 | Which statistical and ML methods most reliably identify market regimes and structural changes out of sample? |
-| RQ2 | Does conditioning forecasting and decision models on estimated regime probabilities improve predictive calibration and economic performance? |
+| RQ2 | Does conditioning forecasting and decision models on estimated regime probabilities improve predictive calibration and risk-adjusted decision quality — and, specifically, does a *discrete* regime add value beyond a *continuous* volatility signal? |
 | RQ3 | Can LLMs extract structured, time-sensitive information from financial text that adds value beyond price, volume and volatility data? |
 | RQ4 | Can risk-constrained reinforcement learning improve position sizing, exposure management or execution versus transparent deterministic policies? |
 | RQ5 | Does a modular multi-agent architecture outperform equivalent single-model and single-agent systems after transaction costs and risk? |
@@ -105,6 +105,22 @@ performance than an equivalent single-agent system; **H5** the multi-agent benef
 **regime transitions** rather than stable periods; and **H6** hard risk constraints improve
 stability and practical viability even where they reduce gross returns. H4 and H5 are the heart of
 the thesis; the others are its scaffolding.
+
+These hypotheses are not left as promises. The [Quant Research Lab](../quant-lab/index.qmd) has begun
+**stress-testing the load-bearing ones on real data**, and the results are already shaping the design
+rather than being fitted to it. A deliberately fair out-of-sample test of RQ2 — a real-time,
+no-look-ahead regime-conditional strategy pitted not against a naive baseline but against a *regime-blind
+volatility scaler using the same information* — found that, **for position sizing, a discrete regime adds
+nothing statistically distinguishable beyond volatility**, and that regime awareness buys drawdown
+control rather than return ([full experiment](../quant-lab/regime-conditioning-oos/index.qmd)). That is a
+partial null, and it *refines* the thesis rather than weakening it: it moves the Regime Agent's
+justification away from sizing alpha — which the evidence does not support — and toward the two functions
+a volatility signal provably cannot replicate, both already demonstrated on this site: **online detection
+of regime *changes*** ([change-point detection](../ml/change-point-detection/index.qmd)) and
+**conditioning *relationships* on regime** ([a stock's beta doubling in the turbulent
+state](../ml/markov-switching-regression/index.qmd)) — alongside the *calibration* half of RQ2, which
+remains to be tested. A proposal whose own experiments can, and do, return nulls is one built on evidence
+rather than hope.
 
 ## The proposed architecture
 
