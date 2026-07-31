@@ -1,0 +1,129 @@
+---
+title: "Does the Benefit Concentrate at Regime Transitions?"
+subtitle: "Testing H5 — the risk protection of adaptivity is earned at transitions and in the turbulence they open, and nowhere else"
+description: >
+  H5 is the other heart of the proposal: that the benefit of an adaptive, regime-aware system
+  concentrates at regime transitions, not in stable periods. An event study and a state
+  decomposition on the Nasdaq confirm it — for the benefit that matters. Downside protection is
+  overwhelmingly earned at transitions and in the turbulence they open, is a mild liability in
+  calm, and is paid for by upside given up in exactly those windows.
+date: 2026-07-31
+author: "David Maguire"
+categories: [regime, event-study, risk, transitions]
+image: fig-benefit-at-transitions.png
+image-alt: "An event study showing an adaptive strategy's drawdown protection accrues after calm-to-turbulent transitions, concentrated in turbulent regimes and paid for by upside given up there"
+toc: true
+---
+
+## Research question
+
+With RQ2 settled, this experiment turns to the proposal's other central bet, **H5**: that *the benefit of
+a coordinated, regime-aware system concentrates at regime transitions rather than in stable periods*. It
+is a claim about **timing** — not "does adaptivity help?" (the earlier experiments answered that: it buys
+risk control) but *when* does it help? If the value of regime awareness is spread evenly across time, then
+detecting regime changes is a nicety; if it is concentrated at the transitions, then **detecting those
+transitions early is the whole game**, and the proposal's [change-point
+detector](../../ml/change-point-detection/index.qmd) earns its place. So: does the benefit cluster at
+transitions?
+
+## Hypothesis
+
+I expected H5 to hold, but only once the benefit is measured correctly. The previous experiments showed
+that regime/volatility awareness buys *risk control*, not return — so the "benefit" to test for is
+**downside protection**, not P&L. **H:** the loss-avoidance from an adaptive strategy is concentrated at
+calm→turbulent transitions and the turbulent periods they open, is near zero (or negative) in stable calm,
+and is paid for by upside forgone in the same windows. Whether it sits at the transition *instant* or
+throughout the following turbulent regime was the open question.
+
+## Data & method
+
+Daily Nasdaq-100 returns, 2015–2026, out-of-sample from 2016. The **adaptive** strategy is the same
+regime-*agnostic* volatility scaler used throughout the lab (exposure-matched to the static buy-and-hold
+baseline, net of costs) — deliberately regime-agnostic, so that any clustering of its benefit at regime
+transitions is a genuine finding and not built in. **Regime transitions** are dated independently, from
+the real-time HMM state of the [sizing experiment](../regime-conditioning-oos/index.qmd), *debounced* to
+require a new regime to persist ≥ 10 days (filtering 257 noisy flips down to **21 genuine transitions** —
+10 calm→turbulent, 11 turbulent→calm).
+
+The benefit is decomposed three ways per day: **downside protection** (loss avoided versus static),
+**upside given up**, and their net (**return benefit**). Each day is labelled a **transition window**
+(±10 days of a switch), **stable calm**, or **stable turbulent**, and I run (i) an **event study** of the
+drawdown avoided around calm→turbulent transitions, and (ii) a **block-permutation test** of whether the
+protection concentrates in turbulent/transitional days. All computed and verified in the sandbox.
+
+## Results
+
+**The downside protection is overwhelmingly concentrated at transitions and in the turbulence they open.**
+Of the total loss-avoidance the adaptive strategy delivers, **142% accrues in the 38% of days that are
+turbulent or transitional** — more than 100% because in *stable calm* the protection is actually
+**negative** (the levered-up strategy loses a little more on the rare calm down-day). The per-day
+protection is **+24 bp in turbulent/transition days versus −4 bp in calm**, a gap that is statistically
+significant (block-permutation **p = 0.006**). The cumulative-protection curve tells it at a glance: flat,
+even slightly declining, through the calm stretches, then stepping up in sharp bursts during the shaded
+turbulent regimes — almost all of the decade's downside protection is earned in a handful of episodes
+(2020, 2022).
+
+**The event study locates it after the transition.** Rebased to zero at each calm→turbulent switch, the
+drawdown avoided grows to **+1.6 percentage points by day 40** — the adaptive strategy pulls steadily
+ahead on drawdown once the regime has turned, exactly as H5 predicts. The benefit is not at the transition
+*instant* (de-risking takes a few days to matter) but in the window the transition opens.
+
+![Left: event study of drawdown avoided around calm→turbulent transitions (n=10, 95% band), rebased to zero at the transition — protection accrues over the following weeks, reaching +1.6pp by day 40. Right: benefit decomposition by market state — downside protection (green) is small in transitions, negative in calm, and large in turbulence, and is mirrored by the upside given up (gold), leaving net return (blue) near zero or negative wherever the protection is largest. Bottom: cumulative downside protection over time — earned in bursts during turbulent regimes (shaded), flat in calm; 142% of it falls in the 38% of days that are turbulent or transitional (p = 0.006).](fig-benefit-at-transitions.png){fig-alt="An event study showing an adaptive strategy's drawdown protection accrues after calm-to-turbulent transitions, concentrated in turbulent regimes and paid for by upside given up there"}
+
+**But it is paid for, in the same windows.** The decomposition is honest about the cost: the downside
+protection in turbulent and transition periods (+37 and +7 bp/day) is almost exactly matched by the
+**upside given up** there (+38 and +13 bp/day), so the *net return* benefit in those windows is near zero
+or slightly negative. The only place the adaptive strategy makes *more money* than static is **stable
+calm**, through leverage (+1 bp/day) — precisely where it offers no protection. Adaptivity does not find
+free lunch at transitions; it **trades return for risk, and it does the trading exactly when risk spikes.**
+
+## The verdict — H5 holds, and it points at detection
+
+H5 is supported, sharpened by the measurement. The benefit of regime awareness — its **downside
+protection** — is not spread across time; it is concentrated at regime transitions and the turbulent
+regimes they open, is a mild liability in stable calm, and is significant (p = 0.006). The refinement is
+that the benefit lives in the *turbulent window*, not the transition *instant* — it accrues over the weeks
+after the regime turns. And it is purchased with forgone upside in those same windows, consistent with the
+whole lab's theme that adaptivity buys risk control, not alpha.
+
+The strategic implication is the one that matters for the [proposal](../../phd/index.qmd), and it closes a
+loop with the two RQ2 experiments. If nearly all of the benefit is earned in the days after a calm→turbulent
+transition, then **the value of the system is dominated by how early and reliably it detects that
+transition** — which is exactly the function the [change-point detector](../../ml/change-point-detection/index.qmd)
+provides and a position-sizing rule does not. H4-sizing said regime adds nothing beyond volatility;
+RQ2-calibration said it sharpens risk probabilities; and H5 now says the payoff is concentrated at
+transitions. Together they point, three times over, to the same conclusion: **the Regime Agent's job is
+detection and assessment at the turning points, not sizing in the stable middle.**
+
+## Limitations
+
+- **Ten transitions.** The event-study sample is small (the debouncing that makes each transition genuine also makes them few), so the ±1.6pp path has a wide band; the state decomposition and permutation test, which use all days, are the firmer evidence.
+- **Transitions are defined by the same HMM.** A different regime detector — or the [change-point detector](../../ml/change-point-detection/index.qmd) directly — would date the transitions slightly differently; the concentration result should be robust to this but I have not cross-checked detectors here.
+- **One adaptive strategy, one index.** A regime-agnostic vol scaler on the Nasdaq; a genuinely regime-conditional strategy would concentrate its benefit at transitions even more by construction, which is why I used the agnostic one — but cross-asset replication is the honest next step.
+- **The cost is real.** Because the protection is paid for by forgone upside in the same windows, a bull-market sample (like this one) understates the *net* value of the protection; a sideways or bear sample would show it in a better light.
+
+## What I learned
+
+The lesson is that **timing a benefit is as informative as measuring it**. "Adaptivity helps" is a flat
+statement; "adaptivity helps only in the weeks after a regime turns, and costs you in the calm middle" is
+a design specification — it tells you to spend your effort on *detection* and to expect a drag in quiet
+markets. The second lesson repeats across the whole lab: measure the right benefit. Had I tested H5 on
+returns I would have concluded the benefit sits in *calm* periods (leverage) and transitions *hurt* —
+the exact opposite conclusion — because the return and risk benefits of adaptivity live in different
+places. H5 is about risk, and on risk it holds.
+
+## References
+
+- Ang, A., & Bekaert, G. (2002). *International Asset Allocation with Regime Shifts.* Review of Financial Studies, 15(4).
+- Kritzman, M., & Li, Y. (2010). *Skulls, Financial Turbulence, and Risk Management.* Financial Analysts Journal, 66(5).
+- Guidolin, M., & Timmermann, A. (2007). *Asset Allocation under Multivariate Regime Switching.* Journal of Economic Dynamics and Control, 31(11).
+- MacKinlay, A. C. (1997). *Event Studies in Economics and Finance.* Journal of Economic Literature, 35(1).
+
+::: {.callout-note appearance="simple"}
+Adaptive strategy: exposure-matched volatility scaler, net 2 bps/turnover. Transitions: real-time HMM
+regime switches, debounced to ≥10-day persistence (21 transitions: 10 up, 11 down). Downside protection
+by state (bp/day): transition +7.1, stable calm −4.3, stable turbulent +36.7; upside given up +12.8 /
+−5.4 / +37.8; net return −5.7 / +1.0 / −1.1. 142% of total loss-reduction falls in turbulent-or-transition
+days (38% of time); +24 vs −4 bp/day, block-permutation p = 0.006. Event study: +1.6pp drawdown avoided by
+day 40 after a calm→turbulent transition. Computed from `equations/multi_daily.csv`, verified in the sandbox.
+:::

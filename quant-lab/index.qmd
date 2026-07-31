@@ -55,7 +55,7 @@ and out of sample, whether they actually do.
 | [Volatility-forecasting horizon (HAR vs GARCH vs random walk)](volatility-forecasting-horizon/index.qmd) | How many days ahead is volatility actually predictable? | Finding 2 | ✅ Done |
 | [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | Does conditioning on regime beat a regime-blind strategy, net of costs? | H4 | ✅ Done |
 | [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | Does regime-conditioning improve probabilistic forecasts (RQ2's other half)? | RQ2 | ✅ Done |
-| Benefit concentration at transitions | Do the gains cluster around regime changes rather than in calm periods? | H5 | 🔜 Planned |
+| [Benefit concentration at transitions](benefit-at-transitions/index.qmd) | Do the gains cluster around regime changes rather than in calm periods? | H5 | ✅ Done |
 | Hard risk limits, net of their cost | Do deterministic risk caps help *after* the return they sacrifice? | H6 | 🔜 Planned |
 | Calendar anomalies after multiple-testing | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | 🔜 Planned |
 
@@ -67,4 +67,7 @@ conditioning on a discrete **regime adds nothing beyond a volatility signal** fo
 edge is statistically significant — yet a companion test shows the same regime **does sharpen and better-
 calibrate the probability of a dangerous day**, where a scalar exposure cannot. Together they resolve RQ2:
 the Regime Agent's value is in *detection, calibration and relationship-conditioning*, not sizing alpha.
-Tested, not assumed.
+And a test of **H5** confirms it from a third angle — the risk protection of adaptivity is concentrated at
+regime transitions and the turbulence they open (142% of it in 38% of days, p = 0.006), earning nothing in
+the calm middle — so the payoff is dominated by how early the turning points are *detected*. Tested, not
+assumed.
