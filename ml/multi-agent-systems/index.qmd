@@ -1,0 +1,197 @@
+---
+title: "Multi-Agent Systems & Credit Assignment"
+subtitle: "When several agents share one P&L — Markov games, and the fair attribution of a joint outcome"
+description: "The proposal is a team of agents that together produce one P&L; the Review & Learning Agent must say who earned it. Markov games are the formal framework, and Shapley values the fair attribution. Applied to a four-agent Nasdaq strategy, credit assignment overturns the naïve story: leave-one-out gets vol-targeting's sign wrong, and the same agents earn opposite credit under a drawdown objective — with the efficiency axiom verified to machine precision."
+date: 2026-07-31
+author: "David Maguire"
+categories: [decision systems, reinforcement learning]
+image: fig-multi-agent-systems.png
+image-alt: "Shapley credit-assignment bars for four trading agents beside a plot showing that leave-one-out credit gets an agent's sign wrong while the Shapley value is the fair average across all coalition orders"
+toc: true
+---
+
+Every entry in this tier so far concerned a *single* decision-maker. But the [proposal's
+architecture](../../phd/index.qmd) is not one agent — it is a **team**: a Regime Agent, a News Agent, an
+RL Trading Agent, a Risk Agent, all feeding one decision that produces **one profit or loss**. That
+raises a question none of the single-agent methods can answer: when the desk makes money, *which agent
+earned it?* — and when it loses, *which one is to blame?* This is the **credit assignment** problem, and
+it is precisely the job the proposal gives its fifth agent, the **Review & Learning Agent** ("attributes
+outcomes… agent contribution"). This entry supplies that agent's formal foundations: **Markov games** as
+the framework for many agents acting together, and the **Shapley value** as the unique *fair* way to
+split a shared outcome among them. Applied to a real four-agent Nasdaq strategy, the method does what a
+good attribution should — it **overturns the naïve story**, and it does so with a ground-truth guarantee
+(the efficiency axiom) verified to machine precision.
+
+## 1. What problem does it solve?
+
+Two coupled problems that appear the moment more than one agent acts. First, **how to model** several
+agents whose actions jointly drive a shared environment — each one's best move depends on what the others
+do, and from any single agent's viewpoint the world is no longer stationary. Second, and the focus here,
+**how to assign credit**: a team that shares a single reward gives no agent a clean signal of its own
+contribution, so learning stalls and, worse, *evaluation lies* — a redundant agent can look useless, and
+a genuinely harmful one can hide behind its teammates. Getting attribution right is what lets a
+multi-agent system both **learn** (each agent needs its own gradient) and be **governed** (a human needs
+to know which component to fix).
+
+## 2. Markov games — the framework
+
+A **Markov game** (stochastic game) is the multi-agent generalisation of the
+[MDP](../markov-decision-processes/index.qmd): a shared state $s$, one action set $A_i$ per agent, a
+transition $P(s' \mid s, a_1,\dots,a_n)$ driven by the **joint** action, and a reward $R_i$ for each
+agent. With one agent it collapses to an MDP; with two zero-sum agents it is the setting of minimax and
+game theory; the proposal's case is **cooperative** — the agents share a team objective (risk-adjusted
+P&L). The defining difficulty is that each agent's environment includes the others, who are *also
+adapting*, so the stationarity that let [Q-learning](../q-learning/index.qmd) and
+[PPO](../ppo/index.qmd) converge is broken: a policy that was optimal yesterday may not be today because a
+teammate changed. That non-stationarity is a core reason the proposal keeps most agents' functions
+**bounded and auditable** — and several of them deterministic — rather than turning a swarm of
+free-running learners loose on each other.
+
+## 3. Credit assignment — from difference rewards to Shapley
+
+Give a cooperative team a single reward and each agent faces the **structural credit assignment** problem
+(distinct from the *temporal* one [TD learning](../policy-gradients/index.qmd) solves): *of the shared
+outcome, how much was me?* The cheap answer is a **difference reward** — team performance minus what it
+would have been with agent $i$ replaced by a default action, $D_i = G(a) - G(a_{-i}, c_i)$ — which
+isolates $i$'s marginal effect in **one** counterfactual and, as **COMA**, gives a low-variance
+policy-gradient baseline (the same [variance-reduction logic](../policy-gradients/index.qmd) as a value
+baseline, now counterfactual). But one counterfactual depends on *when* you remove the agent. The
+principled answer averages over **all** of them: the **Shapley value**,
+
+$$\phi_i \;=\; \sum_{S \subseteq N\setminus\{i\}} \frac{|S|!\,(n-|S|-1)!}{n!}\,\big(v(S \cup \{i\}) - v(S)\big),$$
+
+the mean marginal contribution of agent $i$ across every coalition $S$ it could join. It is the *unique*
+attribution satisfying four fairness axioms — **efficiency** ($\sum_i \phi_i = v(N) - v(\varnothing)$,
+the parts sum to the whole), **symmetry** (equal contributors get equal credit), **null player** (an
+agent that never changes the outcome gets zero), and **linearity**. It is exactly the machinery of
+[SHAP](../shap-values/index.qmd) from earlier in this library — there the "players" were *features* in a
+prediction; here they are *agents* in a P&L. The one cost is that Shapley sums over $2^n$ coalitions, so
+for many agents it is approximated by Monte-Carlo sampling or by difference rewards — which are simply a
+single term of this sum.
+
+## 4. What did the demonstration show?
+
+**Ground truth first.** I verified the Shapley implementation on a hand-computable game (additive values
+with one pairwise interaction): it returned exactly the derived $[5, 7, 7]$, the efficiency axiom held to
+$\Delta = 0$, and a constructed null player received exactly zero while symmetric players tied. The
+attributor is provably correct before it is trusted.
+
+**Then the team.** I built a four-agent Nasdaq strategy on a long base — a **Regime** agent (de-risk when
+turbulent), a **Trend** agent (cut in downtrends), a **Vol-target** agent (scale to a volatility target),
+and a **Drawdown-cap** agent (cut in deep drawdowns) — and used each coalition's annualised **Sharpe** as
+the value function, so the Shapley values attribute the team's risk-adjusted performance (left panel).
+The result is bracingly honest and not what a promoter would claim: over a decade-long Nasdaq *bull*
+market, **only the Vol-target agent adds Sharpe** ($+0.050$); Regime ($-0.021$), Trend ($-0.005$) and
+Drawdown-cap ($-0.044$) each subtract it, because de-risking into a market that kept recovering cost
+return. The full team's Sharpe is a touch *lower* than buy-and-hold ($0.855$ vs $0.875$) — but its
+**maximum drawdown is nearly halved** ($-18.8\%$ vs $-35.6\%$). The Shapley values sum to the total
+change to twelve decimals: attribution that balances exactly.
+
+Two findings make the case for doing this properly. **Leave-one-out credit gets the sign wrong** (right
+panel). Drop the Vol-target agent from the full team and performance barely moves ($-0.015$) — because
+the other risk agents compensate — so a naïve "who was on when we profited" audit would call it
+*harmful*. Averaged fairly across all coalitions, Shapley reveals it as **the single most valuable agent**
+($+0.050$): the redundancy that hides its value from leave-one-out is exactly what the Shapley average
+sees through. And **credit depends on the objective**: re-run the attribution on **maximum drawdown**
+instead of Sharpe and the Regime agent flips from worst-on-Sharpe ($-0.021$) to **the largest
+contributor** ($+0.100$, cutting drawdown), while the Drawdown-cap agent — supposedly the specialist —
+contributes essentially nothing to drawdown ($-0.001$), the regime and vol agents having already done the
+work. Whom you reward depends entirely on what you are optimising.
+
+![Left: Shapley attribution of a four-agent Nasdaq strategy's annualised Sharpe — only the Vol-target agent adds Sharpe (+0.050), the others subtract, and the values sum exactly to the team-minus-base total (efficiency verified). The team trades a little Sharpe for nearly half the drawdown. Right: for each agent, the range of its marginal contribution across all coalition orders (grey), its Shapley value (blue), and its leave-one-out credit (red ✕). For the Vol-target agent the two disagree in sign — leave-one-out says −0.015 (harmful), Shapley says +0.050 (the most valuable agent) — the central reason naïve attribution misleads when agents are redundant.](fig-multi-agent-systems.png){fig-alt="Shapley credit-assignment bars for four trading agents beside a plot showing that leave-one-out credit gets an agent's sign wrong while the Shapley value is the fair average across all coalition orders"}
+
+## 5. What are its strengths?
+
+- **A single principled framework for the whole architecture.** Markov games describe every interacting agent in the proposal at once, rather than four disconnected single-agent stories.
+- **Fair, axiomatic attribution.** Shapley is the *unique* credit split satisfying efficiency, symmetry, null-player and linearity — not a heuristic, and it balances exactly (the efficiency check).
+- **It overturns naïve audits.** As shown, leave-one-out mis-signs redundant agents; Shapley sees through the redundancy — precisely the value a Review Agent adds.
+- **Reuses the library's machinery.** It is [SHAP](../shap-values/index.qmd) with agents as players, and its difference-reward form is a [counterfactual baseline](../policy-gradients/index.qmd) for learning.
+- **Diagnostic, not just descriptive.** The attribution tells you which agent to fix, retrain or retire — the feedback the Review & Learning Agent exists to provide.
+
+## 6. What are its weaknesses?
+
+- **Exponential cost.** Exact Shapley sums over $2^n$ coalitions; beyond a handful of agents it needs Monte-Carlo or difference-reward approximation, with the attendant sampling error.
+- **It depends on the counterfactual.** "Agent off" needs a defined default; a different baseline action changes the attribution, so the choice must be justified, not assumed.
+- **Objective-dependent.** Sharpe and drawdown gave different — even opposite — credit; the attribution is only as meaningful as the value function chosen, which is a modelling decision.
+- **Markov-game non-stationarity.** Convergence and equilibrium selection are genuinely hard when agents co-adapt; multi-agent learning has far weaker guarantees than the single-agent case.
+- **Backtest fragility.** The value function here is one historical path, gross of costs; the attribution inherits every limit of a single-sample, cost-free evaluation.
+
+## 7. How could it apply to markets?
+
+This is the [proposal's](../../phd/index.qmd) **Review & Learning Agent, formalised**. That agent's remit
+— "attributes outcomes… agent contribution" — is exactly a Shapley computation over the desk's agents:
+given a period's P&L, how much did the Regime, News, Trading and Risk agents each contribute, fairly and
+additively? The demonstration is the argument for why it must be principled rather than naïve. A
+back-of-envelope audit that credits whichever agent was active during good months would have branded the
+strategy's single most valuable component *harmful*, because redundant risk agents mask each other — and
+it would have mis-ranked them entirely under the wrong objective. A desk that reallocates capital or
+retrains models on such attributions optimises the wrong thing. The honest, uncomfortable findings are
+the feature, not a bug: a reactive [drawdown](../../equations/maximum-drawdown/index.qmd) stop can destroy
+[Sharpe](../../equations/sharpe-ratio/index.qmd) *and* fail to cut drawdown; de-risking overlays cost
+return in a bull market while earning their keep in tail protection; value is inseparable from the
+objective. Surfacing exactly these truths, with an attribution that provably balances, is the review loop
+that the [AI Trading Systems](../../ai-systems/index.qmd) design insists separates a research system from
+automated overconfidence. And the framework's non-stationarity is itself an argument for the proposal's
+restraint — bounded, auditable, largely deterministic agents rather than a swarm of co-adapting learners
+whose interactions no one can attribute.
+
+## 8. What does the Python code look like?
+
+```python
+from itertools import combinations
+from math import factorial
+import numpy as np
+
+def shapley(v, n):
+    """Exact Shapley values of a characteristic function v(frozenset)->float.
+       Verify with the efficiency axiom: sum(phi) == v(all) - v(none)."""
+    phi = np.zeros(n)
+    for i in range(n):
+        others = [j for j in range(n) if j != i]
+        for k in range(len(others) + 1):
+            for S in combinations(others, k):
+                weight = factorial(k) * factorial(n - k - 1) / factorial(n)
+                phi[i] += weight * (v(frozenset(S) | {i}) - v(frozenset(S)))   # marginal contribution
+    return phi
+
+# v(S) = performance (e.g. annualised Sharpe) of the strategy using ONLY the agents in coalition S
+phi = shapley(v_sharpe, n_agents)
+assert abs(phi.sum() - (v_sharpe(frozenset(range(n_agents))) - v_sharpe(frozenset()))) < 1e-9  # efficiency
+# a difference reward is one term of this sum: D_i = v(N) - v(N \ {i})  (leave-one-out) — cheaper, and, as shown, can mislead
+```
+
+The whole method is the marginal contribution $v(S\cup\{i\}) - v(S)$, weighted so that every ordering of
+the agents counts equally. The `assert` is the ground truth: a correct Shapley computation *must* have
+its parts sum to the whole.
+
+## 9. How would I explain it to a supervisor?
+
+"My proposal is a team of agents that together make one decision and earn one P&L, so I need to say which
+agent deserves the credit — that's the Review Agent's job, and multi-agent RL gives it two tools. Markov
+games are the framework: a shared state, joint actions, and — because the agents co-adapt — no
+stationarity, which is why I keep most agents bounded and auditable. Credit assignment is the hard part:
+a shared reward doesn't tell any agent what it personally contributed. The fair answer is the Shapley
+value, the average marginal contribution over all orderings — the unique attribution that's efficient,
+symmetric, and gives null agents zero; it's literally SHAP from earlier in my library, with agents as the
+players instead of features. I verified my implementation on a game with known Shapley values and the
+efficiency axiom held exactly, then attributed a four-agent Nasdaq strategy's Sharpe. The result was
+honest and surprising: only the vol-targeting agent added risk-adjusted return, and a naïve leave-one-out
+audit got its sign wrong — called the most valuable agent harmful — because the risk agents are redundant
+and mask each other, which only the Shapley average sees through. And the credit flipped entirely under a
+drawdown objective, where the regime agent became the top contributor. That's the whole point of the
+Review Agent: fair, objective-aware attribution that overturns the naïve story and tells you which
+component to actually fix."
+
+::: {.status-note}
+Framework: cooperative Markov game; attribution by exact Shapley values (sum over all $2^n$ coalitions).
+Ground-truth check: hand-computable game (additive + one pairwise interaction) recovered Shapley $[5,7,7]$,
+efficiency $\Delta=0$, null-player $=0$, symmetry exact. Strategy: long-NDX base with four switchable
+agents — Regime (0.40× exposure when 20-day vol above its expanding median), Trend (0.50× when 100-day
+momentum $<0$), Vol-target ($\text{clip}(\text{median vol}/\text{vol}_{20}, 0.3, 1.5)$), Drawdown-cap
+(0.50× when NDX 60-day drawdown $<-10\%$); all signals lagged one day (no leakage), gross of costs,
+2015–2026, $n=2{,}903$. Value = annualised Sharpe: base 0.875 (maxDD −35.6%), full team 0.855 (maxDD
+−18.8%); Shapley R −0.021, T −0.005, V +0.050, D −0.044, sum −0.020 = team−base ($\Delta=0$). Vol-target
+leave-one-out −0.015 vs Shapley +0.050 (sign flip). Second objective (max drawdown): Shapley R +0.100,
+T +0.022, V +0.046, D −0.001; base −0.356 → team −0.188 ($\Delta = 3\times10^{-17}$). Every number was
+checked.
+:::

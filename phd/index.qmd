@@ -117,7 +117,7 @@ deterministic baselines.
 | **News & Narrative Agent** | Transforms unstructured text into bounded, auditable market features. | Event class, direction, sentiment, novelty, urgency, affected assets, horizon, source reliability — schema-constrained, timestamp-safe. |
 | **RL Trading Agent** | Selects exposure, timing and position-management actions from the combined state. | Discrete/continuous actions, risk-sensitive rewards, PPO, actor-critic, constrained RL. |
 | **Risk Management Agent** | Approves, scales or rejects proposed actions. | Exposure, leverage, volatility, [drawdown](../equations/maximum-drawdown/index.qmd), concentration, [Expected Shortfall](../equations/value-at-risk/index.qmd) and cost controls. |
-| **Review & Learning Agent** | Attributes outcomes, tests compliance, informs future learning. | Agent contribution, regime accuracy, post-trade review, decision audit trail. |
+| **Review & Learning Agent** | Attributes outcomes, tests compliance, informs future learning. | [Agent contribution](../ml/multi-agent-systems/index.qmd), regime accuracy, post-trade review, decision audit trail. |
 | *Behaviour Detection Agent* | *Exploratory:* flags unusual activity consistent with systematic flows. | Order-book imbalance, trade intensity, spread changes, liquidity withdrawal. |
 
 : {.striped .hover}
@@ -186,7 +186,7 @@ evidence, and states plainly what remains.
 | Online regime detection for the Regime Agent | ✅ Built | [Bayesian change-point detection](../ml/change-point-detection/index.qmd) — the run-length posterior run online on the Nasdaq, flagging the COVID crash and 2022 onset point-in-time, complementing the HMM's hindsight labels |
 | Regime-conditional dynamics for the Regime Agent | ✅ Built | [Markov-switching regression](../ml/markov-switching-regression/index.qmd) — a regression whose beta switches by regime; PEP's beta to the Nasdaq doubles (0.26→0.51) in the turbulent state, validated against a recovered known model |
 | Trustworthy uncertainty for the News & Risk Agents | ✅ Built | [Probability calibration & conformal prediction](../ml/probability-calibration/index.qmd) — over-confident scores recalibrated (ECE 0.105→0.062), and distribution-free 90% intervals made regime-honest by vol-normalization |
-| Multi-agent systems (Markov games, credit assignment) | 🔜 Next | Planned |
+| The coordination framework & credit assignment (Objective 4) | ✅ Built | [Multi-agent systems & credit assignment](../ml/multi-agent-systems/index.qmd) — Markov games, and Shapley attribution of a four-agent strategy's P&L (efficiency axiom verified); naïve leave-one-out credit shown to mis-sign a redundant agent |
 | Market microstructure & execution modelling | 🔜 Next | Planned (supports the exploratory objective) |
 
 : Built vs. next. Roughly two-thirds of the proposal's methodological base is already implemented, verified and published; the remaining tier is scheduled in the [ML Library roadmap](../ml/index.qmd#the-roadmap). {.striped .hover}
