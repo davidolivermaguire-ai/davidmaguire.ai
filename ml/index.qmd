@@ -50,7 +50,7 @@ Added one at a time, to the standard above. The roadmap below is the plan.
 [Principal Component Analysis](principal-component-analysis/) · [Gaussian Mixture Models](gaussian-mixture-models/).
 
 ### Deep learning
-[Neural networks](neural-networks/) · [activation functions](activation-functions/) · [backpropagation](backpropagation/) · [CNNs](cnns/) · RNNs · LSTMs ·
+[Neural networks](neural-networks/) · [activation functions](activation-functions/) · [backpropagation](backpropagation/) · [CNNs](cnns/) · [RNNs](rnns/) · LSTMs ·
 transformers · attention · embeddings.
 
 ### Quant-specific machine learning
