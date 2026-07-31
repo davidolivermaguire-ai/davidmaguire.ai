@@ -156,7 +156,7 @@ and delayed execution, regime-specific stress tests, repeated seeds,
 Because the true regime is latent, the formal setting is a partially observable MDP: the agent
 maintains a belief $b_t(s) = P(S_t = s \mid o_{1:t}, a_{1:t-1})$ over hidden states.
 
-**Evaluation** spans four layers: predictive (AUC, log loss, Brier score, calibration), financial
+**Evaluation** spans four layers: predictive (AUC, log loss, Brier score, [calibration](../ml/probability-calibration/index.qmd)), financial
 ([Sharpe](../equations/sharpe-ratio/index.qmd), [Sortino](../equations/sortino-ratio/index.qmd),
 Calmar, [maximum drawdown](../equations/maximum-drawdown/index.qmd), Expected Shortfall, turnover
 and implementation shortfall), robustness (performance by regime and asset, block-bootstrap
@@ -185,7 +185,7 @@ evidence, and states plainly what remains.
 | Reinforcement learning (MDPs → PPO, risk-sensitive RL) | ✅ Built | [MDPs](../ml/markov-decision-processes/index.qmd), [Q-learning & DQNs](../ml/q-learning/index.qmd), [policy gradients](../ml/policy-gradients/index.qmd), [PPO](../ml/ppo/index.qmd) and [risk-sensitive & constrained RL](../ml/risk-constrained-rl/index.qmd) — the regime problem solved exactly, re-learned model-free, with continuous actions, stably at scale, and under a hard risk budget (the Risk Agent, formalised) |
 | Online regime detection for the Regime Agent | ✅ Built | [Bayesian change-point detection](../ml/change-point-detection/index.qmd) — the run-length posterior run online on the Nasdaq, flagging the COVID crash and 2022 onset point-in-time, complementing the HMM's hindsight labels |
 | Regime-conditional dynamics for the Regime Agent | ✅ Built | [Markov-switching regression](../ml/markov-switching-regression/index.qmd) — a regression whose beta switches by regime; PEP's beta to the Nasdaq doubles (0.26→0.51) in the turbulent state, validated against a recovered known model |
-| Probability calibration (Brier, ECE, conformal) | 🔜 Next | Planned |
+| Trustworthy uncertainty for the News & Risk Agents | ✅ Built | [Probability calibration & conformal prediction](../ml/probability-calibration/index.qmd) — over-confident scores recalibrated (ECE 0.105→0.062), and distribution-free 90% intervals made regime-honest by vol-normalization |
 | Multi-agent systems (Markov games, credit assignment) | 🔜 Next | Planned |
 | Market microstructure & execution modelling | 🔜 Next | Planned (supports the exploratory objective) |
 
