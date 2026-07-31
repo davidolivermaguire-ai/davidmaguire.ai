@@ -1,0 +1,138 @@
+---
+title: "Avoiding Data Leakage"
+subtitle: "The many ways information sneaks from test to train — and the one rule that stops most of them"
+description: "Data leakage is any time information from the test set, the future, or the outcome contaminates training, silently inflating results. The taxonomy of leakage, the preprocess-inside-the-split rule, and a demonstration where leakage manufactures a 0.81 AUC from pure noise."
+date: 2026-07-27
+author: "David Maguire"
+categories: [quant-specific ML, validation]
+image: fig-data-leakage.png
+image-alt: "A wrong-versus-right pipeline showing preprocessing inside the CV split, beside bars where feature-selection leakage inflates AUC from 0.53 to 0.81 on pure noise"
+toc: true
+---
+
+The [walk-forward](../walk-forward-validation/) and [time-series CV](../time-series-cross-validation/)
+pages both defended against one kind of leakage — *temporal*, training on the future. But leakage is
+broader and sneakier than that. It is **any** time information from the test set, the future, or the
+outcome itself contaminates the training process, and its signature is uniquely dangerous: it makes your
+model look *better*, so there is no error message, no crash, nothing to warn you — the reward *is* the
+trap. Leakage is the single biggest reason a backtest gleams and live trading bleeds. This page is the
+umbrella: the taxonomy of how it happens, the one discipline that prevents most of it, and a
+demonstration in which leakage conjures a strong, convincing signal out of pure noise.
+
+## 1. What problem does it solve?
+
+Preventing the **silent inflation of measured performance** that comes from letting the test set (or the
+future, or the target) influence training or model selection. A leaked evaluation reports a number that
+cannot be reproduced out of sample, so it is worse than useless — it is actively misleading. Leakage is
+not a single bug but a *family* of them, and avoiding it is the discipline that separates a backtest you
+can trust from one that will lose money the moment it goes live.
+
+## 2. What is the core principle?
+
+The test set must be a faithful stand-in for **future, unseen data**. Therefore *nothing derived from it*
+— not its labels, not its feature distribution, not any later information — may touch training or model
+choice. Stated as a rule: anything that **learns from data** (a scaler's mean and variance, an imputer's
+fill value, a feature-selection ranking, an encoder, the model itself) must be fit on the **training fold
+only** and merely *applied* to the test fold. Every leak is a violation of this one sentence.
+
+## 3. Where does it come from?
+
+The common forms, shown in the left panel and each worth recognising on sight:
+
+- **Look-ahead / temporal** — training on data from after the prediction point; the [walk-forward](../walk-forward-validation/) case.
+- **Preprocessing before the split** — fitting a scaler, imputer, encoder, or PCA on the *whole* dataset, so the test set's distribution bleeds into training.
+- **Feature selection outside cross-validation** — choosing features by their relationship to the target on all the data, so the selection has already seen the test labels.
+- **Target leakage** — a feature that secretly encodes the outcome (a value known only after the label is determined, or same-timestamp information you wouldn't have in real time).
+- **Survivorship bias** — building a universe from only the names that survived, so the delisted losers are invisible and every backtest is flattered.
+
+## 4. How do you prevent it?
+
+One rule handles the majority: **preprocess inside the cross-validation loop, never before it.** Put every
+data-learning step — scaling, imputation, encoding, feature selection, the model — into a single pipeline,
+and pass the *pipeline* to the cross-validator, so it refits on each training fold and the test fold is
+never seen during fitting. The right panel shows why this is not pedantry. Take **pure noise**: 400 rows,
+2,000 random features, a random binary target, *no relationship whatsoever*. Rank the features by their
+correlation with the target using **all** the data, keep the top 20, and cross-validate a classifier on
+them — it reports an AUC of **0.81**. A strong, publishable-looking signal, entirely fabricated, because
+those 20 features were chosen precisely *because* they happened to correlate with the target on the same
+rows used to test. Move the identical selection **inside** the cross-validation loop, so each fold selects
+from its training data only, and the AUC falls to **0.53** — honestly near the 0.50 truth. The whole
+**+0.28** was leakage: a signal invented from nothing.
+
+![Left: the rule. Fitting preprocessing and feature selection on all the data *before* splitting lets the test fold influence them — a leak; splitting first and fitting only on each training fold keeps the test set unseen. Below, the common leakage forms. Right: feature-selection leakage on pure noise — selecting 20 of 2,000 random features on the full data yields a cross-validated AUC of 0.81, while selecting inside the CV loop gives 0.53; the 0.28 gap is invented from noise.](fig-data-leakage.png){fig-alt="A wrong-versus-right pipeline showing preprocessing inside the CV split, beside bars where feature-selection leakage inflates AUC from 0.53 to 0.81 on pure noise"}
+
+Scaling before the split leaks too — it is wrong in principle, though usually small in effect (here an
+imperceptible 0.586 versus 0.587). The dangerous cases are the aggressive transforms: target encoding,
+oversampling (SMOTE) applied before the split, or imputation that uses the target — each can leak as
+badly as the feature-selection example above.
+
+## 5. What are its strengths?
+
+- **Trustworthy estimates.** A leak-free pipeline gives a performance number you can actually expect to see live.
+- **Catches the fabricated-signal trap.** It is the only defence against the noise-to-0.81 illusion, which no amount of model tuning would reveal.
+- **One habit covers most cases.** Wrapping everything in a pipeline and cross-validating the pipeline prevents the whole preprocessing-and-selection family at once.
+- **Reinforces the temporal discipline.** The same instinct — fit on train, apply to test — is what makes walk-forward honest.
+
+## 6. What are its weaknesses (and difficulties)?
+
+- **It is invisible.** Leakage improves your score, so there is no failure to debug — you have to *suspect* it, which is a discipline, not a diagnostic.
+- **Many subtle forms.** Survivorship, point-in-time data, and restated fundamentals live outside the CV mechanics entirely and need provenance knowledge to catch.
+- **Requires knowing label timing.** You must know when each label becomes available to purge overlaps and forbid same-time features.
+- **A little slower.** Refitting preprocessing on every fold costs compute versus doing it once (the price of honesty).
+- **Not sufficient alone.** A perfectly leak-free pipeline can still overfit through repeated trials — the next page's subject.
+
+## 7. How could it apply to markets?
+
+Leakage is *the* reason most amateur trading strategies die in production: the backtest leaked. Every form
+bites hard in finance — **look-ahead** (using the close to predict that same day's direction),
+**survivorship** (backtesting on *today's* index members, silently excluding everything that delisted),
+**point-in-time** violations (using restated fundamentals or later-revised data), and
+**preprocessing/selection on all history** exactly as demonstrated. And the demonstration is the
+cautionary tale every quant should carry: two thousand random features and a coin-flip target produce a
+0.81 backtest AUC when the selection leaks — a "strategy" that is pure noise. For a
+[MarketLens](../feature-engineering/) signal the defences are concrete: wrap every transform in a
+pipeline, use point-in-time data, include delisted names in the universe, forbid any feature that uses
+information from the label's own period, and treat any surprisingly good backtest as guilty until proven
+leak-free.
+
+## 8. What does the Python code look like?
+
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.model_selection import cross_val_score
+
+# WRONG — selection/scaling on all data, THEN cross-validate (leaks the test set):
+# best = SelectKBest(k=20).fit(X, y)          # <-- fit on everything, incl. test folds
+# cross_val_score(model, best.transform(X), y)
+
+# RIGHT — everything inside ONE pipeline, refit on each training fold:
+pipe = make_pipeline(StandardScaler(),
+                     SelectKBest(f_classif, k=20),   # selection now sees train folds only
+                     model)
+auc = cross_val_score(pipe, X, y, cv=cv, scoring="roc_auc").mean()
+```
+
+The single habit — build a `Pipeline` and cross-validate *the pipeline*, never a pre-transformed `X` —
+prevents the entire preprocessing-and-selection family of leaks. For time order, combine it with
+`TimeSeriesSplit` and purging; for provenance leaks, fix the data, not the code.
+
+## 9. How would I explain it to a supervisor?
+
+"Data leakage is when information from the test set, the future, or the outcome sneaks into training, and
+it's dangerous because it makes the model look better — there's no error to catch, the good score *is* the
+symptom. The forms are look-ahead, preprocessing or feature selection fit on all the data, target leakage,
+and survivorship bias. The one rule that prevents most of it is to preprocess inside the cross-validation
+loop — put scaling, selection, and the model in a pipeline and cross-validate the pipeline, so the test
+fold is never seen during fitting. I showed how bad it gets: on pure noise, selecting the 20 best of 2,000
+random features on all the data gives a cross-validated AUC of 0.81, versus 0.53 when the selection is done
+inside the loop — a 0.28 signal invented from nothing. In markets you add point-in-time data and delisted
+names, and you treat any backtest that looks too good as leaked until proven otherwise."
+
+::: {.status-note}
+Feature-selection leakage demonstrated on synthetic pure noise (400 samples, 2,000 i.i.d. Gaussian
+features, random binary target): top-20 features chosen by correlation on the full data then 5-fold CV,
+versus selection inside the CV pipeline (`scikit-learn` `SelectKBest` + `LogisticRegression`). Scaling-leak
+comparison on a small synthetic signal. Every number was checked.
+:::

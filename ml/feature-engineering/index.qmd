@@ -66,7 +66,7 @@ fully differencing a series (price → return) achieves stationarity but erases 
 López de Prado's **fractional differencing** takes the *minimum* differencing needed for stationarity
 while preserving as much long-memory predictive structure as possible. And **scaling**: standardise
 features, but fit the scaler on the **training data only** — fitting it on the whole sample leaks
-future distribution information backward, a mistake the data-leakage entry ahead treats in full.
+future distribution information backward, a mistake the [data-leakage](../data-leakage/) entry treats in full.
 
 ![Left: the Nasdaq price is non-stationary (ADF p = 0.997, a unit root) — useless as a direct feature — while its returns are stationary (ADF p < 0.001), the foundation every other feature is built on. Right: the univariate predictive power (AUC) of nine engineered features for two targets. Every feature is essentially 0.50 for next-day direction (no signal), while several reach 0.60–0.63 for next-day volatility — the craft extracts the signal that exists and cannot manufacture the one that doesn't.](fig-feature-engineering.png){fig-alt="A non-stationary price series turned into stationary returns beside a chart showing engineered features predict volatility but not direction"}
 
