@@ -1,0 +1,62 @@
+---
+title: "Li, Kim, Cucuringu & Ma (2025) — Can LLM-based Financial Investing Strategies Outperform the Market in the Long Run?"
+description: "The rigorous evaluation that dismantles LLM-trading hype — and, in doing so, documents the exact gap my proposal fills: LLM strategies fail to adapt across regimes. The most important paper for my positioning."
+date: 2026-07-28
+author: "David Maguire"
+categories: [LLM agents, evaluation, positioning]
+toc: true
+---
+
+**Citation.** Li, W., Kim, H., Cucuringu, M., & Ma, T. (2025). *Can LLM-based Financial Investing
+Strategies Outperform the Market in the Long Run?* (FINSABER framework). arXiv:2505.07078.
+
+> **One-line takeaway.** Put LLM investing strategies through broad-universe, two-decade, bias-controlled
+> backtesting and their reported advantages largely **evaporate** — and, most tellingly, the strategies are
+> **conservative in bull markets and aggressive in bear markets**, i.e. they fail to adapt across regimes.
+> The single most useful paper for positioning my proposal.
+
+## What the paper claims
+
+Existing evaluations of LLM-based trading — including the multi-agent frameworks — suffer from **short
+horizons, narrow stock universes, and selection biases** that inflate performance. Under a rigorous,
+unified backtesting framework (**FINSABER**), those advantages **deteriorate significantly** when tested
+over a broad cross-section and a long horizon. The most actionable finding is behavioural: LLM strategies
+are systematically **regime-maladapted** — too cautious when markets rise, too aggressive when they fall.
+
+## How they show it
+
+FINSABER standardises evaluation over **100+ symbols across roughly two decades**, with controls for the
+biases that flatter short, narrow backtests, and compares LLM strategies against passive benchmarks and
+simpler methods, sliced by market regime. The breadth is the point: it is the opposite of the months-long,
+single-name demos that produced the headline claims.
+
+## What I'd push on
+
+- **It is a diagnosis, not a cure.** FINSABER says what does *not* work and why; it does not build the
+  system that would. The constructive gap — an LLM-in-the-loop design that *does* adapt across regimes and
+  survives honest evaluation — is left wide open. That gap is my proposal.
+- **Prompting sensitivity.** Some of the underperformance may reflect naive prompting rather than a
+  fundamental ceiling; a fairer test would stress the *best* elicitation. But the sheer breadth of the
+  evaluation makes the qualitative conclusion robust to this.
+- **The regime finding is the load-bearing one.** "Conservative in bulls, aggressive in bears" is not a
+  vague failure — it is a precise, mechanistic one that points directly at the fix: **explicit regime
+  conditioning and a hard risk layer**, rather than hoping an autonomous swarm learns to adapt.
+
+## How it connects to the proposal
+
+This is the most important paper I have read for the proposal, because it converts my positioning from an
+assertion into an externally-documented gap. It (1) independently corroborates the near-efficiency my own
+[capstone](../../../capstone.qmd) reaches — LLM strategies do not beat the market in the long run; (2)
+shows that the fashionable [multi-agent LLM systems](../tradingagents-2024-multi-agent-llm/index.qmd) are
+**regime-blind**, which is exactly the failure a [regime-aware architecture](../../../ml/regime-aware-modelling/index.qmd)
+targets; and (3) sets the **evaluation standard** — broad universe, long horizon, bias controls — that the
+proposal adopts and that the [Quant Lab](../../../quant-lab/index.qmd) already practices with deflated
+significance and honest nulls. In one paper: the field's own most rigorous work says naive LLM trading
+overstates its returns and cannot handle regimes, and asks for a controlled, regime-aware, honestly-evaluated
+alternative — which is precisely what the proposal sets out to build.
+
+## Related work to read next
+
+Xiao et al. (2024, [TradingAgents note](../tradingagents-2024-multi-agent-llm/index.qmd)); Bailey & López de
+Prado (2014, [Deflated Sharpe note](../bailey-lopez-de-prado-2014-deflated-sharpe/index.qmd)); the
+[literature review](../../literature-review/index.qmd), §6–7.

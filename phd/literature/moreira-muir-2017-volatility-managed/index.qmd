@@ -1,0 +1,65 @@
+---
+title: "Moreira & Muir (2017) — Volatility-Managed Portfolios"
+description: "Scaling exposure by inverse variance raises Sharpe and produces alpha — a striking claim I could reproduce and stress-test directly. Notes, the Cederburg critique, and what my own experiment found."
+date: 2026-07-08
+author: "David Maguire"
+categories: [volatility, portfolio, tradability]
+toc: true
+---
+
+**Citation.** Moreira, A., & Muir, T. (2017). *Volatility-Managed Portfolios.* The Journal of Finance,
+72(4), 1611–1644.
+
+> **One-line takeaway.** Scale a factor's exposure by the inverse of last month's realised variance and
+> you raise its Sharpe ratio and earn a positive alpha — a claim that says you can improve a portfolio by
+> timing your *own* volatility, with no view on returns.
+
+## What the paper claims
+
+Managing volatility — taking less exposure when recent realised variance is high and more when it is low —
+**increases risk-adjusted returns** across the major equity factors (market, value, momentum, and others).
+The headline evidence is a spanning regression: the volatility-managed factor $f^\sigma_t =
+(c/\hat\sigma^2_{t-1})\,f_t$ regressed on the original factor $f_t$ produces a **positive, significant
+alpha**, meaning the timing adds value beyond simply holding the factor. The mechanism is that volatility
+is persistent and forecastable while the equity premium is not strongly related to volatility at these
+horizons, so cutting exposure in high-variance months avoids risk without giving up much return.
+
+## How they show it
+
+Monthly data, decades of factor returns; realised variance from daily returns within the prior month; the
+constant $c$ chosen so the managed factor has the same unconditional volatility as the original (making the
+comparison risk-matched). Alphas are reported with standard errors; the effect is strongest for momentum,
+whose crashes are the most volatility-linked.
+
+## What I'd push on
+
+- **Out-of-sample and net of costs.** The strongest challenge is Cederburg, O'Doherty, Wang & Yang (2020),
+  who show that for a *real-time* investor estimating everything as they go, and after transaction costs,
+  much of the alpha **evaporates**, and a naive implementation can underperform. The in-sample spanning
+  alpha is not the same as a tradable edge.
+- **Leverage the normalisation hides.** Matching unconditional volatility with a single constant $c$ masks
+  the fact that inverse-variance weighting demands enormous leverage in calm periods — capping it changes
+  the result materially, which is an implementation choice, not the signal.
+- **Sharpe improvement vs significant alpha.** These are different tests; a strategy can lift Sharpe while
+  its spanning alpha fails to clear a bar, especially once you account for the specifications tried.
+- **Momentum-driven.** Much of the aggregate result rides on the momentum factor, whose volatility-managed
+  version is really *managing momentum crashes* (Barroso & Santa-Clara, 2015) — a narrower and better-
+  understood phenomenon than "volatility management works."
+
+## How it connects to the proposal — and what I found
+
+This is a paper I could not just annotate but **test**, and did: my
+[volatility-managed-portfolios experiment](../../../quant-lab/volatility-managed-portfolios/index.qmd)
+reproduces the debate on the Nasdaq with in-sample-vs-OOS, leverage caps, costs, and Newey–West alphas.
+The verdict lands between Moreira–Muir and Cederburg: volatility management **improves risk-adjusted
+metrics** (Sharpe up, drawdown roughly halved) and **survives out of sample and costs once leverage is
+capped**, but its spanning alpha is **never statistically significant** across eight specifications, and
+the naive uncapped version underperforms. The robust benefit is *risk control, not alpha* — which is
+precisely the empirical foundation of the proposal's whole positioning, and a cleaner statement than
+either side of the original debate.
+
+## Related work to read next
+
+Cederburg, O'Doherty, Wang & Yang (2020); Barroso & Santa-Clara (2015, *Momentum Has Its Moments*);
+my [volatility-forecasting-horizon experiment](../../../quant-lab/volatility-forecasting-horizon/index.qmd);
+the [literature review](../../literature-review/index.qmd), §3.

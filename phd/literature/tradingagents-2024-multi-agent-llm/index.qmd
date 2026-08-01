@@ -1,0 +1,66 @@
+---
+title: "Xiao, Sun, Luo & Wang (2024) — TradingAgents: Multi-Agents LLM Financial Trading Framework"
+description: "The closest precedent to my proposal, and its foil: a swarm of LLM agents deliberating in natural language toward trades. Notes on what it gets right, and the design choices I deliberately reject."
+date: 2026-07-22
+author: "David Maguire"
+categories: [LLM agents, multi-agent, positioning]
+toc: true
+---
+
+**Citation.** Xiao, Y., Sun, E., Luo, D., & Wang, W. (2024). *TradingAgents: Multi-Agents LLM Financial
+Trading Framework.* arXiv:2412.20138.
+
+> **One-line takeaway.** Simulate a trading firm as a swarm of specialised LLM agents — fundamental,
+> sentiment and technical analysts, researchers, traders and a risk manager — deliberating in natural
+> language toward a trade, and report backtests that beat single-agent baselines. The nearest thing to my
+> proposal in the literature, and the design I most want to argue *against*.
+
+## What the paper claims
+
+Decomposing an LLM trading system into **specialised role-agents that deliberate** produces better and
+more "human-like" decisions than one monolithic LLM. The framework mirrors a real desk — analysts feed
+researchers, who feed traders with varied risk profiles, overseen by a risk-manager agent — and the
+reported backtests show superior cumulative return, Sharpe ratio and risk management versus single-agent
+and simple baselines.
+
+## How they show it
+
+A multi-modal dataset (prices, news, social-media sentiment, insider transactions, filings, technical
+indicators) drives the agents; evaluation is a backtest over a short, recent window (data from early 2024,
+trading over a several-month 2024 span in the reported setup), compared against single-agent and passive
+baselines.
+
+## What I'd push on
+
+- **The evaluation is exactly the kind Li et al. (2025) dismantle.** A months-long, single-period, recent
+  (largely bull) window over a narrow universe is precisely where LLM strategies look best and generalise
+  worst; FINSABER shows such advantages **evaporate** under broad-universe, multi-decade, bias-controlled
+  testing. There is no deflated Sharpe or multiple-testing correction.
+- **Look-ahead is hard to rule out.** A frozen LLM whose training data postdates the trading window may
+  effectively "know" outcomes when it reads 2024 news in 2024 — a contamination that a point-in-time,
+  provider-sourced pipeline is built to prevent and a chat model cannot easily guarantee.
+- **Free-text deliberation is the wrong primitive for capital.** Natural-language agent debate is
+  non-deterministic, unbounded, hard to audit, and error-compounding, and it re-opens the prompt-injection
+  surface at every hop — the concerns my [multi-agent coordination](../../../ai-systems/multi-agent-coordination/index.qmd)
+  entry argues make this design unsafe near money.
+- **A risk-manager *agent* is a soft control.** An LLM overseeing other LLMs is gameable and unverifiable;
+  it is not the hard, deterministic risk gate that [an execution boundary requires](../../../ai-systems/why-llms-never-trade/index.qmd).
+- **Regime-blindness.** Consistent with FINSABER's finding that such systems are conservative in bulls and
+  reckless in bears, there is no explicit regime conditioning — the adaptation the whole approach most
+  needs is left to emerge, and doesn't.
+
+## How it connects to the proposal
+
+TradingAgents is simultaneously my nearest precedent and my clearest foil, and citing it precisely is how I
+explain what the proposal *is not*. I adopt its one genuinely right idea — **decomposition into specialised
+agents** — and reject essentially every other choice: structured, typed shared state instead of free-text
+debate; an LLM that is **never an execution authority**; a **deterministic** risk gate rather than a
+risk-manager agent; **regime-awareness by construction**; and **deflated, out-of-sample, honest-null**
+evaluation. Where TradingAgents builds for autonomy and an impressive demo, the proposal builds for control,
+auditability and evidence — the axis its successors' critics say is missing.
+
+## Related work to read next
+
+Li, Kim, Cucuringu & Ma (2025, [FINSABER note](../li-2025-finsaber-llm-evaluation/index.qmd)); Yang et al.
+(2024, *FinRobot*); the 2026 "coordination primacy / cost awareness" evaluation; the
+[literature review](../../literature-review/index.qmd), §6.

@@ -1,0 +1,65 @@
+---
+title: "Bailey & López de Prado (2014) — The Deflated Sharpe Ratio"
+description: "How to judge a backtest's Sharpe against the best you'd expect from luck given how many things you tried. Notes, the √(2 ln N) intuition, and the discipline the whole Quant Lab is built on."
+date: 2026-07-14
+author: "David Maguire"
+categories: [methodology, backtesting, statistics]
+toc: true
+---
+
+**Citation.** Bailey, D. H., & López de Prado, M. (2014). *The Deflated Sharpe Ratio: Correcting for
+Selection Bias, Backtest Overfitting, and Non-Normality.* The Journal of Portfolio Management, 40(5),
+94–107.
+
+> **One-line takeaway.** An observed Sharpe ratio means nothing until you compare it to the *maximum* you
+> would expect from luck alone, given how many strategies you tried, how long the sample is, and how
+> non-normal the returns are.
+
+## What the paper claims
+
+Reported Sharpe ratios are systematically inflated by **selection**: search enough strategies and the best
+will look excellent even with zero true edge, because you are reporting the maximum of many noisy
+estimates. The **Deflated Sharpe Ratio (DSR)** corrects for this by asking how far an observed Sharpe sits
+above the expected maximum under the null, adjusting for (i) the **number of trials** $N$, (ii) the
+**sample length**, and (iii) the **skewness and kurtosis** of the strategy's returns, both of which make
+extreme Sharpes more likely than a normal approximation implies. A strategy is only credible if its Sharpe
+clears this deflated benchmark, not the naive $t$-stat.
+
+## How they show it
+
+Analytically. The expected maximum Sharpe across $N$ independent trials grows like a known function of $N$
+(leading order $\sqrt{2\ln N}$ scaled by the Sharpe standard error), and the DSR converts an observed
+Sharpe into a probability that the true Sharpe exceeds zero, given that benchmark. The companion work
+(Bailey et al., 2017) turns the same idea into the **Probability of Backtest Overfitting** via combinatorial
+splits.
+
+## What I'd push on
+
+- **Counting $N$ honestly is the hard part.** Every feature, parameter, universe and variant you tried is a
+  trial — including the ones you discarded and the ones a co-author tried. The effective $N$ is almost
+  always far larger than the number reported, and the DSR is only as honest as that count.
+- **Independence is optimistic.** Real candidate strategies are highly correlated, so the *effective*
+  number of independent trials is smaller than the raw count; the honest $N$ is nearer the number of
+  independent bets, which is genuinely hard to pin down.
+- **It corrects, it does not rescue.** The DSR tells you a backtest is probably noise; it cannot turn a
+  data-mined strategy into a real one. Its cultural value — *prefer fewer, hypothesis-driven tests* — matters
+  more than the formula.
+- **Non-normality adjustment assumes you can estimate skew/kurtosis**, which are themselves noisy in short
+  samples — the correction has its own estimation risk.
+
+## How it connects to the proposal
+
+The DSR is the statistical conscience of the whole proposal, and I made it concrete: the
+[backtest-overfitting experiment](../../../quant-lab/backtest-overfitting/index.qmd) reproduces the
+$\sqrt{2\ln N}$ inflation from pure noise, and the
+[calendar-anomalies experiment](../../../quant-lab/calendar-anomalies/index.qmd) applies exactly this logic
+to 29 seasonal effects — the largest $|t|$ lands right on the $\sqrt{2\ln N}$ noise curve, and none survive
+correction. This is the standard the proposal holds *itself* to and, pointedly, the standard the LLM-trading
+results dismantled by Li et al. (2025) were *not* held to — making rigorous, deflated evaluation the
+proposal's clearest point of differentiation.
+
+## Related work to read next
+
+Bailey, Borwein, López de Prado & Zhu (2017, *Probability of Backtest Overfitting*); Harvey, Liu & Zhu
+(2016); López de Prado (2018, *Advances in Financial Machine Learning*); the
+[literature review](../../literature-review/index.qmd), §7.
