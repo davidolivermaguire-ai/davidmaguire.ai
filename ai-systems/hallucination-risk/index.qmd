@@ -1,0 +1,156 @@
+---
+title: "Hallucination Risk When LLMs Meet Financial Data"
+subtitle: "Why a fluent model invents confident falsehoods, why that is uniquely dangerous with money, and the layered defence that manages — never eliminates — it"
+description: >
+  A language model produces plausible text, not true text; the two usually coincide and occasionally,
+  fluently, do not. In a chatbot that is an annoyance. In a system that trades on the output it is a
+  liability. The taxonomy of financial hallucination, the honest limits of every fix, and the one rule
+  that matters most: use the model for text, never for numbers you can look up.
+date: 2026-07-31
+author: "David Maguire"
+categories: [safety]
+toc: true
+---
+
+Every entry in the [News Agent tier](../schema-constrained-extraction/index.qmd) deferred to this one, and
+for good reason: **hallucination** is the risk that makes all the others necessary. A large language model
+does not retrieve facts; it **generates plausible text**, one token at a time, optimised for how likely a
+continuation is — not for whether it is true. Usually plausible and true coincide. Occasionally, and with
+total fluency and confidence, they do not, and the model states a wrong number, a fabricated event or an
+invented source in exactly the same untroubled tone it uses for correct ones. In a chatbot that is an
+annoyance. In a system that **acts on the output with money**, it is a liability that has to be engineered
+against from the first line — and, honestly, never fully engineered away.
+
+## 1. Hallucination is intrinsic, not a bug
+
+It is tempting to treat hallucination as a defect a better model will fix. It is closer to a *property* of
+what these models are. A next-token predictor trained to continue text fluently has no built-in
+distinction between "I know this" and "this is the kind of thing that sounds right," and no default notion
+of "I don't know." Bigger and better models hallucinate **less**, and grounding and tooling reduce it
+further, but the rate is never zero and the failures are, by construction, the ones that *look most
+plausible* — the hardest to catch. Designing as though a large enough model will make the problem go away
+is the first mistake; the second is designing as though the model's confidence means anything, when LLMs
+are notoriously [poorly calibrated](../../ml/probability-calibration/index.qmd) and sound equally sure when
+right and wrong.
+
+## 2. Why finance is the worst place for it
+
+Two properties of financial data make hallucination especially dangerous. First, **the exact value is the
+point.** A chatbot that rounds a date or fuzzes a statistic is still useful; a system that reports EPS as
+\$3.10 when it was \$3.01, or a stock at 340 when it is 430, is worse than useless — and LLMs are
+[specifically weak at exact figures](../llms-vs-conventional-ml/index.qmd), the thing finance most needs.
+Second, **the consequences are asymmetric and fast.** A hallucinated fact does not just mislead a reader;
+it can size a position, and an automated pipeline acts on it faster than a human can intervene. The cost of
+a fluent falsehood is no longer embarrassment — it is a filled order.
+
+## 3. A taxonomy of financial hallucination
+
+Naming the failure modes is the first step to catching them. In market text, the model can fabricate:
+
+- **Figures** — a wrong EPS, price, percentage or date, produced with full confidence.
+- **Entities** — a non-existent ticker, a mis-spelled company mapped to the wrong symbol, an invented executive.
+- **Events** — an acquisition, a downgrade or a lawsuit that did not happen, assembled from plausible fragments.
+- **Citations** — a quote or a source that was never written, attributed precisely.
+- **Direction** — the subtlest and most dangerous: getting a *real* fact backwards ("beat" read as "missed," a hedge read as a bet), where everything is real except the sign.
+- **Time** — attributing old news as current, or blending events from different periods, which in a point-in-time system is both a hallucination and a [look-ahead leak](../../ml/data-leakage/index.qmd).
+
+The direction and time errors matter most, because they hide inside otherwise-correct extractions and pass
+the eye test that catches an obviously invented number.
+
+## 4. Why the standard fixes only half-work
+
+Each mitigation this section has built helps, and none is sufficient alone — the honest accounting:
+
+- **Grounding** ([RAG](../rag/index.qmd)) cuts fabrication by forcing the model to answer from retrieved sources — but the model can still *misread* what it retrieved, or the retrieval can miss the relevant passage.
+- **Schema constraints** ([bounded extraction](../schema-constrained-extraction/index.qmd)) close structural nonsense and trade-instructions — but bound the *shape*, not the *facts*: a schema-valid record can still hold a hallucinated figure.
+- **Bigger models** lower the base rate — but never to zero, and the survivors are the most plausible.
+- **Corroboration** across [sources](../sentiment-and-narrative/index.qmd) raises reliability — but a widely-repeated error stays wrong.
+
+There is no silver bullet. Hallucination is **managed by layers**, not solved by one, and any design that
+leans on a single control is one plausible falsehood away from acting on it.
+
+## 5. The one rule that matters most
+
+The single highest-leverage decision is architectural, and it is simple: **use the model for what only it
+can do, and never for a fact you can look up.** The News Agent should extract the *structure* of an event
+from text — its class, direction, affected tickers, the fact that an earnings release happened — because
+that conversion is the [one job an LLM uniquely does](../llms-vs-conventional-ml/index.qmd). It should
+**not** report the EPS number, the price, or the date, because those are exact facts available from a data
+provider, and asking a model to recall them is inviting a confident error where a deterministic lookup
+would give truth:
+
+```javascript
+// RULE: the LLM extracts STRUCTURE from text; exact NUMBERS come from a data feed, never the model.
+async function newsEvent(article, publishedAt) {
+  const e = await extractEvent(article, publishedAt);      // schema: event_class, direction, tickers, sentiment…
+  // The model may have "read" an EPS or a price out of the text. Do not trust it — fetch the truth.
+  const facts = await Promise.all(e.affected_tickers.map(async t => ({
+    ticker: t,
+    price: await dataFeed.priceAsOf(t, publishedAt),        // exact, point-in-time, from a provider
+    eps:   await dataFeed.epsAsOf(t, publishedAt),
+  })));
+  return { ...e, facts };                                   // LLM-derived structure + provider-verified numbers
+}
+```
+
+This split does more than reduce error; it **relocates trust** to where it belongs — the model is believed
+about *language*, the data feed about *quantities* — and it makes the numbers in the system reproducible
+and auditable, which a model's recollection never is.
+
+## 6. The layered defence, in order
+
+Around that rule sits a defence-in-depth, each layer catching what the last let through:
+
+1. **Ground** the model in retrieved sources and forbid answering from memory (RAG).
+2. **Bound** the output to a typed schema so it cannot emit anything but pre-defined features.
+3. **Verify** every quantitative claim against a data feed, and every ticker against the traded universe — deleting what does not check out.
+4. **Gate** on a [calibrated](../../ml/probability-calibration/index.qmd) confidence field, abstaining when the model is unsure rather than guessing.
+5. **Corroborate** across independent sources before a claim is trusted.
+6. **Contain** it — the ultimate backstop — by ensuring the LLM is never an execution authority, so that even a hallucination that survives every earlier layer produces, at worst, a wrong *feature* that the risk limits and review loop are built to catch, and never a trade.
+
+```javascript
+function accept(event, facts) {
+  if (event.confidence < 0.6) return null;                 // calibrated gate: abstain, don't guess
+  if (event.affected_tickers.length === 0) return null;    // nothing tradeable / likely irrelevant
+  if (!factsCorroborate(event, facts)) return flagForReview(event);  // extracted claim ≠ verified data
+  return { ...event, verified: true };
+}
+```
+
+Containment is the layer that lets the rest be imperfect: because a hallucinated feature *cannot* place a
+trade on its own, the system is allowed to be wrong sometimes without being dangerous.
+
+## 7. Grounding in MarketLens AI
+
+My **MarketLens AI** report generator is, today, a live example of the hazard: it leans on the model's own
+knowledge, so any figure, date or citation in its reports is a potential fabrication — which is exactly why
+its output belongs in the "draft for a human" category, not the "input to a decision" one. The fixes are
+this entry made concrete: ground the prose in a retrieved, timestamped corpus; pull every *number* from a
+data feed rather than the model; attach a confidence and abstain when it is low; and never let a generated
+report feed a position directly. The distance between MarketLens as a demo and MarketLens as something a
+research process could trust is, almost exactly, the distance between trusting the model for facts and
+trusting it only for language.
+
+## 8. How I would explain it to a supervisor
+
+"Hallucination isn't a bug I can patch out — it's what a next-token predictor does: it generates plausible
+text, not true text, with the same confidence either way, and LLMs are poorly calibrated so that confidence
+tells me nothing. In finance that's uniquely dangerous because the exact number is the point and an
+automated system acts on the error before anyone reads it. So I name the failure modes — fabricated
+figures, entities, events, citations, and the subtle ones, getting a real fact's direction or date wrong —
+and I defend in layers: ground the model in retrieved sources, bound its output to a schema, verify every
+number against a data feed, gate on a calibrated confidence, corroborate across sources, and contain the
+whole thing so the model is never an execution authority. But the highest-leverage rule is architectural:
+I use the model for what only it can do, turning text into structure, and I never ask it for a fact I can
+look up — the EPS and the price come from a provider, not the model's memory. That relocates trust to where
+it's earned, and it means a hallucination, when one gets through, produces a wrong feature my risk limits
+catch, not a trade."
+
+::: {.status-note}
+The controls compose the [News Agent pipeline](../schema-constrained-extraction/index.qmd):
+[RAG grounding](../rag/index.qmd), schema bounding, numeric verification against a data feed, a
+[calibrated](../../ml/probability-calibration/index.qmd) confidence gate, cross-source corroboration, and
+containment (the LLM is never an execution authority — the subject of the next entry). The "text from the
+model, numbers from a feed" split is the single highest-leverage rule. MarketLens AI grounding reflects its
+current, ungrounded report generator; the layered defence is described as the required hardening.
+:::
