@@ -1,0 +1,184 @@
+---
+title: "What Is an AI Agent?"
+subtitle: "A model answers; an agent acts — the loop, the tools, and the autonomy–control trade-off that defines the whole architecture"
+description: >
+  The word 'agent' does a lot of work in this proposal — six of them. Before building on the idea it is
+  worth being precise: the difference between a language model and an agent is the difference between a
+  system that answers and one that acts, and in finance that difference is everything. The agent loop,
+  the real Anthropic API code behind it, and why the proposal keeps its agents deliberately un-autonomous.
+date: 2026-07-31
+author: "David Maguire"
+categories: [foundations, agents]
+toc: true
+---
+
+The word **agent** is carrying a lot of weight in this proposal — six of them, in fact. Before building
+anything on the idea, it is worth being precise about what an agent actually *is*, because the difference
+between a language model and an agent is the difference between a system that **answers a question** and
+one that **takes actions in the world** — and in finance, that difference is everything. This entry draws
+the line exactly, shows the real code that turns one into the other, and explains why the proposal's
+architecture, despite being built from agents, is deliberately engineered to sit at the **controlled** end
+of the spectrum rather than the autonomous one.
+
+## 1. A model answers; an agent acts
+
+A large language **model** is, from the outside, a pure function: text in, text out. You send a prompt,
+it returns a completion, and the interaction is over. My **MarketLens AI** equity-research generator is,
+today, exactly this — a single structured call that turns a prompt into a report. Nothing it produces
+reaches beyond the text it returns.
+
+An **agent** wraps that model in a **loop** that lets it take actions. It perceives a state, decides on an
+action — usually *calling a tool* — observes the result, and repeats until a goal is met. The model is the
+agent's "brain," supplying the decisions; the loop and the tools are what make it an agent. The one-line
+distinction that matters for everything downstream:
+
+> A model produces **text**. An agent produces text **and consequences**.
+
+That is why "agent" is not marketing filler here. The moment a language model can call a tool that touches
+a market — read a price, place an order — it has stopped answering and started *acting*, and every
+question of safety, control and evaluation that this proposal is built around begins.
+
+## 2. The agent loop
+
+The mechanism is a short loop, and its single most important property is a control point hiding in plain
+sight:
+
+> **perceive → decide → act → observe → repeat.**
+
+The model never executes anything itself. It *requests* a tool call — "I would like to call `get_price`
+with `NVDA`" — and **your code decides whether and how to run it**, then feeds the result back. The model
+has no hands; it only has a voice that asks your code to act on its behalf. That indirection is not a
+technical accident, it is *the* place where control lives: every action an agent takes passes through code
+you wrote, where you can validate it, bound it, log it, or refuse it. A system that lets the model's
+output reach the market directly has thrown that control away.
+
+## 3. What the code actually looks like
+
+Here is the loop, in the real [Anthropic Messages API](https://docs.claude.com/en/api/messages) my app is
+built on — JavaScript, because MarketLens is a React/TypeScript codebase:
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();                       // reads ANTHROPIC_API_KEY
+
+// A tool is a NAME, a DESCRIPTION, and a JSON schema for its inputs — nothing more.
+const tools = [{
+  name: "get_price",
+  description: "Return the latest price for a stock ticker. Read-only.",
+  input_schema: { type: "object", properties: { ticker: { type: "string" } }, required: ["ticker"] },
+}];
+
+let messages = [{ role: "user", content: "What is NVDA trading at, and is that above its 50-day average?" }];
+
+while (true) {
+  const res = await client.messages.create({
+    model: "claude-sonnet-5",                         // the workhorse; use claude-haiku-4-5 for cheap, bounded tasks
+    max_tokens: 1024,
+    tools,
+    messages,
+  });
+  messages.push({ role: "assistant", content: res.content });
+
+  if (res.stop_reason !== "tool_use") break;          // no tool requested -> the model has a final answer
+
+  // The model REQUESTED a tool. YOUR code decides whether and how to run it.
+  const call = res.content.find(b => b.type === "tool_use");
+  const result = await runReadOnlyTool(call.name, call.input);   // ← the control point
+  messages.push({
+    role: "user",
+    content: [{ type: "tool_result", tool_use_id: call.id, content: result }],
+  });
+}
+```
+
+The `while` loop *is* the agent. Strip it out and you are left with a single `messages.create` call — a
+model, not an agent. Note what the model can and cannot do: it can *ask* for `get_price`, but it is
+`runReadOnlyTool` — code I control — that actually runs, and it will only ever run tools I chose to
+expose. Anthropic distinguishes **client tools** like this one, which execute in *your* application, from
+**server tools** (web search, code execution) that run on Anthropic's infrastructure; for a trading
+system, keeping the consequential tools on the *client* side, behind your own validation, is the whole
+game.
+
+## 4. The three things that turn a model into an agent
+
+- **Tools** are its hands — the functions it can request: fetch a quote, query a database, run a
+calculation. An agent is only as capable, and only as dangerous, as the tools you give it. The
+proposal's News Agent gets **read-only** tools; the ability to *trade* is never one of them.
+- **Memory** is its state — short-term is simply the growing `messages` array it carries through the
+loop; long-term is an external store it can retrieve from (the subject of the RAG entry to come).
+- **Planning** is decomposition — breaking a goal into steps, whether implicitly through the loop or
+explicitly by asking the model to draft a plan before acting. Planning is what lets an agent tackle a
+task no single call could.
+
+Tools, memory, planning: give a model all three and you have a capable agent. Give it tools that touch
+money and you have a liability — which is why the next question is not *how capable* but *how autonomous*.
+
+## 5. The autonomy–control spectrum
+
+Agency is not binary; it is a dial, and every notch trades **control for capability**:
+
+1. **A single model call** — no loop, no tools. Maximum control, minimum autonomy. (MarketLens today.)
+2. **A tool-using agent** — the loop above, with read-only tools. Bounded autonomy: it can gather and
+reason, but cannot act on the world.
+3. **An autonomous multi-step agent** — with consequential tools and the freedom to chain many actions.
+High autonomy; now genuinely dangerous with money attached.
+4. **A self-directed agent** — one that sets its own sub-goals. In a trading context, this is the thing
+you must not build.
+
+Every step down this list buys capability and spends control. In most domains the trade is worth making.
+In finance it is not, because the downside is unbounded: an autonomous agent with market access can be
+**catastrophically wrong at machine speed, faster than a human can intervene** — the lesson the 2010
+flash crash taught about un-governed automation, a decade before LLMs. The correct place for a
+market-facing system to sit is therefore far toward the **controlled** end, and the engineering task is to
+buy back as much capability as possible *without* moving down the dial.
+
+## 6. So is MarketLens AI an agent?
+
+Honestly, no — not yet, and that is the right answer for what it does. Its report generator makes **one
+structured API call**: a model, not an agent, sitting at position 1 on the spectrum. (It also, today,
+calls the API *directly from the browser* — which means the key is exposed and there is no server-side
+control layer; moving those calls behind my own backend is the first thing the proposal's design
+requires, for **both** key security and the tool-gating that control depends on.) To become the
+proposal's **News Agent**, MarketLens would gain tools — but deliberately *read-only* ones (fetch an
+article, retrieve context) — and its output would stay a **bounded schema** (event class, sentiment,
+horizon), never a free-form trading instruction. It would become a *more capable* agent without becoming
+a *more autonomous* one: a move rightward in capability, not downward in control.
+
+## 7. How the proposal uses "agents"
+
+This reframes what "multi-agent" means in the [proposal](../../phd/index.qmd). The point of decomposing
+the system into a [Regime](../../ml/regime-aware-modelling/index.qmd) Agent, a News Agent, an
+[RL Trading](../../ml/policy-gradients/index.qmd) Agent, a [Risk](../../ml/risk-constrained-rl/index.qmd)
+Agent and a [Review](../../ml/multi-agent-systems/index.qmd) Agent is **not to maximise autonomy** — it is
+the opposite. Each agent is a **testable component** with a bounded function, defined data access, and an
+auditable output; the LLM is **never an execution authority**; every proposed action must pass a
+deterministic risk layer and is evaluated after the fact. A single, opaque, end-to-end autonomous agent
+would be far *more* capable and far *less* controllable — exactly the wrong trade. The architecture is
+multi-agent precisely so that no one agent has to be trusted with everything, and every one can be
+switched off, tested, and audited in isolation. Agency, here, is a thing to be **carefully rationed**, not
+maximised.
+
+## 8. How I would explain it to a supervisor
+
+"A language model answers; an agent acts. An agent is a model wrapped in a loop that lets it call tools —
+perceive, decide, act, observe, repeat — so the model's reasoning can reach into the world. The control
+point that makes this safe is that the model never executes anything itself: it *requests* a tool call,
+and code I wrote runs it, which is exactly where limits go. My MarketLens app today is a model, not an
+agent — one structured call, no loop. In the proposal I keep the agents deliberately near the controlled
+end of the autonomy spectrum: bounded functions, read-only tools, outputs that are schemas rather than
+instructions, every action gated by a deterministic risk layer and reviewed afterwards. The reason the
+architecture is multi-agent is not to give the system more freedom but to decompose it so each component
+is testable and auditable — the opposite of handing one opaque autonomous model the keys. In finance the
+cost of being wrong is unbounded and instant, so autonomy is something you spend as little of as you can
+get away with."
+
+::: {.status-note}
+Code uses the Anthropic Messages API (`@anthropic-ai/sdk`): a request carries `model`, `max_tokens`,
+`messages` and `tools`; a tool is a name, description and JSON `input_schema`; the model signals a tool
+request with `stop_reason: "tool_use"` and a `tool_use` content block, which your code answers with a
+`tool_result`. Current model IDs at the time of writing: `claude-sonnet-5` (workhorse),
+`claude-haiku-4-5` (fast/cheap), `claude-opus-5` and `claude-fable-5` (most capable) — always check the
+[models overview](https://docs.claude.com/en/docs/about-claude/models/overview) for the current list.
+MarketLens AI grounding is accurate to its current design (a single browser-side structured call); the
+proposal's server-side, tool-gated version is described as the intended next step, not the present state.
+:::

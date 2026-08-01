@@ -1,31 +1,66 @@
 ---
 title: "AI Trading Systems"
-description: "How LLMs and AI agents could support market decision-making — with the risk controls that make it credible."
+description: "How LLMs and AI agents could support market decision-making — built from first principles, grounded in real code, and honest about the risks that make control non-negotiable."
+listing:
+  id: published-ai
+  contents: "*/index.qmd"
+  type: default
+  sort: "date desc"
+  fields: [date, title, description, categories, reading-time]
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  feed: true
 toc: true
 ---
 
-This section develops the research direction behind my proposed PhD: how large
-language models and AI agents might support market decision-making. The emphasis
-is on **transparency and control** — an agent should be a testable, auditable
-component of a system, never an unsupervised black box placing trades.
+This section develops the **LLM and agent half** of my proposed PhD: how large language models and AI
+agents might support market decision-making, and — just as important — the controls that make that
+credible rather than reckless. The other half of the site (the [Equation](../equations/index.qmd) and
+[Machine Learning](../ml/index.qmd) libraries, the [Quant Lab](../quant-lab/index.qmd)) is quantitative
+and verified against real data; this section is its qualitative, engineering counterpart, built to the
+same standard of honesty. The emphasis throughout is **transparency and control**: an agent should be a
+testable, auditable component of a system, never an unsupervised black box placing trades.
 
-## Topics
+Where the quant sections compute and check every number, these entries **ground every claim in real,
+runnable code** — the actual [Anthropic Messages API](https://docs.claude.com/en/api/messages) structure,
+correct model IDs, and the schema-constrained, guarded patterns my **MarketLens AI** app uses
+— so the design principles are shown working, not just asserted.
 
-- What is an AI agent?
-- LLMs versus conventional machine-learning models
-- Retrieval-Augmented Generation (RAG)
-- Sentiment analysis and news interpretation
-- Tool-using agents
-- Multi-agent systems
-- Agent memory and planning
-- AI risk controls
-- Hallucination risk when LLMs meet financial data
-- Why an LLM should never directly place trades without hard controls
+## Published entries
 
-## A proposed multi-agent architecture
+::: {.status-note}
+Added one at a time, to the same standard as the rest of the site. The roadmap below is the plan.
+:::
 
-A concrete system I want to study — deliberately decomposed so each component can
-be tested and evaluated on its own, rather than trusting a single model end to end:
+::: {#published-ai}
+:::
+
+## The roadmap
+
+::: {.roadmap}
+
+### Foundations
+[What is an AI agent?](what-is-an-agent/index.qmd) · LLMs versus conventional machine-learning models.
+
+### The News & Narrative Agent
+Schema-constrained news extraction · Retrieval-Augmented Generation (RAG) · sentiment and narrative interpretation.
+
+### Agent capabilities
+Tool-using agents · agent memory and planning · multi-agent coordination.
+
+### Safety and control
+AI risk controls · hallucination risk when LLMs meet financial data · why an LLM must never directly place trades.
+
+*Each topic becomes an entry, grounded in real code and honest about its limits — the qualitative
+counterpart to the proposal's quantitative evidence.*
+
+:::
+
+## The proposed multi-agent architecture
+
+A concrete system I want to study — deliberately decomposed so each component can be tested and evaluated
+on its own, rather than trusting a single model end to end:
 
 - **Market Regime Agent** — identifies the current market state and estimates regime probabilities (HMMs, mixtures, change-point detection — foundations [already built](../ml/regime-aware-modelling/index.qmd)).
 - **News & Narrative Agent** — converts unstructured text into bounded, schema-constrained, timestamp-safe market features; never free-form trading instructions.
@@ -34,8 +69,7 @@ be tested and evaluated on its own, rather than trusting a single model end to e
 - **Review & Learning Agent** — evaluates, after the fact, whether each decision was justified given the information available at the time, and attributes outcomes per agent.
 - *Behaviour Detection Agent (exploratory)* — flags microstructure patterns consistent with elevated systematic activity.
 
-The **Review & Learning Agent** matters most: without a rigorous, honest evaluation
-loop, a system like this is just automation of overconfidence. The
-[PhD Research](../phd/index.qmd) page presents the full formal proposal built around
-this architecture — objectives, hypotheses, methodology, and the evidence already
-in place across this site.
+The **Review & Learning Agent** matters most: without a rigorous, honest evaluation loop, a system like
+this is just automation of overconfidence. The [PhD Research](../phd/index.qmd) page presents the full
+formal proposal built around this architecture — objectives, hypotheses, methodology, and the evidence
+already in place across this site.
