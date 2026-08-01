@@ -1,0 +1,166 @@
+---
+title: "Retrieval-Augmented Generation (RAG)"
+subtitle: "Grounding the model in retrieved, point-in-time source text — the fix for stale knowledge and factual hallucination, and its own subtle look-ahead trap"
+description: >
+  The schema stops a model emitting a trade or a malformed field, but not a fluent misreading of a fact.
+  RAG is the layer that grounds the model in retrieved, current, authoritative source text so it reasons
+  over facts you provide rather than facts it half-remembers. How it works, the real code, why every
+  retrieval must be point-in-time, and what it does and does not fix.
+date: 2026-07-31
+author: "David Maguire"
+categories: [news agent, safety]
+toc: true
+---
+
+The [schema-constrained extraction](../schema-constrained-extraction/index.qmd) entry closed one class of
+failure — the model can no longer emit a trade instruction or a malformed field — but left another open:
+**factual hallucination**. A model boxed into a schema can still fill `sentiment: -0.8` for an event it
+misread, or assert a number that was never in the text, with complete fluency. And it has a second, quieter
+weakness: its knowledge is **frozen at training time**, so it knows nothing of this morning's news. RAG —
+**R**etrieval-**A**ugmented **G**eneration — is the layer that addresses both, by grounding the model's
+answer in **retrieved, current, authoritative source text** rather than in what it happens to remember.
+It is the difference between an analyst reasoning from the documents in front of them and one reciting from
+memory.
+
+## 1. The problem RAG solves
+
+An LLM's knowledge is a lossy compression of its training data: broadly right, precisely unreliable, and
+stale. For a market system that is doubly disqualifying, because markets demand **current** facts (today's
+filing, this hour's headline) and **exact** ones (the actual EPS, not a plausible-sounding number). RAG
+fixes the shape of the problem: instead of asking the model *"what do you know about NVDA's earnings?"* —
+inviting it to confabulate — you **retrieve the actual earnings release** and ask *"using only this text,
+what did NVDA report?"* The model's job shrinks from *recall* to *reading comprehension*, which is exactly
+the task it is good and safe at.
+
+## 2. How it works: retrieve → augment → generate
+
+RAG is three steps, and the first two are just search:
+
+1. **Index (offline).** Chunk your documents — filings, news, transcripts — and convert each chunk to a
+vector with an [embedding model](../../ml/embeddings/index.qmd), so that semantically similar text lands
+nearby in vector space. Store the vectors, each keeping its real publication timestamp.
+2. **Retrieve.** Embed the query the same way and return the *k* nearest chunks by cosine similarity —
+semantic search, finding text by meaning rather than keyword.
+3. **Augment + generate.** Paste the retrieved chunks into the prompt as numbered sources and instruct the
+model to answer **only** from them, **citing** each claim. The model reasons over facts you supplied, and
+every statement traces back to a source.
+
+## 3. The real code
+
+Claude has **no native embeddings endpoint**; embeddings come from a dedicated model — Anthropic recommends
+**Voyage AI**, which ships a finance-domain model (`voyage-finance-2`) tuned for exactly this text. The
+retrieval is ordinary vector search; the generation is the [Messages API](../what-is-an-agent/index.qmd):
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+const claude = new Anthropic();
+
+// Embeddings come from a dedicated model (Claude has no embeddings endpoint).
+// Anthropic recommends Voyage AI; voyage-finance-2 is domain-tuned for financial text.
+async function embed(text) { /* -> vector, via your embedding provider */ }
+const cosine = (a, b) => dot(a, b) / (norm(a) * norm(b));
+
+// 1. INDEX (offline): embed each chunk once; keep its real publication time.
+const index = await Promise.all(corpus.map(async d => ({ ...d, vec: await embed(d.text) })));
+
+// 2. RETRIEVE: the k nearest chunks that EXISTED as of the decision time.
+async function retrieve(query, asOf, k = 5) {
+  const q = await embed(query);
+  return index
+    .filter(d => d.published_at <= asOf)               // point-in-time — the look-ahead guard (§4)
+    .map(d => ({ d, score: cosine(q, d.vec) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, k).map(x => x.d);
+}
+
+// 3. AUGMENT + GENERATE: answer ONLY from the retrieved sources, with citations.
+async function groundedAnswer(query, asOf) {
+  const docs = await retrieve(query, asOf);
+  const sources = docs.map((d, i) => `[${i + 1}] (${d.published_at}) ${d.text}`).join("\n\n");
+  const res = await claude.messages.create({
+    model: "claude-sonnet-5",
+    max_tokens: 1024,
+    system: "Answer ONLY from the numbered sources. Cite every claim as [n]. " +
+            "If the sources do not support an answer, say so — never fill the gap from memory.",
+    messages: [{ role: "user", content: `Sources:\n${sources}\n\nQuestion: ${query}` }],
+  });
+  return res.content[0].text;                          // grounded, cited, point-in-time
+}
+```
+
+Anthropic also offers **server-side** retrieval tools — `web_search`, `web_fetch` — that fetch context for
+you. They are convenient, but for a trading system you almost always want the opposite: your **own
+curated, point-in-time corpus**, not the open web, because you must control exactly what the model can see
+and *when* it could have seen it.
+
+## 4. Point-in-time retrieval, or how RAG leaks the future
+
+The `asOf` filter in `retrieve` is not a detail; it is the whole difference between a research toy and
+something a backtest can trust. If retrieval can return a document published *after* the decision moment,
+the model is reasoning with information the market did not have, and the backtest is
+[fiction](../../ml/data-leakage/index.qmd) — the same look-ahead that this site
+[measured turning noise into a fake 0.81 AUC](../../ml/walk-forward-validation/index.qmd), now hidden one
+layer deeper inside a vector store. RAG makes this trap *easier* to fall into, because the corpus usually
+contains the whole history and nothing stops a naive query from retrieving tomorrow's news. So every
+retrieval is filtered to `published_at <= asOf`, every chunk carries its timestamp, and the backtester
+replays the corpus as it grew. Point-in-time discipline is the bridge from the AI half of this system to
+the quant rigour of the other.
+
+## 5. What RAG fixes, and what it does not
+
+RAG **reduces factual hallucination and eliminates staleness** — the model now cites current sources rather
+than reciting stale memory, and every claim is auditable back to a document, which is precisely what a
+[review-and-compliance loop](../../ml/multi-agent-systems/index.qmd) needs. But it is not a cure:
+
+- **Retrieval can miss.** If the relevant chunk is not in the top *k*, the model answers from a gap — and may still fill it. Grounding is only as good as the search.
+- **The model can still misread** what it retrieved, or over-generalise from a thin source.
+- **Garbage in, grounded garbage out.** RAG grounds the model in your corpus; if the corpus is wrong, outdated, or adversarially seeded (a fake press release), the model faithfully grounds itself in the error.
+
+So RAG lowers the hallucination rate; it does not zero it. It is paired with the schema (which bounds the
+*shape*), a **calibrated** [confidence](../../ml/probability-calibration/index.qmd) field (which flags weak
+extractions), and downstream verification — layers, not a silver bullet.
+
+## 6. RAG + schema = the News Agent pipeline
+
+The two entries compose into the agent's full loop. For a news item, the pipeline is: **retrieve** the
+source text and any relevant prior context (point-in-time), then run the
+[schema-constrained extraction](../schema-constrained-extraction/index.qmd) *grounded in that retrieved
+text*, emitting a typed feature record whose `rationale` cites the sources it came from. Retrieval supplies
+the facts; the schema bounds the output; the citations make it auditable; the timestamp keeps it honest.
+That is the whole News & Narrative Agent: not a clever prompt, but a disciplined pipeline that lets a
+fluent model be useful without letting it be dangerous.
+
+## 7. Grounding in MarketLens AI
+
+My **MarketLens AI** report generator today leans on the model's own knowledge — which is why its reports
+are best treated as drafts, not facts: anything time-sensitive or numeric is exactly what a frozen model
+gets wrong. Adding RAG is the single highest-value upgrade to it: index a curated corpus of filings and
+vetted news, retrieve per query, and force every generated claim to cite a source. The report stops being
+a plausible essay and becomes a **grounded, cited** document — and, if the same corpus is timestamped, one
+that can be reconstructed exactly as it would have read on any past date. That last property is what turns a
+demo into something a research process could actually depend on.
+
+## 8. How I would explain it to a supervisor
+
+"RAG grounds the model in retrieved source text instead of its own memory, which fixes two things a market
+system can't tolerate: stale knowledge and factual hallucination. The mechanism is search — embed the
+documents into vectors, embed the query, retrieve the nearest chunks, and make the model answer only from
+those, with citations. Claude has no embeddings endpoint so I'd use a finance-domain embedding model like
+Voyage's, and I'd keep my own curated corpus rather than open web search, because I have to control what
+the model can see. The finance-critical piece is that retrieval must be point-in-time — only return
+documents that existed as of the decision moment — or the backtest silently leaks the future, which is the
+same look-ahead trap I measured elsewhere on the site, just buried in a vector store. RAG plus the schema
+is the whole News Agent: retrieve the facts, bound the output to typed features, cite the sources, stamp
+the time. It lowers the hallucination rate a lot; it doesn't zero it, so it's paired with a calibrated
+confidence gate and verification. The honest summary is that RAG makes the model reason from documents
+instead of from vibes — which is the only version of an LLM I'd let near a decision."
+
+::: {.status-note}
+Generation uses the Anthropic Messages API (`claude-sonnet-5`); embeddings use a dedicated model, since
+Claude has no embeddings endpoint — Anthropic recommends **Voyage AI**, with `voyage-finance-2` tuned for
+financial text (assess vendors for your use case). Server-side retrieval tools (`web_search`, `web_fetch`)
+exist but a controlled system should prefer a curated, point-in-time corpus. The `asOf` retrieval filter is
+the [no-look-ahead](../../ml/data-leakage/index.qmd) discipline the quant side of the site demands.
+MarketLens AI grounding reflects its current, un-grounded design; RAG is described as its highest-value
+upgrade, not its present state.
+:::

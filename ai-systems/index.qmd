@@ -44,7 +44,7 @@ Added one at a time, to the same standard as the rest of the site. The roadmap b
 [What is an AI agent?](what-is-an-agent/index.qmd) · [LLMs versus conventional machine-learning models](llms-vs-conventional-ml/index.qmd).
 
 ### The News & Narrative Agent
-[Schema-constrained news extraction](schema-constrained-extraction/index.qmd) · Retrieval-Augmented Generation (RAG) · sentiment and narrative interpretation.
+[Schema-constrained news extraction](schema-constrained-extraction/index.qmd) · [Retrieval-Augmented Generation (RAG)](rag/index.qmd) · sentiment and narrative interpretation.
 
 ### Agent capabilities
 Tool-using agents · agent memory and planning · multi-agent coordination.
