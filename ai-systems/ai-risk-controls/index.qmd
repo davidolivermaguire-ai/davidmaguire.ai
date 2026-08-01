@@ -1,0 +1,127 @@
+---
+title: "AI Risk Controls"
+subtitle: "Defence in depth for an untrustworthy component — the full control stack, the fail-safe default, and why safety is a property of the system, not the model"
+description: >
+  You cannot make a language model trustworthy; you make the system safe around an untrustworthy
+  component. This entry synthesises the whole section into one control stack — input, invocation, output,
+  action and monitoring — governed by two principles: defence in depth, and fail safe. The layers, what
+  each defends against, and the honest limit that this buys bounded, auditable failure, not none.
+date: 2026-07-31
+author: "David Maguire"
+categories: [safety]
+toc: true
+---
+
+The preceding entries each closed one gap; this one steps back and assembles them into a **system**. The
+governing idea is the one this section keeps returning to: **you do not make a language model
+trustworthy — you make the system safe around an untrustworthy component.** Safety is a property of the
+*architecture*, not the model, and it is bought with **defence in depth**: a stack of controls in which no
+single layer is trusted, arranged so that the failure of any one is caught by another. What follows is that
+stack, top to bottom, and the two principles that hold it together.
+
+## The control stack
+
+A decision travels from raw text to a filled order through five layers, each with a job and a set of
+failures it is there to catch:
+
+| Layer | Controls | Defends against |
+|---|---|---|
+| **Input** | treat all external text as untrusted; [point-in-time](../../ml/data-leakage/index.qmd) only; vet and rate-limit sources | prompt injection, look-ahead leakage, poisoned data |
+| **Invocation** | [schema-bounded](../schema-constrained-extraction/index.qmd) output; [grounding](../rag/index.qmd) in retrieved sources; low temperature; guardrail system prompts | free-form actions, hallucination, stale knowledge |
+| **Output** | [verify numbers against a data feed](../hallucination-risk/index.qmd); validate ranges, enums, ticker whitelist; [calibrated](../../ml/probability-calibration/index.qmd) confidence gate; cross-source corroboration | fabricated figures and entities, over-confidence |
+| **Action** | [deterministic risk gate](../why-llms-never-trade/index.qmd), hard limits (exposure, leverage, drawdown, CVaR); human-in-the-loop; kill-switch | catastrophic or irreversible trades |
+| **Monitoring** | log every input, output and decision; drift and anomaly detection; circuit breakers; the [Review Agent](../../ml/multi-agent-systems/index.qmd); adversarial red-teaming | silent failure, distribution shift, novel attacks |
+
+: Defence in depth — no single layer is trusted; each catches what the last let through. {.striped .hover}
+
+The earlier entries built the top four rows; the **monitoring** row is what this synthesis adds, and it is
+the one most often skipped and most needed.
+
+## What monitoring adds
+
+The first four layers try to *prevent* a bad decision; the fifth assumes they will sometimes fail and makes
+that failure **visible, bounded and reversible**. Three controls matter most:
+
+- **Observability.** Every decision is logged with its inputs, the model's raw output, which controls fired, the proposal and the final order — timestamped, so any decision can be **reconstructed exactly**. This is not book-keeping; it is what turns "the system did something strange" into "here is the input, the extraction, the gate's ruling and why," and it is the raw material the [Review & Learning Agent](../../ml/multi-agent-systems/index.qmd) audits. A decision that cannot be reconstructed cannot be trusted.
+- **Drift and circuit breakers.** Model behaviour, input distributions and realised performance are watched for anomalies, and a **circuit breaker** halts trading automatically when something moves outside expected bounds — the automated analogue of a human pulling the plug, acting faster than a human can.
+- **Red-teaming.** The system is *attacked on purpose* — especially with [prompt-injection](../why-llms-never-trade/index.qmd) attempts through the news feed — before an adversary does it for real. A control you have not tried to break is a control you do not know you have.
+
+## Two principles hold it together
+
+The stack is only as good as the discipline running it, and two rules do most of the work.
+
+**Defence in depth.** No layer is a wall; each is a filter, and the design *assumes every filter sometimes
+leaks.* The schema catches structural nonsense but not a wrong number; the fact-check catches the wrong
+number but not a misread direction; the risk gate catches the dangerous action whatever produced it. Safety
+comes from the *composition*, never from any single control being perfect — which is precisely why the
+un-removable last layer, [the model having no authority](../why-llms-never-trade/index.qmd), is the one that
+lets all the others be imperfect.
+
+**Fail safe, not fail open.** When a control fires, or a confidence is low, or anything is uncertain, the
+default is to **do less** — abstain, shrink the position, hold — never to proceed on a guess. An
+uncertain system that trades is dangerous; an uncertain system that *waits* is merely idle. This is the
+single most important cultural rule in the stack, and it inverts the usual software instinct: here, when in
+doubt, the correct behaviour is to **not act.**
+
+```javascript
+async function guardedDecision(article, asOf, state) {
+  const features = await newsAgent.extract(sanitize(article), asOf);   // INPUT + INVOCATION: untrusted, schema-bounded, grounded
+  if (!verify(features, dataFeed) || features.confidence < THRESHOLD)  // OUTPUT: fact-check + calibrated gate
+    return abstain("unverified or low-confidence");                    //   fail safe: do nothing
+
+  const proposed = tradingAgent.propose({ ...state, features });        // a PROPOSAL, never an order
+  const order    = riskGate(proposed, HARD_LIMITS, portfolio);         // ACTION: deterministic hard veto
+
+  audit.log({ asOf, articleId: article.id, features, proposed, order });// MONITORING: reconstructable forever
+  return order ? execute(order) : abstain("rejected by risk gate");    // fail safe on rejection, too
+}
+```
+
+Every branch that is unsure ends in `abstain`. That is the shape of a safe system: many ways to decline,
+one narrow, guarded path to act.
+
+## The honest limit
+
+Defence in depth is not infinite depth. Controls add **latency, cost and complexity**; they can be
+**mis-specified** (a wrong limit protects the wrong thing precisely); a human-in-the-loop can lapse into
+**rubber-stamping** through automation complacency; and a determined novel attack can, in principle, thread
+every layer. So the honest claim is not that this makes failure impossible — it is that it makes failure
+**bounded, auditable and recoverable** rather than catastrophic, silent and total. That is the achievable
+goal for a system built on components you cannot fully trust, and it is a far more defensible promise to a
+supervisor or a risk committee than "the AI won't get it wrong."
+
+## Grounding in MarketLens AI and the proposal
+
+This entry is the [proposal's](../../phd/index.qmd) "transparency and control" thesis made concrete: the
+**Risk Agent** is the action layer, the **Review & Learning Agent** is the monitoring layer, and the schema,
+grounding and verification of the News Agent are the invocation and output layers. **MarketLens AI** today
+has only the softest of these — it is a read-only dashboard, so its blast radius is a misleading report,
+not a bad trade — but the path from it to a system near capital is exactly the path *down this stack*:
+grounding and verification first, then, before any execution is contemplated, a deterministic risk gate,
+full observability, and a circuit breaker. Building the controls is not the boring part that comes after the
+AI; in a market system, **the controls are the product**, and the model is a component inside them.
+
+## How I would explain it to a supervisor
+
+"I don't try to make the language model trustworthy — I make the system safe around it, with defence in
+depth. There are five layers: input, where I treat all external text as untrusted and keep everything
+point-in-time; invocation, where the output is a bounded schema grounded in retrieved sources; output,
+where I verify every number against a data feed and gate on a calibrated confidence; action, where a
+deterministic risk gate with hard limits is the only thing that can authorise a trade; and monitoring,
+where I log every decision so it's reconstructable, watch for drift, wire in circuit breakers, and red-team
+the whole thing with prompt-injection attempts. Two rules hold it together: no layer is trusted on its own —
+safety is the composition — and the default on any uncertainty is to do *less*, never to guess. I'm honest
+that this doesn't make failure impossible; it makes failure bounded, auditable and recoverable instead of
+catastrophic and silent, which is the only promise worth making about a system built on components you can't
+fully trust. In a trading system the controls aren't the wrapper around the AI — they *are* the product,
+and the model is a part inside them."
+
+::: {.status-note}
+The five-layer stack synthesises the section's controls — input, [invocation](../schema-constrained-extraction/index.qmd),
+[output](../hallucination-risk/index.qmd), [action](../why-llms-never-trade/index.qmd) and monitoring — under
+two principles: defence in depth (no single point of trust) and fail-safe defaults (abstain on
+uncertainty). It maps directly onto the proposal's [Risk Agent](../../ml/risk-constrained-rl/index.qmd)
+(action) and [Review & Learning Agent](../../ml/multi-agent-systems/index.qmd) (monitoring). The honest
+claim is bounded, auditable, recoverable failure — not zero failure. MarketLens AI is currently a read-only
+dashboard; the described controls are the path to anything nearer execution.
+:::

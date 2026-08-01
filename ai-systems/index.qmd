@@ -50,7 +50,7 @@ Added one at a time, to the same standard as the rest of the site. The roadmap b
 Tool-using agents · agent memory and planning · multi-agent coordination.
 
 ### Safety and control
-AI risk controls · [hallucination risk when LLMs meet financial data](hallucination-risk/index.qmd) · [why an LLM must never directly place trades](why-llms-never-trade/index.qmd).
+[AI risk controls](ai-risk-controls/index.qmd) · [hallucination risk when LLMs meet financial data](hallucination-risk/index.qmd) · [why an LLM must never directly place trades](why-llms-never-trade/index.qmd).
 
 *Each topic becomes an entry, grounded in real code and honest about its limits — the qualitative
 counterpart to the proposal's quantitative evidence.*
