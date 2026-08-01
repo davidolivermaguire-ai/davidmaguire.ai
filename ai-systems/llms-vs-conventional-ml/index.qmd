@@ -1,0 +1,135 @@
+---
+title: "LLMs versus Conventional ML"
+subtitle: "Three families, not two — task-trained models, domain foundation models, and general LLMs, and which one belongs where in a market system"
+description: >
+  The instinct is to stage a duel between LLMs and 'traditional' machine learning and crown a winner.
+  That framing is already out of date: by 2026 there are three distinct families, and the useful
+  question is not which is best but which belongs where — a discrimination a market system depends on,
+  and one the efficient market puts a hard ceiling on.
+date: 2026-07-31
+author: "David Maguire"
+categories: [foundations]
+toc: true
+---
+
+The instinct is to frame this as a duel — large language models versus "traditional" machine learning —
+and pick a winner. That framing was always a little lazy, and by 2026 it is simply wrong: there are now
+**three** distinct families of model a market system might use, not two, and the interesting question is
+not which is best in the abstract but **which belongs where**. Getting that allocation right is most of
+the engineering, and getting it wrong — reaching for a general LLM to do a job a trained model does better,
+cheaper and more honestly — is one of the most common and expensive mistakes in applied AI. This entry
+draws the three families apart, is honest about a frontier that has genuinely shifted, and sets the ceiling
+that the rest of this site's evidence imposes on all of them.
+
+## Family one — task-trained models (the whole ML library)
+
+The classical picture: a model with weights **fit to your data, for one task**. A
+[logistic regression](../../ml/logistic-regression/index.qmd), a
+[gradient-boosted tree](../../ml/xgboost/index.qmd), a small neural net — every entry in this site's
+[Machine Learning Library](../../ml/index.qmd) is this family. It is trained once on your labelled examples
+and then answers that one question, fast. Its virtues are exactly the ones a deployed risk system cares
+about: it is **cheap and low-latency** (microseconds, effectively free per prediction), **deterministic**
+(same input, same output), it can be **calibrated** so its probabilities [mean what they
+say](../../ml/probability-calibration/index.qmd), it is **auditable** via
+[SHAP](../../ml/shap-values/index.qmd) or its own coefficients, and it **cannot hallucinate** — it only
+knows the features you gave it. For a specific prediction on structured numeric data, with training data to
+hand, this is the default, and it is a very good one.
+
+## Family two — domain foundation models (the 2026 shift)
+
+The line between "trained on your task" and "pretrained and prompted" — long the clean divide between ML
+and LLMs — has been blurred by a third family that is neither. **Domain foundation models** are pretrained
+on *many* datasets and then used **zero-shot or in-context** on numeric data: for tabular data the
+TabPFN / TabICL / TabFM lineage, for time series models such as Chronos, TimesFM and TimeGPT. You hand a
+tabular foundation model the labelled rows as *context* and it predicts the held-out rows in a single
+forward pass — no training loop at all. And the frontier has genuinely moved: on the main public tabular
+benchmarks, the best single models are now these foundation models, sitting a meaningful margin *above*
+the best tuned gradient-boosted tree. What they buy is **sample efficiency** (strong performance from
+little data) and **zero-shot convenience** (skip the training and tuning). What they are emphatically
+**not** is a general chat LLM — you would not ask Claude to forecast a return series; you would reach for a
+time-series foundation model built for exactly that. Keeping this distinction sharp matters, because the
+loose phrase "just use an LLM for it" almost always means the *wrong* family.
+
+## Family three — general LLMs (Claude, GPT)
+
+A large language model is pretrained on internet-scale **text** and steered not by training but by
+**prompting** — frozen weights, behaviour shaped by the context you provide. Its defining strength is the
+one neither other family has: turning **unstructured text into structure**, and reasoning in natural
+language over messy, novel inputs. Give it a news article and ask for the event type, the affected tickers
+and the sentiment, and it will do in one prompt what would otherwise take a bespoke NLP pipeline. Its
+weaknesses are the mirror image of family one's strengths: it is **expensive and slow** (hundreds of
+milliseconds to seconds, real cost per call), **non-deterministic**, **poorly calibrated** out of the box,
+**opaque**, and it can **hallucinate** — inventing a number or a fact with complete fluency. For anything
+numeric and repetitive, those are disqualifying. For text, they are the price of a capability nothing else
+offers.
+
+## The honest trade-off
+
+| | Task-trained model | Domain foundation model | General LLM |
+|---|---|---|---|
+| Input | tabular / numeric | tabular / time-series | **text** (any) |
+| Adaptation | trained on your task | zero-shot / in-context | prompted (frozen) |
+| Cost & latency | tiny (µs, ≈ free) | moderate | **high** (100 ms–s, \$) |
+| Determinism | deterministic | mostly | **stochastic** |
+| Calibration | can be [calibrated](../../ml/probability-calibration/index.qmd) | reasonable | **poor out-of-box** |
+| Hallucination | none | none | **yes** |
+| Interpretability | [SHAP](../../ml/shap-values/index.qmd) / coefficients | limited | hard |
+| Shines at | a specific task, with data | few-shot / scarce data | **unstructured text → structure** |
+
+: There is no universally best family — only a best family *for a given job*. {.striped}
+
+## The ceiling nobody escapes
+
+Before allocating families to jobs, one result from the rest of this site overrides everything: in a
+near-efficient market, **next-day direction is unpredictable at every level of sophistication** — the
+[capstone](../../capstone.qmd) shows a transformer tying a logistic regression at a coin-flip AUC of 0.50.
+That ceiling applies to *all three families equally*. A tabular foundation model does not conjure an edge
+a gradient-boosted tree could not find; a general LLM asked to predict tomorrow's return is not secretly an
+oracle. Foundation models buy **sample efficiency and convenience, not alpha**, and no amount of pretraining
+repeals market efficiency. So the choice between families is almost never about *predictive power on
+returns* — there is little to be had — and almost always about the **engineering** properties that decide
+whether a system is deployable: cost, calibration, determinism and auditability. That reframing is itself
+the most useful thing this comparison offers.
+
+## Which belongs where in the proposal
+
+The [architecture](../../phd/index.qmd) allocates each family to what it is actually good at:
+
+- The **News & Narrative Agent** needs a **general LLM** — text → structure is its irreplaceable job, and no other family can do it. This is the *only* place a general LLM belongs in the system.
+- **Regime, volatility and sizing** are numeric prediction, so they use **task-trained models** by default (calibrated, cheap, auditable — the [ML library](../../ml/index.qmd) and [RL tier](../../ml/markov-decision-processes/index.qmd)), with **domain foundation models** a reasonable option where data is scarce.
+- The mistake to avoid, explicitly: **do not reach for a general chat LLM to predict a number.** It is expensive, uncalibrated, non-deterministic theatre, with no edge to show for it — and using one big LLM for everything is precisely the single-opaque-model anti-pattern the multi-agent design [exists to reject](../what-is-an-agent/index.qmd).
+
+## Grounding in MarketLens AI
+
+My **MarketLens AI** app already respects this split, mostly. It uses a general LLM (Claude) for the
+**text** work — interpreting news for the sentiment dashboard, drafting the prose of an equity-research
+report — which is exactly family three's domain. Where it would be tempting to go wrong is a numeric
+signal: if MarketLens added a next-day direction or volatility indicator, the right tool is a **trained,
+calibrated classifier** (family one), not a prompt asking the model to emit "72% chance up." That number
+would look authoritative and mean nothing — uncalibrated, non-reproducible, and, per the ceiling above,
+edgeless. The discipline is to let the LLM do the reading and let a small honest model do the counting.
+
+## How I would explain it to a supervisor
+
+"I'd resist framing it as LLMs versus traditional ML, because there are three families now. Task-trained
+models — the whole ML library — are cheap, calibrated, deterministic and auditable, and they're the
+default for numeric prediction. Domain foundation models, the tabular and time-series pretrained models
+that in 2026 actually beat gradient boosting on benchmarks, add zero-shot convenience and sample efficiency
+but aren't chat LLMs. And general LLMs are unmatched at turning unstructured text into structure but are
+expensive, stochastic, uncalibrated and can hallucinate. The key point is that the choice is rarely about
+predictive power on returns — my own capstone shows the market is near-efficient, so a transformer ties a
+logistic regression at 0.50, and that ceiling binds every family — it's about engineering properties. So
+in the proposal the general LLM does exactly one job, the News Agent's text-to-structure, and everything
+numeric uses trained or domain-foundation models. The anti-pattern I most want to avoid is asking a chat
+LLM to predict a number: it produces confident, uncalibrated nonsense, which is the opposite of what a risk
+system needs."
+
+::: {.status-note}
+The 2026 frontier is represented honestly: tabular foundation models (TabPFN / TabICL / TabFM) and
+time-series foundation models (Chronos, TimesFM, TimeGPT) now rival or exceed tuned gradient-boosted trees
+on public benchmarks — but they are *domain* foundation models, distinct from general chat LLMs, and the
+near-efficiency of returns (established in the [capstone](../../capstone.qmd)) caps the predictive edge of
+all three families. Claims about MarketLens AI reflect its current design (an LLM used for text tasks).
+Model-family capabilities move quickly; the engineering trade-offs — cost, calibration, determinism,
+auditability — are the stable part.
+:::
