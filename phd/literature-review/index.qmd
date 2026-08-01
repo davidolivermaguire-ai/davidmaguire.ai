@@ -1,0 +1,210 @@
+---
+title: "Literature Review"
+subtitle: "The intellectual foundations of adaptive, regime-aware, risk-governed market decision-making — and where this proposal sits among them"
+description: >
+  A thematic, critical review of the seven literatures the proposal integrates — market efficiency,
+  regime detection, volatility, reinforcement learning, NLP and LLMs in finance, multi-agent systems, and
+  backtest methodology — positioned against the 2024–2026 wave of multi-agent LLM trading systems whose
+  own critics have begun to document the gap this proposal sets out to fill.
+date: 2026-07-31
+author: "David Maguire"
+toc: true
+toc-depth: 2
+---
+
+This review organises the field into the **seven literatures the proposal integrates**, reads each
+critically rather than cataloguing it, and locates the proposal against a body of work that barely existed
+when the idea was first sketched: the 2024–2026 explosion of **multi-agent LLM trading systems**. Its
+central argument is that the contribution is *not* another such system — those now exist and are
+proliferating — but a **control-first, regime-aware, risk-governed and rigorously-evaluated** one, and that
+the newest and most sceptical papers in the field have independently begun to document exactly why that is
+the gap worth filling. Throughout, claims are connected to the
+[evidence already built](../index.qmd#what-is-already-built-the-evidence-tracker) on this site, because a
+literature review that also *tests* the literature is the discipline the whole proposal argues for.
+
+## 1. Market efficiency and the boundaries of predictability
+
+The intellectual starting point is the **efficient market hypothesis** (Fama, 1970): if prices reflect
+available information, systematic return prediction is close to impossible, and the decades-long "factor
+zoo" of claimed anomalies has largely dissolved under scrutiny. Harvey, Liu & Zhu (2016) show that once the
+hundreds of published factors are corrected for the sheer number of hypotheses tested, most fail to clear a
+credible significance bar — a multiple-testing crisis this proposal takes as a methodological warning, not a
+footnote. Machine learning has sharpened rather than overturned the verdict: Gu, Kelly & Xiu (2020) find
+that flexible models (trees, neural networks) do extract *modest, mostly nonlinear* predictability from a
+large predictor set, but the gains are concentrated and fragile. The proposal engages this evidence rather
+than wishing it away — its own [capstone](../../capstone.qmd) independently reproduces it, with every model
+from a linear regression to a transformer tying at a coin-flip on next-day direction. The theoretical home
+for the proposal's response is Lo's (2004) **Adaptive Markets Hypothesis**, which reframes efficiency as
+*dynamic and regime-dependent*: opportunities appear and are arbitraged away at rates that vary with the
+environment. That reframing is precisely why the proposal targets **robustness and decision quality under
+changing conditions** rather than a static predictive edge — a positioning the efficiency literature
+supports, and one that separates this work from the return-chasing it is often mistaken for.
+
+## 2. Regime detection and non-stationarity
+
+If markets are adaptive, the central modelling object is the **regime**. The foundational apparatus is
+Hamilton's (1989) Markov regime-switching model, which lets a series' parameters switch between hidden
+states following a Markov chain, and its asset-pricing descendants: Ang & Bekaert (2002) show that regime
+shifts materially change optimal international allocation, and Guidolin & Timmermann (2007) extend this to
+multivariate regime-switching portfolios. A parallel, more operational line treats regimes as *risk states*
+— Kritzman & Li (2010) define a "financial turbulence" index that spikes precisely in the periods risk
+management most cares about — and the online-detection literature, exemplified by Adams & MacKay's (2007)
+Bayesian online change-point detection, asks not "which regime was this?" but "has the regime *just
+changed*?" Critically, most of this literature is either **offline** (smoothing over a completed history,
+which contains look-ahead) or **descriptive** (labelling regimes without conditioning decisions on them).
+The proposal's contribution is to make regime awareness **real-time and decision-facing** — filtered, not
+smoothed; feeding sizing, risk and forecast-calibration — and, unusually, to *test whether it pays*: its
+[Quant Lab](../../quant-lab/index.qmd) finds that a discrete regime adds nothing beyond a volatility signal
+for position *sizing*, yet sharpens risk *probabilities* and concentrates its benefit at *transitions* —
+a nuanced result the descriptive regime literature never had to confront.
+
+## 3. Volatility: the forecastable dimension
+
+Where returns resist prediction, **volatility** yields. From Engle's (1982) ARCH and Bollerslev's (1986)
+GARCH to the realized-volatility programme — Andersen & Bollerslev's (1998) rebuttal of the "GARCH doesn't
+forecast" sceptics, and Corsi's (2009) HAR model — the literature establishes that conditional variance is
+persistent and genuinely forecastable, if only over short horizons. The natural question is whether that
+forecastability is *tradable*, and here the literature is instructively divided: Moreira & Muir (2017)
+argue that volatility-managed portfolios (scaling exposure by inverse variance) raise Sharpe ratios and
+produce alpha, while Cederburg, O'Doherty, Wang & Yang (2020) show much of that advantage evaporates out of
+sample and net of costs. The proposal sides with neither on faith: it [reproduces the debate
+directly](../../quant-lab/volatility-managed-portfolios/index.qmd), finding that volatility timing buys
+*risk control, not statistically significant alpha*, and [measures the forecast
+horizon](../../quant-lab/volatility-forecasting-horizon/index.qmd) at roughly a one-month shock half-life.
+This is the empirical backbone of the whole proposal: the forecastable dimension is *risk*, so risk — not
+return — is where the system's edge is sought.
+
+## 4. Reinforcement learning for sequential decisions
+
+Trading is a sequential decision problem, which makes **reinforcement learning** its natural formalism.
+The lineage runs from Moody & Saffell's (2001) direct (policy-based) reinforcement for trading, through
+Deng et al.'s (2017) deep direct RL that learns market features and trading decisions jointly, to Jiang,
+Xu & Liang's (2017) deep RL framework for portfolio management; alongside sits the execution literature,
+where Almgren & Chriss (2001) give the canonical optimal-liquidation trade-off between market impact and
+timing risk. Two weaknesses recur across the trading-RL literature. First, most agents **maximise return
+without hard risk constraints**, so a reward-hungry policy will take ruinous leverage for marginal gain —
+the very failure the risk-sensitive and constrained-RL literature (CVaR objectives, Lagrangian methods)
+exists to address, and which the proposal's [risk-constrained RL](../../ml/risk-constrained-rl/index.qmd)
+component adopts. Second, most assume **stationarity**, learning a policy for a market that then changes
+underneath it. The proposal's answer is to pair constrained RL with regime-conditioning and a
+**deterministic risk layer** that can override the learner outright — and its [Quant Lab H6
+test](../../quant-lab/hard-risk-limits/index.qmd) confirms empirically what the constrained-RL theory
+argues: hard, deterministic limits are what turn a fallible learner into a viable strategy.
+
+## 5. NLP and large language models in finance
+
+Finance has read text for signal since Tetlock's (2007) demonstration that media pessimism predicts
+(transient) downward pressure on prices, and Loughran & McDonald's (2011) finding that a *domain-specific*
+sentiment lexicon substantially outperforms general-purpose ones — a reminder that financial language is its
+own dialect. The transformer era brought domain-adapted models: FinBERT (Araci, 2019), BloombergGPT (Wu et
+al., 2023) and FinGPT, each improving downstream text tasks. Yet the classic finding survives the technology:
+the *return* content of news sentiment is weak and quickly arbitraged, consistent with the efficiency
+literature above. The proposal draws the honest conclusion — text is not a return oracle — and reframes the
+News Agent's job around what text can robustly provide: **bounded, auditable, timestamp-safe features**
+(event class, novelty, narrative, risk context), not a buy signal, exactly the stance developed in its
+[schema-constrained extraction](../../ai-systems/schema-constrained-extraction/index.qmd) and
+[sentiment-and-narrative](../../ai-systems/sentiment-and-narrative/index.qmd) work. Where most text-in-finance
+research still chases sentiment-to-return, the proposal treats text as a risk-and-context input under hard
+controls.
+
+## 6. LLM agents and multi-agent trading systems — the frontier and its critics
+
+This is where the proposal must be positioned most carefully, because the frontier moved fast. Since 2024 a
+wave of **multi-agent LLM trading systems** has appeared — most prominently TradingAgents (Xiao, Sun, Luo &
+Wang, 2024), which simulates a trading firm with fundamental, sentiment and technical analyst agents,
+researchers, traders and risk managers, and FinRobot (Yang et al., 2024), an open-source agentic platform —
+surveyed in a growing body of work (e.g. the 2024 *Large Language Model Agent in Financial Trading* survey).
+Their shared design is a **swarm of LLM agents deliberating in natural language** toward a trade, and their
+reported backtests are impressive. The proposal is emphatically *not* a fourteenth entry in this line, and
+the reason is that the field's own most rigorous recent work has turned sceptical. Li, Kim, Cucuringu & Ma
+(2025), with their FINSABER framework, subject LLM investing strategies to broad-universe, two-decade,
+bias-controlled backtesting and find the reported advantages **largely evaporate** — and, most tellingly for
+this proposal, that LLM strategies are *"overly conservative in bull markets… and overly aggressive in bear
+markets,"* i.e. they **fail to adapt across regimes**. Complementary evaluations (2026) stress that these
+systems' apparent gains are fragile to evaluation choices and that *coordination*, not raw model power,
+governs their behaviour. The literature has thus independently named three gaps: naive multi-agent LLM
+systems overstate performance, are evaluated unreliably, and are regime-blind. The proposal's contribution
+is the deliberate inverse of the prevailing design: agents that **do not deliberate in free text** but
+exchange typed features through a structured state
+([multi-agent coordination](../../ai-systems/multi-agent-coordination/index.qmd)); an LLM that is **never an
+execution authority** ([why an LLM must never trade](../../ai-systems/why-llms-never-trade/index.qmd));
+**regime-awareness by construction** rather than as an emergent hope; and evaluation held to
+**deflated-Sharpe, out-of-sample, honest-null** standards. Where the field built for autonomy and impressive
+demos, this proposal builds for control, auditability and evidence — the axis its own critics now say is
+missing.
+
+## 7. Backtest overfitting and evaluation methodology
+
+The thread that ties the critique of §6 to the discipline of the whole site is the **backtest-overfitting**
+literature. López de Prado (2018) catalogues how standard backtesting silently manufactures false discoveries;
+Bailey & López de Prado (2014) formalise the correction as the **Deflated Sharpe Ratio**, adjusting an
+observed Sharpe for the number of trials, sample length and non-normality; Bailey et al. (2017) quantify the
+**Probability of Backtest Overfitting**; and Sullivan, Timmermann & White (2001) show, on the classic case
+of calendar effects, that data-mined patterns vanish once the search is accounted for. Together with Harvey,
+Liu & Zhu (2016) from §1, this literature is the reason the proposal treats **methodology as a first-class
+research object**. Its [Quant Lab](../../quant-lab/index.qmd) is built on these tools — deflated significance,
+purged/combinatorial cross-validation, point-in-time discipline, and a
+[calendar-anomaly control experiment](../../quant-lab/calendar-anomalies/index.qmd) that reproduces Sullivan
+et al.'s null on modern data — and reports its own negative results as readily as its positive ones. This is
+precisely the standard against which the LLM-trading results the critics of §6 dismantled were *not* held; it
+is the proposal's strongest point of differentiation.
+
+## Synthesis: the gap this proposal fills
+
+Each of the seven literatures is deep, and none is the contribution. Efficiency and its ML re-examination
+say return prediction is a near-dead end; the regime and volatility literatures say *risk* is the structured,
+forecastable dimension; reinforcement learning offers the decision formalism but usually without hard risk
+control or regime awareness; the finance-NLP tradition says text carries weak return content but useful
+context; the new multi-agent-LLM literature offers a compelling decomposition *and*, through its own critics,
+a warning that the naive version overstates, mis-evaluates, and cannot handle regimes; and the
+backtest-overfitting literature supplies the evaluative conscience the rest of the field so often lacks. **No
+existing work integrates these into a single, control-first, regime-aware, risk-governed and honestly-evaluated
+architecture** — one where an LLM informs but never acts, where hard deterministic limits bound a
+constrained RL learner, where regime awareness is real-time and its value is *tested* rather than assumed, and
+where every claim is deflated and reported with its nulls. That integration, positioned modestly as a bet on
+robustness and decision quality rather than on beating the efficient market, is the proposal's contribution —
+and, unusually for a proposal, the majority of its components are [already built and tested](../index.qmd#what-is-already-built-the-evidence-tracker)
+on this site. This review is the seed of the formal Chapter 2; the notes below develop individual papers in
+depth.
+
+## References
+
+- Adams, R. P., & MacKay, D. J. C. (2007). *Bayesian Online Changepoint Detection.* arXiv:0710.3742.
+- Almgren, R., & Chriss, N. (2001). *Optimal Execution of Portfolio Transactions.* Journal of Risk, 3(2).
+- Andersen, T. G., & Bollerslev, T. (1998). *Answering the Skeptics: Yes, Standard Volatility Models Do Provide Accurate Forecasts.* International Economic Review, 39(4).
+- Ang, A., & Bekaert, G. (2002). *International Asset Allocation with Regime Shifts.* Review of Financial Studies, 15(4).
+- Araci, D. (2019). *FinBERT: Financial Sentiment Analysis with Pre-trained Language Models.* arXiv:1908.10063.
+- Bailey, D. H., & López de Prado, M. (2014). *The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting, and Non-Normality.* Journal of Portfolio Management, 40(5).
+- Bailey, D. H., Borwein, J., López de Prado, M., & Zhu, Q. J. (2017). *The Probability of Backtest Overfitting.* Journal of Computational Finance, 20(4).
+- Bollerslev, T. (1986). *Generalized Autoregressive Conditional Heteroskedasticity.* Journal of Econometrics, 31(3).
+- Cederburg, S., O'Doherty, M. S., Wang, F., & Yang, X. (2020). *On the Performance of Volatility-Managed Portfolios.* Journal of Financial Economics, 138(1).
+- Corsi, F. (2009). *A Simple Approximate Long-Memory Model of Realized Volatility.* Journal of Financial Econometrics, 7(2).
+- Deng, Y., Bao, F., Kong, Y., Ren, Z., & Dai, Q. (2017). *Deep Direct Reinforcement Learning for Financial Signal Representation and Trading.* IEEE Transactions on Neural Networks and Learning Systems, 28(3).
+- Engle, R. F. (1982). *Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation.* Econometrica, 50(4).
+- Fama, E. F. (1970). *Efficient Capital Markets: A Review of Theory and Empirical Work.* Journal of Finance, 25(2).
+- Gu, S., Kelly, B., & Xiu, D. (2020). *Empirical Asset Pricing via Machine Learning.* Review of Financial Studies, 33(5), 2223–2273.
+- Guidolin, M., & Timmermann, A. (2007). *Asset Allocation under Multivariate Regime Switching.* Journal of Economic Dynamics and Control, 31(11).
+- Hamilton, J. D. (1989). *A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle.* Econometrica, 57(2).
+- Harvey, C. R., Liu, Y., & Zhu, H. (2016). *… and the Cross-Section of Expected Returns.* Review of Financial Studies, 29(1).
+- Jiang, Z., Xu, D., & Liang, J. (2017). *A Deep Reinforcement Learning Framework for the Financial Portfolio Management Problem.* arXiv:1706.10059.
+- Kritzman, M., & Li, Y. (2010). *Skulls, Financial Turbulence, and Risk Management.* Financial Analysts Journal, 66(5).
+- Li, W., Kim, H., Cucuringu, M., & Ma, T. (2025). *Can LLM-based Financial Investing Strategies Outperform the Market in Long Run?* (FINSABER). arXiv:2505.07078.
+- Lo, A. W. (2004). *The Adaptive Markets Hypothesis.* Journal of Portfolio Management, 30(5).
+- López de Prado, M. (2018). *Advances in Financial Machine Learning.* Wiley.
+- Loughran, T., & McDonald, B. (2011). *When Is a Liability Not a Liability? Textual Analysis, Dictionaries, and 10-Ks.* Journal of Finance, 66(1).
+- Moody, J., & Saffell, M. (2001). *Learning to Trade via Direct Reinforcement.* IEEE Transactions on Neural Networks, 12(4).
+- Moreira, A., & Muir, T. (2017). *Volatility-Managed Portfolios.* Journal of Finance, 72(4).
+- Sullivan, R., Timmermann, A., & White, H. (2001). *Dangers of Data Mining: The Case of Calendar Effects in Stock Returns.* Journal of Econometrics, 105(1).
+- Tetlock, P. C. (2007). *Giving Content to Investor Sentiment: The Role of Media in the Stock Market.* Journal of Finance, 62(3).
+- Wu, S., Irsoy, O., Lu, S., Dabravolski, V., Dredze, M., Gehrmann, S., Kambadur, P., Rosenberg, D., & Mann, G. (2023). *BloombergGPT: A Large Language Model for Finance.* arXiv:2303.17564.
+- Xiao, Y., Sun, E., Luo, D., & Wang, W. (2024). *TradingAgents: Multi-Agents LLM Financial Trading Framework.* arXiv:2412.20138.
+- Yang, H., Zhang, B., Wang, N., et al. (2024). *FinRobot: An Open-Source AI Agent Platform for Financial Applications using Large Language Models.* arXiv:2405.14767.
+
+::: {.status-note}
+This review is a working document developed in the open, not the final Chapter 2. Classic
+finance/econometrics citations (efficiency, regime-switching, GARCH, RL for trading, finance-NLP) are
+foundational and stable; the 2024–2026 multi-agent-LLM and ML-asset-pricing citations were verified against
+current sources at the time of writing, and details (volumes, venues) should be re-checked at formal
+write-up. Where the review asserts an empirical claim about markets, it is [tested on this
+site](../../quant-lab/index.qmd) rather than taken on trust.
+:::

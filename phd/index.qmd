@@ -265,10 +265,15 @@ industry-linked routes); **(4)** secure data access commitments (market, news an
 exploratory objective — order-book data); **(5)** expand the literature review below toward the
 formal Chapter 2 base.
 
-## Literature review notes
+## Literature review
 
-Structured notes on the papers I'm reading — what each claims, how it shows it, what I'd push on,
-and how it connects to the proposal.
+A full **[thematic literature review](literature-review/index.qmd)** surveys the seven literatures the
+proposal integrates — market efficiency and the limits of predictability, regime detection and
+non-stationarity, volatility, reinforcement learning for trading, NLP and LLMs in finance, multi-agent
+systems, and backtest methodology — read critically and, crucially, positioned against the 2024–2026 wave
+of multi-agent LLM trading systems (TradingAgents, FinRobot) whose own critics have begun to document the
+gap this proposal fills: control-first, regime-aware, risk-governed, and honestly evaluated. Structured
+notes on individual papers follow below.
 
 ::: {#literature}
 :::
