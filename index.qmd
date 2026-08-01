@@ -74,7 +74,7 @@ Reproducible strategy experiments with explicit hypotheses, methods, and honestl
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-robot card-ic" aria-hidden="true"></i> [AI Trading Systems](ai-systems/index.qmd)
-How LLMs and AI agents could support market decision-making — and the risk controls that make such a system credible.
+**Complete — 11 entries.** How LLMs and AI agents could support market decision-making, grounded in real Anthropic API code — the agent loop, the News Agent, and the controls that make a system credible.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}

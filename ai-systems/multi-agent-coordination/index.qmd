@@ -1,0 +1,145 @@
+---
+title: "Multi-Agent Coordination"
+subtitle: "Combining specialised agents into one decision — through a structured shared state and a deterministic hierarchy, not a swarm of models negotiating"
+description: >
+  The section began by defining an agent and ends by wiring several together. The fashionable image of
+  multi-agent AI — models debating in natural language until they agree — is exactly what a trading system
+  must not build. Real coordination is a structured, typed shared state, a fixed decision flow, a
+  deterministic arbiter with the final say, and honest uncertainty carried through. The engineering of
+  coordination, and how it meets the game theory the ML tier already formalised.
+date: 2026-07-31
+author: "David Maguire"
+categories: [agents, safety]
+toc: true
+---
+
+The section opened by [defining an agent](../what-is-an-agent/index.qmd) and closes by wiring several
+together. The [proposal](../../phd/index.qmd) is, after all, *six* of them — Regime, News, Trading, Risk,
+Review and Behaviour — and the obvious question is how they combine into a single decision without becoming
+a single opaque system, compounding each other's errors, or drifting into behaviour no one designed. The
+fashionable answer is the wrong one: the popular image of multi-agent AI is a set of models **debating in
+natural language** until they converge, and that is precisely the architecture a system near capital must
+not build. This entry lays out the coordination that works instead — structured, typed, hierarchical,
+deterministic where it counts — and shows how it meets the [game-theoretic
+framework](../../ml/multi-agent-systems/index.qmd) the quant tier already built.
+
+## 1. Two meanings of "multi-agent"
+
+The word hides a fork. One meaning is a **swarm of autonomous models** that talk to each other, negotiate,
+and self-organise toward a goal — maximal autonomy, emergent behaviour, the demo that impresses. The other
+is **modular decomposition**: a system split into specialised components, each with a bounded function and
+an auditable interface, wired together by a fixed flow — maximal *control*, no emergence, the thing you can
+test. The [first entry's](../what-is-an-agent/index.qmd) whole argument was that a market system belongs
+firmly at the controlled end of the autonomy dial, and multi-agent coordination is where that choice is
+either honoured or thrown away. The proposal is multi-agent in the **second** sense entirely: the reason to
+have six agents is not to let them negotiate, it is so that no one component has to be trusted with
+everything and each can be switched off, tested and audited alone.
+
+## 2. Why not let the agents talk
+
+Free-form agent-to-agent conversation is seductive and, for this problem, disqualifying. It is
+**non-deterministic** (the same inputs yield different debates), **unbounded** (conversations can run
+long, loop, or wander), **hard to audit** (the "reasoning" is a transcript, not a record), and
+**error-compounding** (one agent's [hallucination](../hallucination-risk/index.qmd) becomes another's
+premise). Worst of all, every natural-language hop re-opens the [prompt-injection
+surface](../why-llms-never-trade/index.qmd): text that could hijack one agent can now propagate through the
+others. A system whose components persuade each other in prose has multiplied its attack surface and
+surrendered its auditability for a capability — open-ended negotiation — that a trading desk does not
+actually want. So the agents in this design **do not converse.** They contribute typed features to a shared
+state.
+
+## 3. Coordination through a structured shared state
+
+The agents communicate the way a well-run desk does — through a **shared, structured state**, not a group
+chat. Each agent reads the state and writes its own bounded, typed, confidence-tagged contribution; a fixed
+**decision flow** moves the state from perception to action; and the interfaces between agents are schemas,
+not sentences:
+
+```javascript
+async function decide(marketData, asOf) {
+  // PERCEPTION: each agent writes a TYPED, confidence-tagged contribution to a shared state — no chatter.
+  const state = {
+    regime:    await regimeAgent.assess(marketData, asOf),        // { label, prob, confidence }
+    news:      await newsAgent.extract(feed.news(asOf), asOf),    // schema features + confidence
+    behaviour: await behaviourAgent.flags(marketData, asOf),      // exploratory signals
+    prices:    marketData,                                        // exact facts, from the feed
+  };
+  // DECISION: the RL agent proposes from the combined state, weighting each input by its CALIBRATED confidence.
+  const proposal = tradingAgent.propose(state);                  // uncertainty carried through, not discarded
+  // ARBITRATION: the Risk Agent is deterministic and has the FINAL say — it can override any agent.
+  const order = riskGate(proposal, HARD_LIMITS, portfolio);
+  // REVIEW: log the whole state and attribute the outcome (the backward half of coordination).
+  review.record({ asOf, state, proposal, order });
+  return order;
+}
+```
+
+The flow is the design. Perception agents feed a combined state; the Trading agent proposes from it; the
+Risk agent arbitrates deterministically; the Review agent records and attributes. Every arrow is a typed,
+timestamped, auditable hand-off — the opposite of a transcript no one can later account for.
+
+## 4. Conflict resolution and confidence
+
+Agents will disagree — News reads bullish while Regime reads turbulent while Risk sees a breached limit —
+and the resolution is **not** an argument between them. It is a **fixed hierarchy** with a deterministic
+arbiter: the [Risk Agent](../../ml/risk-constrained-rl/index.qmd) can always scale or veto, whatever any
+other agent proposes, because [authority is not shared](../why-llms-never-trade/index.qmd). Below that,
+disagreement is handled by **confidence**, not volume: each agent attaches a
+[calibrated](../../ml/probability-calibration/index.qmd) uncertainty to its contribution, and the
+combination weights inputs by how much they can be trusted, so a low-confidence signal cannot shout down a
+high-confidence one. Crucially, uncertainty **propagates** — the combined state carries it forward rather
+than collapsing to a false point estimate — so the final decision reflects the *weakest* link, not the most
+confident agent. A coordinated system that discards uncertainty at the first hop is just an over-confident
+one wearing six hats.
+
+## 5. The forward flow meets the backward theory
+
+Coordination has two halves, and this section and the quant tier each built one. The **forward** half is
+the engineering above: structured state, fixed flow, deterministic arbitration, confidence propagation. The
+**backward** half is attribution — after the outcome is known, which agent deserves the credit or the
+blame? — and that is exactly the [multi-agent credit-assignment](../../ml/multi-agent-systems/index.qmd)
+work from the ML library, where **Shapley values** gave the unique fair split of a shared P&L and showed
+that a naïve "who was on when we won" audit gets it wrong. The Review Agent closes the loop by running that
+attribution on the logged decisions, feeding it back into which agents to trust, retrain or retire. Forward
+coordination is how the agents *act together*; backward attribution is how they *learn together* — and a
+multi-agent system without the second is, as the credit-assignment entry warned, just automation of
+overconfidence.
+
+## 6. Grounding, and the point of the whole design
+
+My **MarketLens AI** is a single component today, so it has no coordination to get wrong — which is its own
+kind of honesty about where it sits. The multi-agent version is the proposal, and this entry is its
+decision flow made concrete: typed hand-offs through a shared state, a deterministic risk arbiter, and a
+review loop that attributes outcomes. Standing back, the entire section resolves to one thesis, and
+coordination is where it is finally cashed out: **the reason to build with agents is control, not
+emergence.** You decompose the system so each part is bounded and auditable; you wire the parts through
+structured state rather than conversation; you keep authority deterministic and singular; you carry
+uncertainty honestly; and you attribute outcomes so the thing can learn. Do that and "multi-agent" means a
+system you can reason about and switch off. Skip it and it means a swarm you can only hope behaves — which
+is the one thing you cannot afford in front of a market.
+
+## 7. How I would explain it to a supervisor
+
+"Coordinating six agents sounds like it should mean letting them talk to each other, and that's exactly
+what I won't do — free-form agent conversation is non-deterministic, unbounded, unauditable,
+error-compounding, and it re-opens the prompt-injection surface at every hop. So my agents don't converse;
+they write typed, confidence-tagged features into a shared state, and a fixed flow moves that state from
+perception to a proposal to a deterministic risk arbiter that has the final say and can override anyone.
+Conflicts aren't debated, they're resolved by hierarchy and by calibrated confidence, and uncertainty
+propagates so the decision reflects the weakest link rather than the loudest agent. That's the forward
+half; the backward half is attribution — after the fact the Review Agent runs the Shapley credit assignment
+I built in the ML tier to work out which agent actually earned the outcome, and feeds that into what to
+trust or retrain. The point of the whole thing is that I'm multi-agent for control, not for emergence:
+decompose so every part is testable, wire them through structure not chatter, keep authority deterministic,
+and attribute honestly. That gives me a system I can reason about and switch off — which is the only kind
+I'd put near a market."
+
+::: {.status-note}
+Coordination is structured, not conversational: agents write typed, [calibrated](../../ml/probability-calibration/index.qmd),
+timestamped contributions to a shared state; a fixed flow runs perception → proposal → deterministic
+[risk arbitration](../../ml/risk-constrained-rl/index.qmd) → [review](../../ml/multi-agent-systems/index.qmd).
+Conflict is resolved by hierarchy and confidence-weighting, not agent debate; uncertainty propagates.
+Post-hoc [Shapley attribution](../../ml/multi-agent-systems/index.qmd) is the backward half, from the ML
+tier. This entry completes the AI Systems section — the LLM/agent half of the [proposal](../../phd/index.qmd).
+MarketLens AI is single-component today; the coordinated architecture is the proposal.
+:::
