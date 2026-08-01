@@ -57,6 +57,7 @@ and out of sample, whether they actually do.
 
 | Experiment | The question it settles | Tests | Status |
 |---|---|:--:|:--:|
+| [How backtest selection inflates the Sharpe ratio](backtest-overfitting/index.qmd) | How easily does searching over strategies manufacture a fake edge? | discipline | ✅ Done |
 | [Volatility-managed portfolios](volatility-managed-portfolios/index.qmd) | If volatility is forecastable, can you trade it? | Finding 2 | ✅ Done |
 | [Volatility-forecasting horizon (HAR vs GARCH vs random walk)](volatility-forecasting-horizon/index.qmd) | How many days ahead is volatility actually predictable? | Finding 2 | ✅ Done |
 | [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | Does conditioning on regime beat a regime-blind strategy, net of costs? | H4 | ✅ Done |
