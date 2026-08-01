@@ -1,0 +1,139 @@
+---
+title: "Agent Memory & Planning"
+subtitle: "How an agent carries state and decomposes goals — and why both are autonomy dials a market system keeps short"
+description: >
+  Tools give an agent hands; memory gives it continuity and planning gives it reach. Both are what make an
+  agent capable of more than a single call — and both are autonomy dials that a system near capital turns
+  down, not up. Short-term versus long-term memory, the planning patterns, why long-horizon planning is
+  unreliable, and the point-in-time, bounded, gated discipline that keeps them safe.
+date: 2026-07-31
+author: "David Maguire"
+categories: [agents, safety]
+toc: true
+---
+
+[Tools](../tool-using-agents/index.qmd) give an agent hands. **Memory** gives it continuity — the ability
+to carry what it has learned across steps and sessions — and **planning** gives it reach: the ability to
+decompose a goal it could never answer in one call. Together with tools they are what turn a model into a
+genuine agent. And, like tools, each is an [autonomy dial](../what-is-an-agent/index.qmd): more memory and
+longer planning buy capability and spend control, so a market system grants them generously to *research*
+and sparingly to anything near an action. This entry covers both, and the discipline that keeps them from
+becoming liabilities.
+
+## 1. Short-term memory: the context, and its limit
+
+An agent's working memory is simply the **message list** it carries through the loop — every user turn,
+every tool call, every result. It is the model's scratchpad, and it has a hard ceiling: the **context
+window**. A long research run steadily fills it, and once it overflows, something has to give. The three
+options are the whole of context management: **truncate** (drop the oldest turns — cheap, forgetful),
+**summarise** (compress old turns into a running précis — the usual choice), or **offload** to an external
+store and retrieve on demand. The practical rule is to keep the *recent and relevant* in context and push
+everything else out:
+
+```javascript
+// Working memory grows; when it nears the budget, compress the old turns and keep the recent ones verbatim.
+async function step(messages, tools) {
+  if (tokens(messages) > CONTEXT_BUDGET) messages = await summariseOldTurns(messages);
+  return client.messages.create({ model: "claude-sonnet-5", max_tokens: 1024, tools, messages });
+}
+```
+
+## 2. Long-term memory: a store, retrieved point-in-time
+
+Anything the agent must remember beyond the context window — across a session boundary, or across the whole
+history of the system — lives in an **external store** and is fetched when relevant. This is not a new
+mechanism: **long-term memory is [RAG](../rag/index.qmd) pointed at the agent's own past** — its notes, its
+prior extractions, its previous decisions — embedded and retrieved by similarity. Which means it inherits
+RAG's most important discipline: retrieval must be **point-in-time**. An agent that recalls a note written
+*after* the decision it is reconstructing has [leaked the future](../../ml/data-leakage/index.qmd) as surely
+as any other look-ahead, now hidden inside its memory. So every remembered item carries its timestamp, and
+recall is filtered to what the agent could have known:
+
+```javascript
+// Long-term memory = RAG over the agent's own past, filtered to what it could have known at the time.
+async function recall(query, asOf) {
+  return memoryStore.search(await embed(query), { before: asOf, k: 5 });   // notes/decisions, no look-ahead
+}
+```
+
+The most valuable thing to remember is not facts — those come from [feeds and
+tools](../hallucination-risk/index.qmd) — but **decisions and their outcomes**: what the system did, on what
+information, and how it turned out. That memory is the raw material the
+[Review & Learning Agent](../../ml/multi-agent-systems/index.qmd) audits, and it is what lets the system
+learn without re-trusting a model's recollection. Memory is also a **risk**: a stale, wrong, or hallucinated
+item, once written to the store, becomes a "fact" the agent grounds itself in later — so memory is written
+with the same verification and confidence gates as any other output, and never treated as truer than the
+process that produced it.
+
+## 3. Planning: decomposition, and its unreliability
+
+Planning is how an agent tackles a goal too large for one step: it **decomposes** the goal into a sequence
+of tool-using sub-tasks. The agent loop already plans *implicitly* — deciding the next action each turn —
+and the common explicit patterns add structure on top: **ReAct** interleaves reasoning and action,
+**plan-and-execute** drafts the whole plan first and then carries it out, and **reflection** has the agent
+critique and revise its own output. Used well, planning is what turns "answer this" into "research this
+properly."
+
+Used naively, it is where agents most visibly fail. **LLM planning is unreliable over long horizons**:
+errors compound step to step, the agent can loop or get stuck, and a plan drafted at the start drifts from
+reality as it executes. The honest response is not a cleverer planner but **shorter plans**: bound the
+number of steps, verify each step's result before the next, and prefer decomposing a task into small,
+checkable pieces over trusting one long autonomous chain. This is the same conclusion the whole section
+keeps reaching — capability is real, but it degrades with autonomy, so you spend as little of it as the job
+allows.
+
+## 4. Both are autonomy dials — turned down near an action
+
+For a market system the rule that unifies memory and planning is that **rich versions belong to research,
+bounded versions to anything near execution.** A research or News agent gathering and reasoning over a name
+can have generous memory and multi-step planning — its blast radius is a report. An agent anywhere near a
+trade gets the opposite: short, point-in-time memory that is auditable rather than expansive, plans capped
+to a few verified steps, and — the invariant that never bends — every consequential step still routed
+through the [deterministic risk gate](../why-llms-never-trade/index.qmd), never executed by the plan itself:
+
+```javascript
+// PLANNING near an action: decompose, but bound the horizon and gate every consequential step.
+const plan = await draftPlan(goal);                       // model proposes a short list of sub-tasks
+for (const task of plan.slice(0, MAX_TASKS)) {            // bounded — short plans only
+  const result = await research(task);                    // read-only tools; gather, don't act
+  if (task.proposesAction) await riskGate(task.action);   // any action still deterministically approved
+}
+```
+
+An agent may *plan* a trade; it may never *place* one. Planning extends the model's reach through
+information, not through authority — the same line tools drew, now drawn through time.
+
+## 5. Grounding in MarketLens AI
+
+My **MarketLens AI** is, today, stateless per report — it plans nothing and remembers nothing between runs,
+which is safe but limited. The valuable additions are the *research-side* ones: give it long-term memory of
+its **past reports and their subsequent accuracy**, so it can learn which of its calls held up, and a
+bounded planning loop so a report can be assembled from several verified look-ups rather than one recall.
+Both are point-in-time — the memory of a June report is dated June, and a backtest of the tool must never
+let it remember July. What MarketLens must *not* acquire is planning that reaches an order or memory it
+treats as unimpeachable truth; its memory earns its keep as an auditable record of what it did and how it
+fared, exactly the material a review loop needs, and nothing more.
+
+## 6. How I would explain it to a supervisor
+
+"Memory and planning are the two capabilities beyond tools that make something a real agent, and I treat
+both as autonomy dials. Memory is short-term — the message list, which I compress when it fills the context
+window — and long-term, which is just RAG pointed at the agent's own past, so it inherits the point-in-time
+rule: it can't recall a note written after the moment it's reconstructing, or it's leaked the future. The
+thing most worth remembering isn't facts, which come from feeds, but decisions and outcomes, because that's
+what the review loop learns from. Planning is decomposition — ReAct, plan-and-execute, reflection — but it's
+unreliable over long horizons, errors compound, so the fix isn't a smarter planner, it's shorter plans:
+bound the steps, verify each one, and keep any consequential step behind the deterministic risk gate. The
+unifying rule is that rich memory and planning belong to the research side, where the blast radius is a
+report, and near an action everything is short, point-in-time, auditable and gated. An agent can plan a
+trade; it can never place one. Both capabilities extend the model's reach through information, not through
+authority."
+
+::: {.status-note}
+Short-term memory is the message list managed against the context window (truncate / summarise / offload);
+long-term memory is [RAG](../rag/index.qmd) over the agent's own past, [point-in-time](../../ml/data-leakage/index.qmd)
+and verification-gated, feeding the [Review & Learning Agent](../../ml/multi-agent-systems/index.qmd).
+Planning patterns (ReAct, plan-and-execute, reflection) are bounded in step count and keep consequential
+steps behind the [risk gate](../why-llms-never-trade/index.qmd). MarketLens AI is currently stateless per
+report; research-side memory of past reports and bounded planning are the described upgrades.
+:::

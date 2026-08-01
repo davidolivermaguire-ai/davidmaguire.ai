@@ -47,7 +47,7 @@ Added one at a time, to the same standard as the rest of the site. The roadmap b
 [Schema-constrained news extraction](schema-constrained-extraction/index.qmd) · [Retrieval-Augmented Generation (RAG)](rag/index.qmd) · [sentiment and narrative interpretation](sentiment-and-narrative/index.qmd).
 
 ### Agent capabilities
-[Tool-using agents](tool-using-agents/index.qmd) · agent memory and planning · multi-agent coordination.
+[Tool-using agents](tool-using-agents/index.qmd) · [agent memory and planning](memory-and-planning/index.qmd) · multi-agent coordination.
 
 ### Safety and control
 [AI risk controls](ai-risk-controls/index.qmd) · [hallucination risk when LLMs meet financial data](hallucination-risk/index.qmd) · [why an LLM must never directly place trades](why-llms-never-trade/index.qmd).
