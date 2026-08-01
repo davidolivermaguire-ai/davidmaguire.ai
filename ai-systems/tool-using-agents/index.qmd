@@ -1,0 +1,145 @@
+---
+title: "Tool-Using Agents"
+subtitle: "How a model gains hands — and why the tool set is the authority boundary, not just a capability list"
+description: >
+  Tools are what turn a language model from a thing that answers into a thing that acts, and they are the
+  fix for its worst weakness — recalling facts it should look up. But every tool is also an attack surface,
+  so the tool set is where control lives. The mechanics in real code, the design rules for a market system,
+  and why the tools you withhold matter as much as the ones you grant.
+date: 2026-07-31
+author: "David Maguire"
+categories: [agents, safety]
+toc: true
+---
+
+The [first entry](../what-is-an-agent/index.qmd) drew the line between a model that answers and an agent
+that acts, and located the difference in a loop that lets the model call **tools**. This entry goes into
+that mechanism, because tools are doing two jobs at once and it is easy to see only the first. They are how
+a model becomes genuinely **useful** — the direct cure for the hallucination that makes it dangerous. And
+they are where a system's **control** must live, because every tool is a capability *and* an attack
+surface. Getting the tool set right — what you grant, what you withhold, and how you validate what the
+model asks — is most of what separates a helpful research agent from a liability.
+
+## 1. What a tool actually is
+
+A tool is disarmingly simple: a **name**, a **description**, and a **JSON input schema**. That is all the
+model sees. It reads the descriptions, decides which tool (if any) fits the task, and produces a
+schema-valid set of arguments; *your* code executes the tool and returns the result; the model reads the
+result and continues. The model never runs anything itself — it emits a **request**, and the loop from the
+first entry carries it out:
+
+- you send the model the `tools` list on each turn;
+- if it wants one, it returns a `tool_use` block (`id`, `name`, `input`);
+- your code runs it and returns a `tool_result` block (matching `tool_use_id`);
+- the loop repeats until the model stops requesting tools and answers.
+
+The model can request **several tools at once** (parallel tool use), and Anthropic distinguishes **client
+tools** — the ones you define and execute in your app — from **server tools** like `web_search` and
+`web_fetch` that run on Anthropic's infrastructure. For a market system the consequential tools must be
+*client* tools, behind your own code, for a reason that is the whole point of this entry.
+
+## 2. Tools are the cure for hallucination
+
+The most valuable thing tools do is **relocate facts out of the model's memory**. Instead of asking the
+model *"what is NVDA trading at?"* — an invitation to [confidently invent a
+number](../hallucination-risk/index.qmd) — you give it a `get_price` tool that returns the real one from a
+data feed, and instruct it to use the tool rather than recall. This is the mechanism behind the section's
+firmest engineering rule: **the model for language, tools and feeds for facts.** A tool-using research
+agent can read fundamentals, fetch prices and pull point-in-time news, then reason over *verified* inputs
+rather than half-remembered ones. Tools are how you get an LLM's flexibility *and* a database's accuracy in
+the same loop.
+
+## 3. The tool set is the authority boundary
+
+Here is the insight that reframes tool design as a security decision: **an agent can do exactly what its
+tools let it do, and nothing else.** The tool set is therefore not a feature list — it is the precise
+definition of the agent's authority. Give it a `get_price` tool and it can look; give it a `place_order`
+tool and it can *trade*, and now every reason [an LLM must never hold execution
+authority](../why-llms-never-trade/index.qmd) applies with the wire already connected. So the design rules
+follow directly:
+
+- **Least privilege.** Expose only the tools the task needs, and make them **read-only** wherever possible. The tools you *withhold* are as important as the ones you grant.
+- **No consequential tools to the model.** There is no `place_order`, `move_money` or `cancel_all` in the model's tool set — ever. Actions are *proposed* through a bounded object and authorised by a [deterministic risk gate](../ai-risk-controls/index.qmd), which is not a tool the model can call.
+- **Validate every argument.** The model's requested inputs are **untrusted** — a hallucinated or injected ticker, an out-of-range size. The tool's own executor validates them (whitelist the ticker, clamp the range) before doing anything.
+- **Bound the loop.** Cap the number of tool-calling steps, so a confused or adversarial prompt cannot spin the agent indefinitely or run up unbounded cost.
+
+## 4. The real code
+
+A read-only research agent — capable, and structurally incapable of acting:
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();
+const UNIVERSE = new Set(["AAPL","MSFT","NVDA","PEP" /* … tradable tickers */]);
+const MAX_STEPS = 6;
+
+// A READ-ONLY tool set: the agent can gather, never act. No place_order lives here — by design.
+const tools = [
+  { name: "get_price",        description: "Latest price for a ticker, from the market-data feed.",
+    input_schema: { type:"object", properties:{ ticker:{type:"string"} }, required:["ticker"] } },
+  { name: "get_fundamentals", description: "Key fundamentals (EPS, P/E, revenue) for a ticker.",
+    input_schema: { type:"object", properties:{ ticker:{type:"string"} }, required:["ticker"] } },
+  { name: "search_news",      description: "Recent headlines for a ticker, as of a given date (point-in-time).",
+    input_schema: { type:"object", properties:{ ticker:{type:"string"}, asOf:{type:"string"} }, required:["ticker"] } },
+];
+
+// Executors run in YOUR code and validate the model's (untrusted) arguments.
+const run = {
+  get_price:        ({ticker})       => UNIVERSE.has(ticker) ? feed.price(ticker)        : { error:"unknown ticker" },
+  get_fundamentals: ({ticker})       => UNIVERSE.has(ticker) ? feed.fundamentals(ticker) : { error:"unknown ticker" },
+  search_news:      ({ticker, asOf}) => feed.news(ticker, asOf ?? nowAsOf),   // point-in-time — no look-ahead
+};
+
+async function research(question) {
+  let messages = [{ role:"user", content: question }];
+  for (let step = 0; step < MAX_STEPS; step++) {                 // bounded loop: no unlimited agency
+    const res = await client.messages.create({ model:"claude-sonnet-5", max_tokens:1024, tools, messages });
+    messages.push({ role:"assistant", content: res.content });
+    if (res.stop_reason !== "tool_use") return res.content;      // done: a grounded answer
+    const results = res.content.filter(b => b.type === "tool_use").map(call => ({
+      type: "tool_result", tool_use_id: call.id,
+      content: JSON.stringify(run[call.name](call.input)),       // validated execution, handles parallel calls
+    }));
+    messages.push({ role:"user", content: results });
+  }
+  return [{ type:"text", text:"step limit reached" }];           // fail safe on runaway
+}
+```
+
+Everything the model can *do* is in `tools`, and everything consequential is *not*. The agent can research
+a stock exhaustively and cannot place a single trade, because the capability was never in the set.
+
+## 5. Grounding in MarketLens AI
+
+My **MarketLens AI** report generator currently recalls figures from the model's own knowledge, which is
+exactly the failure tools exist to fix. The upgrade is to hand it a read-only tool set — `get_price`,
+`get_fundamentals`, `search_news` — and instruct it to *look things up rather than remember them*. The
+reports stop containing plausible-but-wrong numbers and start containing fetched, verifiable ones, and the
+agent becomes genuinely more capable. What the tool set must *never* grow is an execution tool: MarketLens
+can gain every gathering capability I can give it and remain, by construction, unable to trade — which is
+precisely the balance the whole section argues for, capability granted freely, authority withheld
+absolutely.
+
+## 6. How I would explain it to a supervisor
+
+"Tools are what let a model act instead of just answer, and they're the fix for its biggest weakness: it
+hallucinates facts, so instead of asking it for a price I give it a get_price tool that returns the real one
+from a feed, and it reasons over verified inputs. The insight I'd stress is that the tool set *is* the
+agent's authority — it can do exactly what its tools allow and nothing more — so designing the tool set is a
+security decision, not a feature choice. That means least privilege and read-only wherever possible; no
+consequential tool like place_order ever in the model's set, because actions go through a deterministic risk
+gate the model can't call; validating every argument the model requests, since a hallucinated or injected
+ticker is untrusted; and bounding the loop so a bad prompt can't run it forever. The nice property is that
+this makes the agent *more* capable and *no* more dangerous — it can research a name exhaustively with
+read-only tools and is structurally unable to trade, because the capability was never in the set. The tools
+you withhold are as much of the design as the ones you grant."
+
+::: {.status-note}
+Tool mechanics use the Anthropic Messages API: tools are name + description + JSON `input_schema`; the model
+returns `tool_use` blocks answered by `tool_result`; parallel tool use and client-vs-server tools are as
+documented. The design rules — least privilege, read-only, no execution tool, validated (untrusted)
+arguments, bounded loop — make the tool set the [authority boundary](../why-llms-never-trade/index.qmd), and
+the `search_news` `asOf` argument carries the [point-in-time](../../ml/data-leakage/index.qmd) discipline.
+MarketLens AI grounding reflects its current recall-based reports; a read-only tool set is the described
+upgrade.
+:::
