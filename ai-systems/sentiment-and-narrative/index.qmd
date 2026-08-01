@@ -1,0 +1,130 @@
+---
+title: "Sentiment & Narrative Interpretation"
+subtitle: "Past the sentiment score — novelty, narrative, and the honest verdict that text is a risk-and-context signal, not a return oracle"
+description: >
+  The seductive pitch for news in trading is 'positive headline, buy.' The efficient-market evidence on
+  this site says that is mostly noise — obvious news is priced in milliseconds. So this entry goes past
+  the sentiment score to what text can genuinely offer a market system: novelty, narrative, and risk
+  context — and is honest that its home is the Regime and Risk agents, not a buy signal.
+date: 2026-07-31
+author: "David Maguire"
+categories: [news agent]
+toc: true
+---
+
+The seductive pitch for language models in trading is a sentiment score: read the headline, output a
+number from −1 to +1, buy the positives. It is the first thing everyone builds and the first thing that
+disappoints, for a reason this site has already established quantitatively: markets are **near-efficient**,
+and obvious news is priced in [milliseconds, not headlines](../../capstone.qmd). A model that scores
+"NVDA beats earnings" as strongly positive is describing something the tape did seconds ago. So the useful
+question is not *how positive is this text* but *what can text tell a market system that the price does not
+already contain* — and the honest answers are **novelty**, **narrative**, and **risk context**, none of
+which is a naive buy signal.
+
+## 1. Why the sentiment score is weak
+
+Three problems sink the naive version. First, **it is already priced**: by the time a headline is
+readable, the surprise has been traded, so the *level* of sentiment predicts little about the *next*
+move. Second, **sentiment is not price impact**: a glowing product announcement can sell off (buy the
+rumour, sell the news) and a grim headline can rally (less bad than feared). Third, **it is noisy** — tone
+is easy to score and hard to map to returns. This is not a modelling failure to be engineered away; it is
+the efficient market doing its job. The site's whole empirical spine — [direction unpredictable at every
+level of sophistication](../../capstone.qmd) — predicts in advance that a sentiment-to-return signal will
+be thin, and it would be dishonest to build the News Agent as though it won't be.
+
+## 2. The only part that can matter: novelty
+
+The efficient-market lens says the sole component of any news that *could* move a price is the part that
+was **not already expected** — the surprise. A positive report everyone predicted moves nothing; a small
+genuine surprise moves a lot. So the News Agent's most valuable estimate is not sentiment but **novelty**:
+is this information new, or an echo of what is already in the price? Novelty has a clean, concrete
+operationalisation using the same [embeddings](../../ml/embeddings/index.qmd) as the
+[RAG layer](../rag/index.qmd) — **semantic surprise**, the distance from what has already been said:
+
+```javascript
+// Novelty as semantic surprise: how far is this item from recent coverage?
+async function novelty(item, recentEmbeddings) {
+  const v = await embed(item.text);
+  const maxSim = Math.max(...recentEmbeddings.map(e => cosine(v, e)));
+  return 1 - maxSim;    // ~0 if it merely echoes existing coverage (already priced), ~1 if genuinely new
+}
+```
+
+A high-novelty item is the one worth a downstream model's attention; a low-novelty one is the market
+talking to itself. This is why `novelty` is a first-class field in the
+[extraction schema](../schema-constrained-extraction/index.qmd), sitting beside sentiment rather than
+under it.
+
+## 3. Past sentiment to narrative
+
+Sentiment is *polarity*; **narrative** is the *coherent story the market is telling itself* — "the AI
+capex boom," "the Fed pivot," "recession fears" — and it operates a level above any single headline.
+Narrative matters for two reasons a polarity score misses. It is the **lens**: the same earnings beat is
+read as vindication under a bullish narrative and as a blow-off top under a bearish one, so a news item's
+effect depends on the prevailing frame. And it is **persistent and regime-like**: narratives last weeks to
+months, and a **shift** in the dominant narrative is a soft [regime change](../../ml/regime-aware-modelling/index.qmd)
+— exactly the kind of turning point the [change-point detector](../../ml/change-point-detection/index.qmd)
+exists to catch, now visible in text before it is visible in volatility. Narrative can be estimated two
+complementary ways: **clustering** recent headline embeddings into themes
+([K-means](../../ml/k-means/index.qmd) over the same vectors), or a schema-constrained LLM call that
+assigns each item to a controlled taxonomy of narratives and flags when the dominant cluster changes. The
+output the system actually wants is not "sentiment = 0.6" but "this fits the prevailing *AI-capex* narrative,
+adds little novelty, and the narrative has held for six weeks" — a far richer, and more honest, feature.
+
+## 4. Corroboration and reliability
+
+A single source can be mistaken, biased, or an outright fake press release, and a language model will read
+a fabricated report as fluently as a real one. **Cross-source corroboration** is the defence: an event
+asserted by several independent outlets earns a higher `source_reliability`; a market-moving claim from one
+unverified source is flagged, not traded. Narrative interpretation aggregates naturally here — the
+consensus frame across many sources is more trustworthy than any one, and an outlier source pushing a lone
+narrative is itself a signal (of noise, or of manipulation for the Behaviour Detection Agent to notice).
+
+## 5. The honest verdict
+
+Put together, the verdict is deliberately modest and entirely consistent with the rest of the site. **Text
+is a weak return predictor and a genuinely useful risk-and-context signal.** Its value to the architecture
+is not a buy signal but three feeds: **novelty** (the surprise component, the only part that could move a
+price), **narrative** (the prevailing frame and its shifts, a soft regime input to the
+[Regime Agent](../../ml/regime-aware-modelling/index.qmd)), and **intensity** (a burst of high-urgency,
+high-dispersion news is a turbulence indicator for the [Risk Agent](../../ml/risk-constrained-rl/index.qmd),
+regardless of polarity). The News Agent therefore feeds the **risk and regime** side of the system, where
+text's structure is real, rather than the return-prediction side, where the efficient market has already
+won. Claiming otherwise would contradict this site's own evidence — and whether news adds *any* value
+beyond price is precisely the kind of question the [Quant Lab](../../quant-lab/index.qmd) exists to test
+honestly, a natural next experiment rather than an assumption to bake in.
+
+## 6. Grounding in MarketLens AI
+
+My **MarketLens AI** sentiment dashboard is, today, the naive version — a polarity score per headline,
+which the section above explains is the least useful thing text offers. The upgrade path is exactly this
+entry: add **novelty** (semantic surprise against recent coverage), surface the **narrative** an item
+belongs to and whether that narrative is shifting, aggregate **corroboration** across sources, and reframe
+the whole dashboard from "how positive is the news" to "what is *new*, what *story* is dominant, and how
+*intense* is the flow." That reframing changes what the tool is *for* — from a return-signal toy, which the
+efficient market defeats, into a risk-and-context instrument, which is where text actually earns its place.
+
+## 7. How I would explain it to a supervisor
+
+"The instinct is to score sentiment and trade the positives, but my own capstone shows the market is
+near-efficient, so obvious news is already priced and a sentiment-to-return signal is thin — I'd be
+building against my own evidence. So the News Agent extracts what text *can* offer. First, novelty: the
+only part of any news that can move a price is the unexpected part, and I estimate it as semantic surprise —
+the embedding distance from recent coverage — so an item that just echoes existing stories scores near
+zero. Second, narrative: the coherent frame the market is telling itself, which is the lens that decides
+how a headline lands and whose *shifts* are soft regime changes I can catch in text before volatility.
+Third, corroboration across sources for reliability, which also flags single-source or manufactured claims.
+The honest conclusion is that text is a weak return predictor but a real risk-and-context signal, so it
+feeds the Regime and Risk agents, not a buy button — and whether it adds anything beyond price is a Quant
+Lab experiment I'd run rather than an assumption I'd make. That modesty is the point: an LLM reading the
+news is only safe and useful if you're honest about what the news can and cannot tell you."
+
+::: {.status-note}
+Novelty uses embedding cosine distance against recent coverage; narrative uses clustering
+([K-means](../../ml/k-means/index.qmd)) over the same embeddings or a schema-constrained taxonomy call.
+The empirical stance — text is weak return alpha, useful risk/context — is *inferred from* this site's
+efficient-market evidence ([capstone](../../capstone.qmd)), not separately backtested here; a direct
+"does news add value beyond price?" test is flagged as a natural [Quant Lab](../../quant-lab/index.qmd)
+experiment. MarketLens AI grounding reflects its current polarity-only dashboard; novelty, narrative and
+corroboration are described as the upgrade.
+:::
