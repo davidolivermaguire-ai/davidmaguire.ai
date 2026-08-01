@@ -1,0 +1,204 @@
+---
+title: "Schema-Constrained News Extraction"
+subtitle: "The News Agent's core — turning financial text into bounded, typed, timestamp-safe features, where the schema itself is the safety mechanism"
+description: >
+  The News & Narrative Agent points a fluent, hallucinating language model at market-moving text and asks
+  it to produce inputs a trading system will act on. The single decision that makes that safe rather than
+  reckless is to constrain the output to a bounded schema — typed features, never instructions. The real
+  Anthropic API code that enforces it, the guardrails around it, and why the schema is the safety mechanism.
+date: 2026-07-31
+author: "David Maguire"
+categories: [news agent, safety]
+toc: true
+---
+
+The **News & Narrative Agent** is the proposal's most distinctive component and its most dangerous if
+built carelessly: it points a language model — a fluent, non-deterministic, [hallucination-prone
+thing](../../ml/index.qmd) — at market-moving text and asks it to produce inputs a trading system will
+act on. The single design decision that makes this safe rather than reckless is to **constrain the
+model's output to a bounded schema**. It may fill typed fields, and nothing else. It cannot say "buy
+AAPL"; it can only report an `event_class`, a `direction`, a `sentiment`, a list of `affected_tickers` —
+**features, never instructions**. This entry builds that agent's core, in the real
+[Anthropic API](../what-is-an-agent/index.qmd), and shows why the schema is not merely a convenience but
+the mechanism that keeps the model boxed into being an information processor.
+
+## 1. The problem: text → features, safely
+
+Financial text — a headline, an earnings release, a filing, a transcript — is unstructured, and a
+decision system needs **structured, typed** inputs it can combine with prices and regime state. An LLM is
+the right tool for that conversion ([the one job it uniquely does](../llms-vs-conventional-ml/index.qmd)).
+But two failure modes lurk. First, a free-form model can emit anything, including a confident **trading
+instruction** it has no authority to give. Second, it can **hallucinate** — invent a ticker, a number, an
+event that isn't in the text. The schema is the first line of defence against both: by fixing the *shape*
+of the output, it removes the model's ability to say anything that is not a pre-defined feature.
+
+## 2. The schema — every field a feature, none an action
+
+The agent emits one fixed record. Note what is *present* (typed, bounded features) and, more importantly,
+what is *absent* (any field that resembles a decision):
+
+```json
+{
+  "event_class":  "earnings | guidance | m_and_a | macro | regulatory | product | legal | other",
+  "direction":    "bullish | bearish | neutral",
+  "sentiment":    "number in [-1, +1]",
+  "novelty":      "number in [0, 1]   — genuinely new information, or already priced?",
+  "urgency":      "low | medium | high",
+  "affected_tickers": ["array of symbols — later filtered to the traded universe"],
+  "horizon":      "intraday | days | weeks | months",
+  "source_reliability": "number in [0, 1]",
+  "confidence":   "number in [0, 1]  — the model's confidence in THIS extraction",
+  "rationale":    "one sentence, grounded in the text — for audit, never a trade instruction"
+}
+```
+
+There is no `action`, no `quantity`, no `order`. That absence is deliberate and load-bearing: the schema's
+*shape* is what guarantees the model produces something a downstream system can *interpret*, never
+something it must *obey*. Categoricals are locked to enums; magnitudes to ranges; `affected_tickers` is a
+list to be whitelisted; `rationale` exists only so a human can audit *why* a feature was assigned.
+
+## 3. Enforcing it — real API code
+
+Prompting a model to "return JSON" is not enough; it will occasionally return prose, or a field you did
+not ask for. The robust way is to make schema-valid output the *only* thing the model can produce.
+Anthropic gives two mechanisms: **strict tool use** (define the schema as a tool and force the call) and a
+dedicated **structured-outputs** mode. Here is the strict-tool-use version, which frames the News Agent
+naturally as filling a record:
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();
+
+const EVENT_SCHEMA = {
+  type: "object",
+  properties: {
+    event_class: { type: "string", enum: ["earnings","guidance","m_and_a","macro","regulatory","product","legal","other"] },
+    direction:   { type: "string", enum: ["bullish","bearish","neutral"] },
+    sentiment:   { type: "number", minimum: -1, maximum: 1 },
+    novelty:     { type: "number", minimum: 0, maximum: 1 },
+    urgency:     { type: "string", enum: ["low","medium","high"] },
+    affected_tickers:   { type: "array", items: { type: "string" } },
+    horizon:     { type: "string", enum: ["intraday","days","weeks","months"] },
+    source_reliability: { type: "number", minimum: 0, maximum: 1 },
+    confidence:  { type: "number", minimum: 0, maximum: 1 },
+    rationale:   { type: "string" },
+  },
+  required: ["event_class","direction","sentiment","affected_tickers","horizon","confidence"],
+  additionalProperties: false,
+};
+
+async function extractEvent(articleText, publishedAt) {
+  const res = await client.messages.create({
+    model: "claude-haiku-4-5",                    // extraction is bounded + high-volume -> fast and cheap
+    max_tokens: 1024,
+    system: "Extract only what the text supports. Output features, never trades. " +
+            "If a field is not supported by the text, be conservative and lower the confidence.",
+    tools: [{ name: "record_event", description: "Record the market event described in the text.",
+              input_schema: EVENT_SCHEMA, strict: true }],   // strict: the call must match the schema exactly
+    tool_choice: { type: "tool", name: "record_event" },     // FORCE the record — no free-form output possible
+    messages: [{ role: "user", content: articleText }],
+  });
+  const record = res.content.find(b => b.type === "tool_use").input;   // typed, schema-valid by construction
+  return guard(record, publishedAt);                                   // then YOUR guardrails
+}
+```
+
+`tool_choice` forces the call and `strict: true` guarantees the arguments match `EVENT_SCHEMA` exactly, so
+`record` is a typed object, not a hopeful parse of free text. (The dedicated structured-outputs mode —
+`output_config.format` with the same JSON schema, generally available in 2026 — returns the JSON directly
+in the text block and is an equally good choice; the principle is identical.)
+
+## 4. The guardrails after the schema
+
+Schema-valid is not the same as *trustworthy*. Even a perfectly-typed record needs a deterministic guard
+layer — code you own — before anything downstream sees it:
+
+```javascript
+const UNIVERSE = new Set(["AAPL","MSFT","NVDA","PEP" /* … the tickers you actually trade */]);
+const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+
+function guard(e, publishedAt) {
+  const tickers = (e.affected_tickers ?? []).filter(t => UNIVERSE.has(t));   // drop hallucinated symbols
+  return {
+    ...e,
+    sentiment:  clamp(e.sentiment, -1, 1),
+    confidence: tickers.length ? clamp(e.confidence, 0, 1) : 0,   // no tradeable ticker -> no usable signal
+    affected_tickers: tickers,
+    as_of:        publishedAt,   // TIMESTAMP-SAFETY: the event's time, never Date.now() — see below
+    is_actionable: false,        // a FEATURE record; any trade must pass the Risk Agent
+  };
+}
+```
+
+Three things happen here that the model cannot be trusted to do itself: magnitudes are **clamped** to
+their legal ranges; `affected_tickers` is **filtered to the universe you trade**, which silently deletes
+any symbol the model invented; and the record is stamped `is_actionable: false`, because a feature is not a
+decision.
+
+## 5. Timestamp-safety, or how an LLM pipeline leaks the future
+
+The most dangerous bug in a text pipeline is not a wrong feature — it is a *right feature that arrives
+early*. If a backtest sees an event's features before the market did, its results are fiction, exactly the
+[look-ahead leakage](../../ml/data-leakage/index.qmd) that this site has [measured turning noise into a
+fake 0.81 AUC](../../ml/walk-forward-validation/index.qmd). So every record is stamped `as_of` **the
+article's real publication time**, never the wall-clock time of extraction, and the backtester may only
+join it to prices *after* that instant. LLM pipelines leak the future in subtle ways too — a model whose
+training data postdates the event, a "latest news" feed that back-fills — and the discipline of an explicit
+point-in-time stamp on every feature is the defence. This is where the quant rigour of the rest of the
+site meets the AI half head-on.
+
+## 6. What the schema does and does not stop
+
+Being honest about the limits matters. The schema **structurally** prevents the model from emitting a
+trade instruction or a malformed field — that class of failure is closed. It does **not** prevent
+**factual hallucination**: the model can still fill `sentiment: -0.8` for an event it misread, or assert an
+`event_class` the text does not support. Those need the next layers — **grounding** the model in retrieved
+source text (RAG, the next entry), a **confidence** field that gates weak extractions, and downstream
+**verification** — plus the calibration discipline that makes `confidence` mean something. Schema
+constraint is necessary, not sufficient; it is the floor of the News Agent's safety, not its ceiling.
+
+## 7. Why the schema *is* the safety mechanism
+
+Step back and the design principle is clean. A language model is fluent, persuasive and occasionally
+wrong; left free, it is an unpredictable authority. Boxed into a schema, it becomes a **typed sensor**: it
+converts text into bounded features that **deterministic** downstream code and the
+[Risk Agent](../../ml/risk-constrained-rl/index.qmd) interpret, and it has no vocabulary with which to
+issue an order. This is how the proposal operationalises its firmest rule — *the LLM is an information
+processor, never an execution authority*. The schema is the contract that enforces it in code, not merely
+in intention: even a fully hallucinating model can only ever hand you a wrongly-filled feature record, and
+a wrongly-filled feature is something your guards, your risk limits and your review loop are built to
+catch. A free-form "sell everything" is not.
+
+## 8. Grounding in MarketLens AI
+
+My **MarketLens AI** sentiment dashboard already does a simpler version of this — it reads news and
+extracts sentiment for display. The proposal's News Agent hardens that prototype into the pattern above:
+the full typed schema instead of a loose sentiment score, `strict` schema enforcement instead of parsing
+model prose, the universe whitelist that deletes hallucinated tickers, and — the piece a display-only tool
+can skip but a *trading* system cannot — the point-in-time `as_of` stamp on every record. The move from
+"an LLM that reads the news" to "a News Agent you could put in front of capital" is almost entirely this
+guard layer.
+
+## 9. How I would explain it to a supervisor
+
+"The News Agent turns text into features for the trading system, and the whole safety case rests on one
+decision: its output is a bounded, typed schema, never free text. It can fill an event class, a direction,
+a sentiment, a ticker list — but there is no field for an action, so it structurally *cannot* emit a
+trade. I enforce that with the model's strict tool-use mode, which forces the output to match a JSON schema
+exactly, then a guard layer I own clamps the ranges, filters the tickers to the universe I actually trade —
+which deletes any symbol the model hallucinated — and stamps every record with the article's real
+publication time, so a backtest can't leak the future. The honest limit is that the schema stops
+structural nonsense and trade instructions, but not factual hallucination — that needs retrieval grounding
+and a calibrated confidence gate. The principle underneath is the proposal's firmest rule: the LLM is a
+sensor, never an execution authority, and the schema is what makes that true in code rather than just in
+the write-up."
+
+::: {.status-note}
+Code uses the Anthropic Messages API with **strict tool use** (`strict: true` on the tool, `tool_choice`
+forcing the call) to guarantee schema-valid output; Anthropic's dedicated **structured outputs**
+(`output_config.format`, GA in 2026) is an equivalent alternative. `claude-haiku-4-5` is chosen because
+extraction is bounded and high-volume. The `EVENT_SCHEMA`, guard layer, universe whitelist and `as_of`
+timestamp-safety are the point-in-time, no-look-ahead discipline the [data-leakage](../../ml/data-leakage/index.qmd)
+work demands. MarketLens AI grounding reflects its current sentiment-extraction design; the full schema,
+strict enforcement and timestamp guard are described as the proposal's hardening of it.
+:::
