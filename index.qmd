@@ -79,7 +79,7 @@ Reproducible strategy experiments with explicit hypotheses, methods, and honestl
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-mortarboard card-ic" aria-hidden="true"></i> [PhD Research](phd/index.qmd)
-**Full proposal published.** Adaptive multi-agent AI for regime-aware market decision-making — with a tracker mapping every proposed method to the evidence already built on this site.
+**Full proposal published.** Adaptive Market Intelligence — a probabilistic, multi-agent architecture for real-time market-state inference, strategy suitability and risk-governed decision-making, with an honest tracker of the evidence already built and the specialist methods still to add.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}

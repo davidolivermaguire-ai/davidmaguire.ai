@@ -1,6 +1,6 @@
 ---
 title: "PhD Research Proposal"
-description: "Adaptive multi-agent AI for regime-aware financial market decision-making — the full proposal, the evidence already built for it, and the road ahead."
+description: "Adaptive Market Intelligence — a probabilistic, multi-agent architecture for real-time market-state inference, strategy suitability and risk-governed decision-making. The full proposal, the evidence already built for it, and the road ahead."
 listing:
   - id: literature
     contents: "literature/**/*.qmd"
@@ -13,275 +13,490 @@ toc-depth: 2
 ---
 
 ::: {.status-note}
-**Working title:** *Adaptive Multi-Agent Artificial Intelligence for Real-Time Financial Market
-Decision-Making Using Reinforcement Learning, Large Language Models and Regime Detection*
-(academic alternative: *…for Regime-Aware Financial Market Decision-Making under Non-Stationarity
-and Uncertainty*). Proposed award: PhD, three years. This page is the proposal in full, developed in
-the open; the formatted document is available as a
-[PDF for supervisors](David-Maguire-PhD-Proposal-Outline.pdf).
+**Working title:** *Adaptive Market Intelligence: A Probabilistic Multi-Agent Architecture for
+Real-Time Market-State Inference, Strategy Selection and Risk-Governed Financial Decision-Making*
+(academic alternative: *Probabilistic Multi-Agent Market-State Inference and Adaptive Strategy
+Selection under Non-Stationarity and Uncertainty*). Proposed award: PhD, three years. This is the
+updated working document (August 2026) developed in the open; the formatted version is available as a
+[PDF for supervisors](David-Maguire-PhD-Proposal-Updated-August-2026.pdf).
 :::
 
-## Executive summary
+> **Central proposition.** Financial-market systems should first infer *what type of market is
+> currently being observed*, quantify the uncertainty in that assessment, and identify which strategy
+> families are suitable — before moving to any directional decision. They should not move directly
+> from raw data to trading actions.
 
-This research investigates whether a **coordinated system of specialised AI agents** can make
-financial-market decisions that are more *adaptive, robust and auditable* than conventional static
-models. The system combines probabilistic **market-regime detection**, **large-language-model
-interpretation** of financial narratives, **reinforcement learning** for sequential decisions, and
-**deterministic risk controls** that can scale, reject or override any proposed action.
+## Proposal at a glance
 
-The motivation is the non-stationarity of markets. Relationships between price, volatility,
-liquidity, macroeconomic conditions and investor behaviour change over time, and a model developed
-in one environment deteriorates when the market transitions to another — a fact this site has
-[measured repeatedly](../capstone.qmd). The proposed architecture therefore treats regime awareness,
-uncertainty and controlled adaptation as **central design requirements**, not optional features.
-
-> **Central proposition.** Financial-market decision systems should not rely on one static
-> predictive model. They should operate as adaptive systems in which specialised agents identify
-> market regimes, interpret new information, select actions, control risk, and learn from outcomes.
-
-Two things distinguish this proposal from a speculative pitch. First, its academic positioning is
-deliberately modest: the contribution is **not** a claim of a profitable autonomous trading system —
-this site's own [74-entry empirical record](../capstone.qmd) shows why no such claim would be
-credible — but controlled integration, incremental evidence, and rigorous evaluation of whether
-regime awareness, structured text, sequential learning and agent coordination improve *robustness
-and decision quality* under changing conditions. Second, and unusually for a proposal, its **entire
-methodological foundation is already built and verified** on this site, entry by entry — from regime
-detection through reinforcement learning, credit assignment and execution — see the
-[evidence tracker](#what-is-already-built-the-evidence-tracker) below.
-
-## The research problem
-
-Existing financial-market decision models exhibit five related weaknesses: **static behaviour**
-(relationships learned in one period applied after the environment changes), **limited regime
-awareness** (patterns identified without estimating whether the market is trending, mean-reverting,
-volatile or stressed), **fragmented information processing** (prices, macro data, news and
-disclosures analysed separately), **weak adaptation** (supervised models never learn which
-*sequences* of decisions improve long-run risk-adjusted outcomes), and **poor coordination between
-specialised functions** (forecasting, interpretation, sizing, risk and review concentrated in one
-model or a loose pipeline).
-
-> **Central research question.** Can an adaptive multi-agent AI system combining probabilistic
-> regime detection, LLM interpretation and risk-constrained reinforcement learning improve the
-> robustness and adaptability of financial-market decisions under non-stationary conditions?
-
-## Aim and objectives
-
-The aim is to design, develop and evaluate an adaptive multi-agent AI framework combining
-regime detection, LLM interpretation, reinforcement learning and formal risk controls for
-market decision-making.
-
-| # | Objective |
-|---|-----------|
-| 1 | Develop a **market-regime detection** framework identifying latent and observable market states using statistical and machine-learning methods. |
-| 2 | Develop an **LLM-based news and narrative agent** converting unstructured information into structured, timestamp-safe market features. |
-| 3 | Develop a **reinforcement-learning agent** that adapts exposure, position size, timing and holding decisions from risk-adjusted outcomes. |
-| 4 | Design a **multi-agent coordination framework** governing information access, communication, confidence, conflict resolution and credit assignment. |
-| 5 | Incorporate **deterministic risk management** capable of scaling, rejecting or overriding proposed actions. |
-| 6 | **Evaluate** the complete architecture against transparent econometric, supervised-learning, single-agent and regime-unaware benchmarks. |
-| *E* | *Exploratory extension:* investigate whether market-microstructure and high-frequency features can identify periods of elevated systematic or algorithmic activity. |
-
-: Objectives. The microstructure objective is deliberately positioned as an exploratory extension: attributing observed behaviour specifically to algorithmic activity is close to unfalsifiable with accessible data, so it is a stretch goal rather than a pillar. {.striped}
-
-## Research questions and hypotheses
-
-| Ref. | Research question |
-|------|-------------------|
-| RQ1 | Which statistical and ML methods most reliably identify market regimes and structural changes out of sample? |
-| RQ2 | Does conditioning forecasting and decision models on estimated regime probabilities improve predictive calibration and risk-adjusted decision quality — and, specifically, does a *discrete* regime add value beyond a *continuous* volatility signal? |
-| RQ3 | Can LLMs extract structured, time-sensitive information from financial text that adds value beyond price, volume and volatility data? |
-| RQ4 | Can risk-constrained reinforcement learning improve position sizing, exposure management or execution versus transparent deterministic policies? |
-| RQ5 | Does a modular multi-agent architecture outperform equivalent single-model and single-agent systems after transaction costs and risk? |
-| RQ6 | How stable are the system's decisions across assets, regimes, periods and repeated trials? |
-| RQ7 | Can agent contributions and final decisions be made sufficiently explainable, reproducible and auditable for financial applications? |
-| *RQ-E* | *Exploratory:* can microstructure and high-frequency features identify periods of elevated algorithmic activity? |
+| Field | Updated proposal |
+|-------|------------------|
+| **Primary contribution** | A hierarchical architecture that converts heterogeneous real-time data into *calibrated specialist evidence*, *competing market-state hypotheses*, *consensus estimates* and *regime-conditioned strategy suitability* — under deterministic risk control. |
+| **Primary domain** | Quantitative finance, machine learning, financial econometrics and agentic decision systems. |
+| **Core methods** | Regime and change-point detection, probabilistic calibration, ensemble and expert-weighting methods, financial NLP, constrained agent coordination, strategy selection and formal risk control. |
+| **Initial empirical scope** | The NASDAQ-100 ecosystem — NQ futures, QQQ, volatility, rates, breadth, liquidity, cross-asset and macro-event information. |
+| **Commercial pathway** | An institutional market-intelligence and decision-support platform, with later extensions into allocation, risk overlays and execution support. |
 
 : {.striped}
 
-The testable hypotheses follow directly: **H1** regime-conditioned models are more stable out of
-sample than regime-unaware equivalents; **H2** LLM-structured text adds incremental predictive or
-risk value beyond market data; **H3** risk-constrained RL improves dynamic exposure management over
-static sizing rules; **H4** a coordinated multi-agent system delivers better risk-adjusted
-performance than an equivalent single-agent system; **H5** the multi-agent benefit concentrates at
-**regime transitions** rather than stable periods; and **H6** hard risk constraints improve
-stability and practical viability even where they reduce gross returns. H4 and H5 are the heart of
-the thesis; the others are its scaffolding.
+## Executive summary
 
-These hypotheses are not left as promises. The [Quant Research Lab](../quant-lab/index.qmd) has begun
-**stress-testing the load-bearing ones on real data**, and the results are already shaping the design
-rather than being fitted to it. A deliberately fair out-of-sample test of RQ2 — a real-time,
-no-look-ahead regime-conditional strategy pitted not against a naive baseline but against a *regime-blind
-volatility scaler using the same information* — found that, **for position sizing, a discrete regime adds
-nothing statistically distinguishable beyond volatility**, and that regime awareness buys drawdown
-control rather than return ([full experiment](../quant-lab/regime-conditioning-oos/index.qmd)). That is a
-partial null, and it *refines* the thesis rather than weakening it: it moves the Regime Agent's
-justification away from sizing alpha — which the evidence does not support — and toward the two functions
-a volatility signal provably cannot replicate, both already demonstrated on this site: **online detection
-of regime *changes*** ([change-point detection](../ml/change-point-detection/index.qmd)) and
-**conditioning *relationships* on regime** ([a stock's beta doubling in the turbulent
-state](../ml/markov-switching-regression/index.qmd)) — alongside the *calibration* half of RQ2, which
-remains to be tested. A proposal whose own experiments can, and do, return nulls is one built on evidence
-rather than hope.
+This research proposes a real-time **Adaptive Market Intelligence** architecture designed to *infer
+the current market state before selecting a strategy or action*. The central problem is not framed as
+direct price prediction. It is framed as **point-in-time inference under non-stationarity**: what kind
+of market is currently being observed, how certain is that assessment, which evidence supports or
+contradicts it, and which strategy families are appropriate under those conditions?
 
-## The proposed architecture
+The architecture ingests synchronised market, microstructure, volatility, cross-asset, macroeconomic
+and textual data. Specialist quantitative models transform those inputs into **bounded, calibrated
+evidence** about trend, volatility, liquidity, structural change, macro drivers and cross-asset
+confirmation. A multi-agent reasoning layer then **compares competing market-state hypotheses** rather
+than averaging incompatible model scores. The resulting market-state representation is
+**multidimensional and probabilistic** — it can identify, for example, a macro-driven risk-off
+transition with expanding volatility, weakened but orderly liquidity and elevated uncertainty. A
+separate **strategy council** assesses the suitability of trend, mean-reversion, long-volatility,
+statistical-arbitrage, market-neutral and cash-preservation strategies, and a **deterministic risk
+agent** retains final authority to scale, reject or restrict any proposed action.
 
-Each agent has a bounded function, defined data access, and an auditable output. The LLM is never
-permitted to place trades directly; every action requires risk approval and is evaluated against
-deterministic baselines.
+The academic contribution is the design and rigorous evaluation of a **calibrated, hierarchical and
+auditable market-state inference system**. The commercial contribution is a blueprint for an
+institutional market-intelligence platform providing real-time regime context, transition alerts,
+strategy suitability, risk recommendations, evidence traceability and decision history. Unusually for
+a proposal, **much of its methodological foundation is already built and verified** on this site,
+entry by entry — see the [evidence tracker](#what-is-already-built-the-evidence-tracker), which is
+also honest about the specialist methods still to add.
 
-| Agent | Role | Illustrative methods and outputs |
-|-------|------|----------------------------------|
-| **Market Regime Agent** | Identifies the current market state and estimates regime probabilities. | [HMMs](../ml/regime-aware-modelling/index.qmd), [Markov-switching models](../ml/markov-switching-regression/index.qmd), [Bayesian change-point detection](../ml/change-point-detection/index.qmd), [clustering](../ml/k-means/index.qmd), [GARCH states](../equations/garch/index.qmd). |
-| **News & Narrative Agent** | Transforms unstructured text into bounded, auditable market features. | Event class, direction, sentiment, novelty, urgency, affected assets, horizon, source reliability — schema-constrained, timestamp-safe. |
-| **RL Trading Agent** | Selects exposure, timing and position-management actions from the combined state. | Discrete/continuous actions, risk-sensitive rewards, PPO, actor-critic, constrained RL. |
-| **Risk Management Agent** | Approves, scales or rejects proposed actions. | Exposure, leverage, volatility, [drawdown](../equations/maximum-drawdown/index.qmd), concentration, [Expected Shortfall](../equations/value-at-risk/index.qmd) and cost controls. |
-| **Review & Learning Agent** | Attributes outcomes, tests compliance, informs future learning. | [Agent contribution](../ml/multi-agent-systems/index.qmd), regime accuracy, post-trade review, decision audit trail. |
-| *Behaviour Detection Agent* | *Exploratory:* flags unusual activity consistent with systematic flows. | [Order-book imbalance, trade intensity, spread changes, liquidity withdrawal](../ml/market-microstructure/index.qmd). |
+## What changed from the previous outline
+
+This is a deliberate reframing of an earlier, more autonomy-centred proposal. The revision sharpens
+the research question, demotes reinforcement learning from a pillar to an optional late-stage
+comparison, and makes the commercial thesis explicit.
+
+| Previous emphasis | Updated emphasis |
+|-------------------|------------------|
+| One principal Market Regime Agent | Multiple specialist evidence models — trend, volatility, liquidity, macro narrative, cross-asset confirmation and structural change |
+| Combined state passed directly to an RL trading agent | An explicit hypothesis-generation and **consensus layer before any strategy decision** |
+| Primary output was exposure or a trade action | Primary output is **probabilistic market-state intelligence and strategy suitability** |
+| RL central from an early stage | RL is **optional**, introduced only after regime inference and deterministic allocation baselines are validated |
+| Agents loosely described as functional modules | A clear distinction between quantitative models, specialist agents, a consensus mechanism, strategy agents and deterministic risk control |
+| Commercial value implied | Commercial product, user outputs, proprietary data assets and a staged route to market made explicit |
 
 : {.striped .hover}
 
-The decision flow: market, macro and textual data → regime + news (+ behaviour) agents → a
-**combined state representation with uncertainty** → the RL agent proposes an action → the **risk
-agent approves, scales or rejects** → trade, allocation or no action → review, attribution and
-learning. The [AI Trading Systems](../ai-systems/index.qmd) section develops the design principles
-behind this architecture — above all that the review loop is what separates a research system from
-automated overconfidence.
+## The research problem
 
-## Methodology: a staged, ablation-first design
+Financial markets are non-stationary and only partially observable: relationships between returns,
+volatility, liquidity, order flow, rates, macro information and investor behaviour vary through time.
+A rule that works in a liquid directional trend can fail in an event-driven repricing, a volatility
+shock or a liquidity withdrawal. Yet many financial-ML studies frame the central task as predicting
+the next return or choosing buy/sell/hold — which produces systems that look strong in-sample and
+fail when the process changes. The market state is not a single label such as *bull*, *bear* or
+*sideways*; it is better represented through **simultaneous dimensions** — directionality, volatility,
+liquidity, dominant driver, transition risk and cross-asset confirmation.
 
-Every component is evaluated **independently first, then integrated incrementally**, so performance
-is attributable — gains are never credited to the full system when one component is responsible.
-The stages: literature review → data with strict *available-at* timestamps (market, fundamental,
-macro, textual, cross-asset) → **transparent baselines** (buy-and-hold, rules,
-[linear](../ml/linear-regression/index.qmd)/[logistic](../ml/logistic-regression/index.qmd)
-regression, [ARIMA](../equations/arima/index.qmd), [GARCH](../equations/garch/index.qmd),
-[random forests](../ml/random-forests/index.qmd), [XGBoost](../ml/xgboost/index.qmd)/[LightGBM](../ml/lightgbm/index.qmd),
-[LSTMs](../ml/lstms/index.qmd)) → **regime modelling**
-([K-means](../ml/k-means/index.qmd), [GMMs](../ml/gaussian-mixture-models/index.qmd),
-[HMMs](../ml/regime-aware-modelling/index.qmd), [Markov-switching](../ml/markov-switching-regression/index.qmd), Bayesian change-point) →
-**LLM narrative modelling** (bounded structured outputs, never free-form trading instructions) →
-**RL development** with a risk-sensitive reward that penalises variance, drawdown, costs and
-turnover rather than maximising raw profit,
+Eight specific weaknesses motivate the work: static models apply historical relationships after the
+environment changes; single-label regimes oversimplify overlapping conditions; numerical and textual
+information are reconciled informally; model confidence is frequently **uncalibrated**; ensembles
+average outputs even when models answer different questions; systems move from observation to action
+without explicit **hypothesis testing**; RL is often tasked with trading before the state
+representation is shown to be stable; and commercial systems require auditability, latency control,
+deterministic risk limits and evidence traceability — not only backtest returns.
+
+> **Central research problem.** Can a hierarchical system of specialist quantitative models and
+> bounded reasoning agents infer multidimensional financial-market states and transitions in real
+> time, with calibrated uncertainty, and can those inferences improve out-of-sample strategy selection
+> and risk management relative to static, regime-unaware and single-model alternatives?
+
+## Aim and objectives
+
+The aim is to **design, develop and evaluate a real-time Adaptive Market Intelligence framework** that
+converts heterogeneous point-in-time data into calibrated specialist evidence, reconciles competing
+market-state hypotheses, estimates multidimensional market conditions, and supports regime-conditioned
+strategy selection under deterministic risk constraints.
+
+| # | Objective |
+|---|-----------|
+| O1 | Define an economically interpretable **multidimensional taxonomy** of market states and transitions. |
+| O2 | Construct a **timestamp-safe data architecture** combining market, microstructure, volatility, cross-asset, macro and textual information. |
+| O3 | Develop **specialist model families** for trend, volatility, liquidity, structural change, macro narrative and cross-asset confirmation. |
+| O4 | **Calibrate** specialist probabilities and estimate reliability conditional on data quality, horizon and previously observed conditions. |
+| O5 | Develop a **bounded multi-agent consensus mechanism** that compares competing market-state hypotheses and records supporting and contradictory evidence. |
+| O6 | Evaluate whether inferred market states **improve strategy suitability**, exposure management and risk outcomes versus regime-unaware alternatives. |
+| O7 | Test whether **adaptive expert weighting** provides incremental value over transparent static weighting and Bayesian or ensemble baselines. |
+| O8 | Design an **auditable decision and review framework** tracing each output from source data to models, consensus, strategy recommendation and realised outcome. |
+| O9 | Assess the architecture as the technical and **intellectual-property foundation** for an institutional market-intelligence platform. |
+
+: {.striped}
+
+## Research questions and hypotheses
+
+> **Principal research question.** Can calibrated specialist models and a bounded multi-agent
+> consensus architecture identify multidimensional market states and regime transitions in real time,
+> and does this information improve out-of-sample strategy selection, risk control and decision
+> robustness?
+
+| Ref. | Supporting research question |
+|------|------------------------------|
+| RQ1 | Which statistical, econometric and ML methods most reliably identify trend, volatility, liquidity and structural-change states out of sample? |
+| RQ2 | Can overlapping market *dimensions* be estimated more reliably than a single mutually exclusive regime label? |
+| RQ3 | How should probabilities from heterogeneous models be **calibrated, normalised and compared** across different horizons? |
+| RQ4 | Can structured information from announcements and financial text improve identification of market drivers beyond numerical data? |
+| RQ5 | Does explicit **comparison of competing hypotheses** outperform simple averaging, stacking or voting ensembles? |
+| RQ6 | Does market-state information improve the selection, activation and risk scaling of strategy families after realistic costs? |
+| RQ7 | Can expert reliability be estimated **conditionally**, so models receive different weights in different environments? |
+| RQ8 | Are adaptive-weighting or RL methods superior to transparent deterministic and Bayesian weighting methods? |
+| RQ9 | How stable, explainable and auditable are the outputs across assets, periods, latency assumptions and repeated trials? |
+| RQ10 | Which components create commercially useful decision intelligence even where direct trading performance is not consistently superior? |
+
+: {.striped}
+
+The testable hypotheses follow directly: **H1** a multidimensional state is more temporally stable and
+useful than a single-label regime; **H2** calibrated ensemble probabilities beat uncalibrated
+confidence out of sample; **H3** macro-event and narrative features add value primarily during
+event-driven and transition periods; **H4** explicit hypothesis reconciliation improves state
+classification and uncertainty over voting or averaging; **H5** regime-conditioned strategy selection
+improves risk-adjusted performance, drawdown or tail behaviour versus static allocation; **H6** the
+greatest incremental value arises at **regime transitions and during specialist disagreement**; **H7**
+condition-specific expert weighting beats equal weighting, but complex adaptive methods do not
+necessarily beat well-designed transparent baselines; and **H8** deterministic risk controls improve
+robustness and viability even where they reduce gross return.
+
+These are not left as promises. The [Quant Research Lab](../quant-lab/index.qmd) has already
+stress-tested the load-bearing ones on real data, and the results are **shaping the design rather than
+being fitted to it**. A deliberately fair out-of-sample test — a real-time, no-look-ahead
+regime-conditional strategy pitted against a *regime-blind volatility scaler using the same
+information* — found that, for position sizing, a discrete regime adds **nothing statistically
+distinguishable beyond volatility** ([experiment](../quant-lab/regime-conditioning-oos/index.qmd)),
+while regime conditioning **does** sharpen probability
+[calibration](../quant-lab/regime-conditional-calibration/index.qmd) and concentrates its benefit
+[at transitions](../quant-lab/benefit-at-transitions/index.qmd). That evidence is exactly why H5–H7
+target calibration, suitability and transitions rather than sizing alpha. A proposal whose own
+experiments can, and do, return nulls is one built on evidence rather than hope.
+
+## Proposed conceptual architecture
+
+The system is a **hierarchical decision process**: data → point-in-time platform → specialist
+evidence → standardised, calibrated evidence → competing hypotheses → consensus and uncertainty →
+strategy suitability → deterministic risk → outcome review. Crucially, the proposal distinguishes a
+**model** from an **agent**: a model estimates a defined statistical quantity; an agent owns a bounded
+task, may consult several models, applies validation rules, and communicates through a fixed schema.
+This distinction is deliberate — it prevents "agent" terminology from becoming a substitute for
+methodological precision.
+
+| Layer | Function | Illustrative output |
+|:-----:|----------|---------------------|
+| 1 | Data acquisition | Real-time and historical feeds with source, event and *available-at* timestamps |
+| 2 | Point-in-time data platform | Raw, cleaned and research-ready layers; synchronisation, quality flags, feature lineage |
+| 3 | Specialist quantitative models | Trend, volatility, liquidity, structural-change, macro-narrative and cross-asset evidence |
+| 4 | Evidence standardisation | Calibrated probability, reliability, horizon, freshness, model version, support and anomaly warnings |
+| 5 | Market-state hypothesis engine | Construction and comparison of competing explanations of the current market |
+| 6 | Consensus and uncertainty | Posterior state estimate, disagreement, transition probability and confidence |
+| 7 | Strategy council | Suitability for trend, mean-reversion, volatility, stat-arb, market-neutral and cash preservation |
+| 8 | Risk governance | Deterministic exposure, leverage, liquidity, drawdown, concentration and execution constraints |
+| 9 | Outcome review and learning | State accuracy, strategy suitability, model contribution, overrides and realised outcomes |
+
+: The nine-layer decision stack. {.striped .hover}
+
+### Specialist evidence domains
+
+Each specialist owns one evidence domain, a defined data set, candidate methods and a **structured,
+schema-constrained output** — never a raw trading instruction.
+
+| Specialist | Candidate methods | Structured output |
+|------------|-------------------|-------------------|
+| **Trend & persistence** | [HMM](../ml/regime-aware-modelling/index.qmd), Kalman filter, state-space models, [gradient boosting](../ml/xgboost/index.qmd) | Direction, persistence, transition probability, model agreement |
+| **Volatility** | [GARCH](../equations/garch/index.qmd) family, EGARCH, HAR-RV, boosting, [sequence models](../ml/lstms/index.qmd) | Expansion probability, expected horizon, tail-risk condition |
+| **Liquidity & microstructure** | Anomaly detection, supervised stress models, [order-book/impact features](../ml/market-microstructure/index.qmd) | Liquidity condition, execution risk, stress probability |
+| **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), CUSUM, drift detection | Break probability, detection delay, affected variables |
+| **Macro & narrative** | [Schema-constrained LLM](../ai-systems/schema-constrained-extraction/index.qmd), [event/surprise extraction](../ai-systems/sentiment-and-narrative/index.qmd) | Event class, direction, novelty, duration, affected assets, evidence |
+| **Cross-asset confirmation** | Dynamic correlation (DCC), factor models, graphical methods | Confirming/contradicting markets; risk-on vs risk-off evidence |
+
+: {.striped .hover}
+
+## Data architecture and a worked example
+
+The initial prototype focuses on the **NASDAQ-100 ecosystem** — rich enough to test macro sensitivity,
+tech concentration, volatility, rates and cross-asset interaction, yet narrow enough for a three-year
+programme. Inputs include NQ futures and QQQ prices/quotes, constituent returns and breadth, VIX/VXN
+and options-derived volatility, 2y/10y Treasury yields, the dollar and cross-asset risk indicators,
+scheduled US macro releases, and timestamped news where licensing permits. Data is organised in three
+layers — **Bronze** (unmodified vendor messages with source and receive timestamps and quality flags),
+**Silver** (deduplicated, normalised, time-aligned observations with corporate-action and session
+handling), and **Gold** (feature vectors, labels, model outputs, calibration data, state estimates and
+decision records) — so that every feature has an auditable, point-in-time lineage.
+
+The value of this framing is easiest to see concretely. Suppose that one minute after a hawkish
+inflation surprise, the specialists report:
+
+| Specialist | State | Prob. | Key evidence |
+|------------|-------|:-----:|--------------|
+| Trend | Downward | 0.78 | Negative returns, weak breadth, price below VWAP |
+| Volatility | Expansion | 0.91 | Realised-vol jump, volatility-index confirmation |
+| Liquidity | Deteriorating | 0.74 | Wider spreads, lower depth, negative imbalance |
+| Macro narrative | Hawkish repricing | 0.84 | Inflation surprise, rapid yield adjustment |
+| Cross-asset | Risk-off | 0.69 | Yields, dollar and volatility broadly confirm |
+
+: {.striped}
+
+The hypothesis engine then compares **competing explanations** rather than averaging these scores — an
+ordinary technical pullback (posterior 18%), a macro-driven risk-off transition (76%), or a full
+liquidity crisis (6%) — reconciling supporting and contradictory evidence. The consensus layer emits a
+final state: *macro-driven risk-off transition (76%), volatility expansion (83%), transition
+probability 71%, liquidity weakened but orderly, overall confidence 73%*. Only then does the strategy
+council assess suitability — directional trend 82%, long volatility 71%, market-neutral 54%, stat-arb
+39%, mean-reversion 17% (inactive) — and the risk agent applies non-negotiable limits.
+
+## Strategy suitability and risk governance
+
+The strategy layer is deliberately **separated** from market-state inference. Strategy agents receive
+the same consensus state and independently judge whether their approach should be active, inactive or
+risk-reduced. This makes it possible to test whether market-state intelligence is valuable *without*
+claiming any single model forecasts every environment. Above all sits a **deterministic risk
+authority** with final say: maximum gross/net exposure; volatility- and liquidity-conditional
+position-size limits; leverage, concentration and correlation caps;
+[maximum-drawdown](../equations/maximum-drawdown/index.qmd) and
+[Expected-Shortfall](../equations/value-at-risk/index.qmd) controls; minimum-liquidity and
+maximum-spread thresholds; scheduled-event and overnight restrictions; explicit transaction-cost and
+slippage assumptions; and a **mandatory no-action state** when evidence is stale, contradictory or
+outside the training distribution. The [AI Trading Systems](../ai-systems/index.qmd) section develops
+why an [LLM is never granted execution authority](../ai-systems/why-llms-never-trade/index.qmd) and
+what a [layered control stack](../ai-systems/ai-risk-controls/index.qmd) requires.
+
+## Methodology
+
+The project follows a **staged empirical design**. Each component is evaluated independently first;
+integration proceeds only where **ablation evidence** demonstrates incremental value; and point-in-time
+integrity, transparent baselines and out-of-sample performance are prioritised over architectural
+complexity. The work is organised as six studies: (1) market-state taxonomy and detection; (2)
+calibrated specialist evidence; (3) macro and narrative contribution; (4) consensus and hypothesis
+reconciliation; (5) strategy suitability and risk; and (6) the integrated system, governance and
+commercial prototype.
+
+**Baselines** are transparent and demanding: rule-based volatility/trend/liquidity states;
+[HMM](../ml/regime-aware-modelling/index.qmd) and
+[Markov-switching](../ml/markov-switching-regression/index.qmd) models;
+[K-means](../ml/k-means/index.qmd) and [Gaussian mixtures](../ml/gaussian-mixture-models/index.qmd);
+[Bayesian online change-point detection](../ml/change-point-detection/index.qmd);
+[logistic regression](../ml/logistic-regression/index.qmd),
+[random forests](../ml/random-forests/index.qmd) and
+[gradient boosting](../ml/xgboost/index.qmd); equal-weight, majority-vote, **Bayesian model averaging
+and stacking** ensembles; static versus regime-conditioned allocation; and single-agent, regime-unaware
+comparators. **Validation** enforces chronological splits, [walk-forward](../ml/walk-forward-validation/index.qmd)
+and rolling windows, [purged cross-validation with embargo](../ml/time-series-cross-validation/index.qmd),
+available-at timestamps and frozen information sets, transaction costs, spreads, slippage and delayed
+execution, regime- and transition-specific evaluation, repeated seeds, stress testing across
+monetary-policy and volatility environments, and [out-of-distribution and staleness](../ml/data-leakage/index.qmd)
+testing.
+
+**Reinforcement learning is not assumed to be necessary.** It is tested only after the state
+representation, specialist evidence and deterministic strategy mappings are validated — as a candidate
+for expert weighting, strategy allocation, exposure scaling or conflict resolution — and compared
+directly against transparent rules, **contextual bandits**, Bayesian updating and supervised
+meta-models. A finding that simpler methods win is an academically valid result. Where a risk-sensitive
+objective is used, it penalises variance, drawdown, cost and turnover rather than maximising raw
+profit,
 
 $$R_t \;=\; r_t \;-\; \lambda_1 \sigma_t^2 \;-\; \lambda_2\,\mathrm{DD}_t \;-\; \lambda_3\,\mathrm{TC}_t \;-\; \lambda_4\,\mathrm{TO}_t,$$
 
-→ **incremental multi-agent integration** (regime only; + supervised prediction; + news; + RL;
-+ risk; + review) → evaluation under the full honesty toolkit this site has already documented:
-[purged walk-forward](../ml/walk-forward-validation/index.qmd),
-[combinatorial cross-validation](../ml/time-series-cross-validation/index.qmd), transaction costs
-and delayed execution, regime-specific stress tests, repeated seeds,
-[multiple-testing corrections, PBO and the deflated Sharpe ratio](../ml/overfitting-trading/index.qmd).
-Because the true regime is latent, the formal setting is a partially observable MDP: the agent
-maintains a belief $b_t(s) = P(S_t = s \mid o_{1:t}, a_{1:t-1})$ over hidden states.
+and, because the true state is latent, the formal setting is a partially observable process in which
+the system maintains a belief $b_t(s) = P(S_t = s \mid o_{1:t})$ over states — the object the
+[MDP entry](../ml/markov-decision-processes/index.qmd) formalises and the specialists estimate.
 
-**Evaluation** spans four layers: predictive (AUC, log loss, Brier score, [calibration](../ml/probability-calibration/index.qmd)), financial
-([Sharpe](../equations/sharpe-ratio/index.qmd), [Sortino](../equations/sortino-ratio/index.qmd),
-Calmar, [maximum drawdown](../equations/maximum-drawdown/index.qmd), Expected Shortfall, turnover
-and implementation shortfall), robustness (performance by regime and asset, block-bootstrap
-intervals, sensitivity, PBO, deflated Sharpe, reality-check tests), and **agent-specific** measures
-that are themselves a contribution: incremental contribution per agent, decision consistency under
-repeated trials, disagreement and conflict-resolution outcomes, frequency and value of risk
-overrides, and full ablation attribution.
+## Evaluation framework
+
+Evaluation spans nine areas: **state identification** (accuracy where labels exist, adjusted Rand
+index, persistence, stability, detection delay, economic interpretability); **probabilistic quality**
+(log loss, [Brier score, ECE, reliability diagrams](../ml/probability-calibration/index.qmd),
+sharpness); **transition detection** (lead/delay, false alarms, missed transitions);
+**consensus quality** (hypothesis ranking, disagreement resolution, contradiction handling);
+**strategy suitability** ([Sharpe](../equations/sharpe-ratio/index.qmd),
+[Sortino](../equations/sortino-ratio/index.qmd), Calmar,
+[drawdown](../equations/maximum-drawdown/index.qmd), Expected Shortfall, turnover, tail behaviour);
+**execution realism** (spread, slippage, impact, latency, implementation shortfall); **agent
+contribution** ([ablation and Shapley-style attribution](../ml/multi-agent-systems/index.qmd),
+overrides); **robustness** (block-bootstrap intervals,
+[multiple-testing controls, Deflated Sharpe and PBO](../ml/overfitting-trading/index.qmd)); and
+**governance** (traceability, reproducibility, schema compliance, source attribution, override
+frequency). Commercial usefulness — alert timeliness, interpretability, actionability, stability and
+value *without* direct execution — is evaluated as a first-class outcome, not an afterthought.
 
 ## What is already built: the evidence tracker
 
-This proposal is not aspirational scaffolding — its foundations exist on this site as verified,
-tested entries. The tracker below maps every methodological component of the proposal to the
-evidence, and states plainly what remains.
+Much of this architecture's methodological base already exists on this site as verified, tested
+entries. The tracker maps each layer and specialist domain to the evidence, and is **deliberately
+honest about what is only partial and what is not yet built** — the updated proposal introduces an
+econometrics-heavier specialist set (state-space, asymmetric and long-memory volatility, multivariate
+cross-asset dependence, ensemble and expert-weighting methods) that extends the current foundation.
 
-| Proposal component | Status | Evidence on this site |
-|--------------------|:------:|-----------------------|
-| Regime detection — clustering | ✅ Built | [K-means](../ml/k-means/index.qmd) recovers calm/sell-off/rally regimes unsupervised |
-| Regime detection — mixtures | ✅ Built | [GMM](../ml/gaussian-mixture-models/index.qmd): calm + crisis Gaussians explain the fat tails |
-| Regime detection — HMMs | ✅ Built | [Regime-aware modelling](../ml/regime-aware-modelling/index.qmd): 2-state HMM, 0.98 persistence, point-in-time filter |
-| Volatility dynamics | ✅ Built | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
-| Every proposed baseline model | ✅ Built | The [ML Library](../ml/index.qmd): linear → logistic → trees → forests → boosting → SVM → MLP → LSTM, all market-tested |
-| NLP foundations for the News Agent | ✅ Built | [Transformers](../ml/transformers/index.qmd), [attention](../ml/attention/index.qmd), [embeddings](../ml/embeddings/index.qmd) |
-| Validation & anti-overfitting toolkit | ✅ Built | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged/combinatorial CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [backtest overfitting/PBO/DSR](../ml/overfitting-trading/index.qmd) |
-| Explainability & audit | ✅ Built | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
-| Risk measures for the Risk Agent | ✅ Built | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [Sharpe](../equations/sharpe-ratio/index.qmd)/[Sortino](../equations/sortino-ratio/index.qmd) |
-| Reinforcement learning (MDPs → PPO, risk-sensitive RL) | ✅ Built | [MDPs](../ml/markov-decision-processes/index.qmd), [Q-learning & DQNs](../ml/q-learning/index.qmd), [policy gradients](../ml/policy-gradients/index.qmd), [PPO](../ml/ppo/index.qmd) and [risk-sensitive & constrained RL](../ml/risk-constrained-rl/index.qmd) — the regime problem solved exactly, re-learned model-free, with continuous actions, stably at scale, and under a hard risk budget (the Risk Agent, formalised) |
-| Online regime detection for the Regime Agent | ✅ Built | [Bayesian change-point detection](../ml/change-point-detection/index.qmd) — the run-length posterior run online on the Nasdaq, flagging the COVID crash and 2022 onset point-in-time, complementing the HMM's hindsight labels |
-| Regime-conditional dynamics for the Regime Agent | ✅ Built | [Markov-switching regression](../ml/markov-switching-regression/index.qmd) — a regression whose beta switches by regime; PEP's beta to the Nasdaq doubles (0.26→0.51) in the turbulent state, validated against a recovered known model |
-| Trustworthy uncertainty for the News & Risk Agents | ✅ Built | [Probability calibration & conformal prediction](../ml/probability-calibration/index.qmd) — over-confident scores recalibrated (ECE 0.105→0.062), and distribution-free 90% intervals made regime-honest by vol-normalization |
-| The coordination framework & credit assignment (Objective 4) | ✅ Built | [Multi-agent systems & credit assignment](../ml/multi-agent-systems/index.qmd) — Markov games, and Shapley attribution of a four-agent strategy's P&L (efficiency axiom verified); naïve leave-one-out credit shown to mis-sign a redundant agent |
-| Execution modelling & the exploratory microstructure objective | ✅ Built | [Market microstructure & execution modelling](../ml/market-microstructure/index.qmd) — Almgren–Chriss optimal execution (closed form verified to 1e-15) and the square-root impact law; the cost layer for the RL agent and the Behaviour Detection Agent's foundation |
+**Legend:** ✅ built and verified · ◐ partially built (needs extension) · ○ named in the proposal, not
+yet on the site.
 
-: Built. The proposal's entire methodological base is now implemented, verified and published on this site — from regime detection and volatility dynamics through the full model library, reinforcement learning, credit assignment and execution — every entry to the same standard: computed, checked against ground truth, and reproducible. {.striped .hover}
+| Architecture component | Status | Evidence / what remains |
+|------------------------|:------:|-------------------------|
+| Regime detection — clustering & mixtures | ✅ | [K-means](../ml/k-means/index.qmd), [GMM](../ml/gaussian-mixture-models/index.qmd) recover calm/sell-off/crisis states |
+| Regime detection — HMM & Markov-switching | ✅ | [2-state HMM, point-in-time filter](../ml/regime-aware-modelling/index.qmd); [beta doubling by regime](../ml/markov-switching-regression/index.qmd) |
+| Structural change — online change-point | ✅ | [BOCPD](../ml/change-point-detection/index.qmd) flags COVID and 2022 onset point-in-time |
+| Structural change — CUSUM & drift detection | ○ | Named for the structural-change specialist; **to build** alongside BOCPD |
+| Trend specialist — state-space / Kalman filter | ○ | Named as a primary trend method; **to build** (also underpins belief filtering) |
+| Volatility — GARCH & dynamics | ✅ | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
+| Volatility — EGARCH/GJR & HAR-RV | ◐ | Asymmetry noted in the GARCH entry; **dedicated EGARCH and HAR-RV entries to build** (HAR is used in a [Quant-Lab experiment](../quant-lab/volatility-forecasting-horizon/index.qmd) but not yet a library entry) |
+| Liquidity specialist — stress / anomaly detection | ○ | Order-book and [impact modelling built](../ml/market-microstructure/index.qmd); **liquidity-stress anomaly model to build** |
+| Cross-asset confirmation — DCC, factor & graphical models | ○ | Single-factor [CAPM/beta built](../equations/beta-capm/index.qmd); **multivariate DCC, factor and Gaussian-graphical methods to build** — the thinnest domain |
+| Macro & narrative specialist | ✅ | [Schema-constrained extraction](../ai-systems/schema-constrained-extraction/index.qmd), [narrative/surprise features](../ai-systems/sentiment-and-narrative/index.qmd), [transformers/embeddings](../ml/transformers/index.qmd) |
+| Evidence standardisation — calibration | ✅ | [Calibration & conformal prediction](../ml/probability-calibration/index.qmd) (ECE 0.105→0.062) |
+| Conditional expert reliability | ◐ | Calibration built; **condition-specific reliability histories to formalise** |
+| Consensus — ensemble baselines (equal, vote, **BMA**, **stacking**) | ○ | Named for RQ5; **no dedicated ensemble-combination entry yet** |
+| Consensus — hypothesis reconciliation (posterior over states) | ○ | [Credit assignment / Markov games built](../ml/multi-agent-systems/index.qmd); **Bayesian hypothesis-comparison layer to build** |
+| Adaptive expert weighting (prediction with expert advice / Hedge) | ○ | Central to RQ7–RQ8; **to build** |
+| Strategy council — regime-conditioned suitability | ◐ | Evidence built ([conditioning OOS](../quant-lab/regime-conditioning-oos/index.qmd), [transitions](../quant-lab/benefit-at-transitions/index.qmd), [hard limits](../quant-lab/hard-risk-limits/index.qmd)); **formal suitability council to build** |
+| Risk governance | ✅ | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [hard risk budget](../quant-lab/hard-risk-limits/index.qmd) |
+| Optional RL layer (MDP → PPO, constrained) | ✅ | [MDPs](../ml/markov-decision-processes/index.qmd) → [Q-learning](../ml/q-learning/index.qmd), [policy gradients](../ml/policy-gradients/index.qmd), [PPO](../ml/ppo/index.qmd), [constrained RL](../ml/risk-constrained-rl/index.qmd) |
+| Optional RL — POMDP belief filtering & contextual bandits | ◐ | POMDP belief state named in the [MDP entry](../ml/markov-decision-processes/index.qmd); **explicit belief filter and contextual-bandit comparator to build** |
+| Validation & anti-overfitting toolkit | ✅ | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [PBO/DSR](../ml/overfitting-trading/index.qmd) |
+| Explainability & audit | ✅ | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
 
-Just as important, the site's **empirical findings de-risk the proposal's positioning**. The
-[capstone](../capstone.qmd) shows every model from linear regression to a transformer agreeing that
-next-day *direction* is unpredictable (AUC ≈ 0.50) while *volatility and regimes* are genuinely
-structured and forecastable — which is precisely why this proposal targets **robustness, adaptation
-and risk-governed decision quality**, not return prediction. The research question survives the
-efficient-market evidence because it does not depend on beating it.
+: The foundation is largely green; the amber and open rows are the specialist and combination methods the updated architecture adds — and form the concrete build list for Year 1. {.striped .hover}
 
-## Three-year plan, scope and risks
+The site's **empirical findings also de-risk the positioning**. The [capstone](../capstone.qmd) shows
+every model from linear regression to a transformer agreeing that next-day *direction* is
+unpredictable (AUC ≈ 0.50) while *volatility and regimes* are structured and forecastable — which is
+exactly why this proposal targets **calibrated market-state intelligence and risk-governed decision
+quality**, not return prediction. The research question survives the efficient-market evidence because
+it does not depend on beating it.
 
-**Year 1** — literature, data with temporal controls, baselines, regime models, first paper.
-**Year 2** — News Agent development and evaluation; RL environment, reward design and risk
-constraints; second paper. **Year 3** — multi-agent integration, ablations, robustness, governance
-and explainability analysis; thesis. Scope controls: begin with a small number of liquid markets;
-the LLM is an information processor, never an execution authority; exposure management before any
-autonomous ambitions; robustness and attribution prioritised over backtest return.
+## Expected contribution
 
-The principal risks all have named mitigations already demonstrated on this site: **look-ahead
-bias** (available-at timestamps, [point-in-time feature discipline](../ml/feature-engineering/index.qmd)),
-**backtest overfitting** (baselines, purged walk-forward,
-[trial-counting, PBO and deflated Sharpe](../ml/overfitting-trading/index.qmd)),
-**agent complexity without value** (incremental integration with mandatory ablation evidence),
-**unstable RL** (constrained actions, hard limits, conservative rewards), **LLM hallucination**
-(schema-constrained outputs, evidence retrieval, deterministic validation), and **weak
-explainability** (full logging of inputs, confidence, overrides and reasons —
-the [audit tooling](../ml/shap-values/index.qmd) already exists).
+The **methodological** contribution is a hierarchical separation of data, quantitative models,
+specialist agents, consensus reasoning, strategy suitability and risk authority; a multidimensional
+probabilistic state representation; a common evidence schema carrying calibrated probability,
+conditional reliability, horizon, freshness, support, contradiction and distribution-shift
+information; a bounded hypothesis-reconciliation mechanism; and a rigorous comparison of adaptive
+expert weighting against transparent baselines. The **empirical** contribution is evidence on which
+regime dimensions are detectable and useful out of sample, whether state information improves strategy
+selection after costs, when text and macro add value, and whether complexity pays mainly during
+transitions and disagreement. The **practical/governance** contribution is a real-time architecture
+that produces useful intelligence without granting an LLM trading authority, an auditable path from
+observation to outcome, and a framework for deterministic risk controls, no-action states and human
+oversight.
 
-## Beyond the PhD: the applied trajectory
+## Commercialisation blueprint
 
-I am open about the intended impact: this research programme is designed to produce not only a
-thesis but the validated core of a **professional-grade, risk-governed quantitative decision
-system** — the foundation for a future quantitative research practice or firm. That ambition is a
-feature of the proposal, not a hidden agenda: it is why the architecture insists on auditability,
-deterministic risk overrides, governance and reproducibility — properties an academic prototype can
-ignore but a real institution cannot. The applied trajectory also disciplines the science: every
-component must justify itself after transaction costs, under regime change, and against the
-multiple-testing corrections that separate genuine improvements from artefacts.
+The first commercial product should be a **decision-support platform**, not an autonomous hedge fund
+or signal-selling service: institutional users receive a live interpretation of market conditions,
+evidence and uncertainty. Potential customers include asset managers and hedge funds; bank treasury,
+trading and risk functions; family offices and prop firms; execution desks; wealth-management
+platforms; and risk, model-validation and market-surveillance teams. Defensible IP accrues in the
+point-in-time data engineering and feature lineage, the market-state taxonomy and transition
+definitions, calibration and conditional-reliability histories, the hypothesis-reconciliation logic,
+the regime-to-strategy suitability mappings, a historical-analogue and outcome library, and the
+decision/override/attribution audit trail.
 
-The academic and commercial aims are kept compatible by design: the thesis contributions
-(methodology, evaluation framework, governance approach) are publishable; the applied value lies in
-the engineering, integration and operational discipline built around them. One consequential item
-belongs on the critical path *before* enrolment, not after: **agreeing the intellectual-property
-position with the host university** — IP ownership of PhD outputs varies by institution, and a
-candidate intending to commercialise must resolve this explicitly (standard routes exist, from IP
-carve-outs to industry-partnered PhDs).
+The **route to market is staged**: (1) a research dashboard on delayed/historical data validating
+state inference and explanation; (2) a live market-state API and alert service for a narrow universe;
+(3) an institutional strategy-suitability and risk-overlay module integrated with client workflows;
+(4) client-specific allocation, execution or portfolio-control extensions subject to regulation and
+validation.
 
-## Current status and next steps
+> **Commercial discipline.** The PhD should create reusable data assets, methods and evaluation
+> evidence. It should not depend on the assumption that one proprietary strategy will generate
+> persistent excess returns — the business case is stronger when the platform improves decision
+> context, model governance and strategy selection across many clients and strategies.
 
-The proposal document is complete as a working draft for supervisor discussion. The active next
-steps, in order: **(1)** build the remaining technical tier on this site — reinforcement learning
-from MDPs to PPO, change-point detection, calibration, multi-agent foundations — so the evidence
-tracker reads fully green; **(2)** shortlist target institutions and supervisors whose groups work
-on ML for finance, RL, or multi-agent systems, and tailor the proposal's framing to each;
-**(3)** resolve the IP and funding position with shortlisted institutions (including
-industry-linked routes); **(4)** secure data access commitments (market, news and — for the
-exploratory objective — order-book data); **(5)** expand the literature review below toward the
-formal Chapter 2 base.
+Because commercialisation is explicit, one item belongs on the critical path *before* enrolment:
+**agreeing the intellectual-property position with the host university**, since ownership of PhD
+outputs varies by institution and standard routes exist (IP carve-outs, industry-partnered PhDs).
+
+## Chapter structure and three-year plan
+
+The thesis is planned in ten chapters: introduction; literature review; research design and data
+architecture; multidimensional market-state detection; calibrated specialist evidence; macro-event and
+narrative intelligence; multi-agent hypothesis reconciliation; regime-conditioned strategy selection;
+integrated evaluation and commercial prototype; and governance, conclusions and future research.
+
+**Year 1** — complete the literature review; finalise the taxonomy; acquire and govern data; build the
+point-in-time platform; establish baselines; develop trend, volatility, liquidity and transition
+models (this is where the amber/open tracker rows are built); first paper. **Year 2** — probability
+calibration and reliability; macro-event agent; ensemble versus consensus methods; a live research
+dashboard; second paper. **Year 3** — regime-conditioned strategies and risk controls; adaptive
+weighting; ablations and robustness; institutional prototype and commercialisation chapter; submit
+thesis.
+
+## Scope, limitations and risks
+
+Scope is controlled deliberately: begin with **one liquid market ecosystem**; use one-minute decision
+intervals initially, adding tick-level components only where a defined question requires them; treat
+the LLM as a structured event-information processor, not a trader; evaluate market-state inference and
+strategy suitability *before* trade optimisation; introduce RL only after transparent baselines exist;
+and prioritise calibration, robustness and attribution over headline returns. The principal risks each
+have a named mitigation already demonstrated on this site — unstable or subjective regimes (multiple
+operational definitions, sensitivity reporting), look-ahead and revision bias
+([available-at timestamps, frozen vintages](../ml/feature-engineering/index.qmd)), agent complexity
+without value ([mandatory ablations](../ml/multi-agent-systems/index.qmd)), uncalibrated confidence
+([formal calibration](../ml/probability-calibration/index.qmd)), LLM hallucination
+([schema constraints, retrieval, validation](../ai-systems/hallucination-risk/index.qmd)), RL
+instability ([delayed RL, restricted actions, hard limits](../ml/risk-constrained-rl/index.qmd)), and
+backtest overfitting ([walk-forward, PBO, Deflated Sharpe](../ml/overfitting-trading/index.qmd)).
+
+> **Recommended positioning.** Frame the doctorate as research into *probabilistic market-state
+> inference and regime-conditioned decision intelligence*. Treat trading performance as one downstream
+> evaluation, not the sole proof of value.
+
+## Concluding proposition
+
+The revised proposal is not principally a claim that a collection of agents can predict market
+direction. It is a study of whether heterogeneous evidence can be transformed into a **calibrated,
+multidimensional and auditable understanding of the current market environment**. Its central
+innovation is the separation of perception, evidence, hypothesis reconciliation, strategy suitability
+and risk control: quantitative models describe specific aspects of the market; specialist agents
+validate and standardise their outputs; a consensus layer compares competing explanations; strategy
+agents judge suitability; and deterministic controls retain final authority. This is academically more
+defensible than a broad autonomous-trading proposal and commercially more valuable than a single
+strategy.
+
+## Appendix A — key formal definitions
+
+| Concept | Formulation or interpretation |
+|---------|-------------------------------|
+| Market-state vector | $z_t = [\text{trend}_t,\ \text{vol}_t,\ \text{liq}_t,\ \text{driver}_t,\ \text{transition}_t,\ \text{xasset}_t]$ |
+| Specialist evidence | $e_{i,t} = \{\text{state},\ p,\ \hat p_{\text{cal}},\ \text{reliability},\ \text{horizon},\ \text{freshness},\ \text{support},\ \text{contradiction}\}$ |
+| Calibration condition | $P(Y = 1 \mid \hat p = p) \approx p$ |
+| Competing hypotheses | $H_k$ are alternative explanations; posteriors are updated from specialist evidence |
+| Belief state | $b_t(s) = P(S_t = s \mid o_{1:t})$ |
+| Transition probability | $P(S_{t+1} = j \mid S_t = i)$, or an online probability the current state is changing |
+| Strategy suitability | $u_{j,t}$ = expected utility of strategy $j$ conditional on the inferred state and risk constraints |
+| Expert reliability | $w_{i,t}$ depends on calibration history, similar-state performance, freshness and distribution shift |
+| No-action condition | Action withheld where confidence, data quality, liquidity or distributional validity falls below thresholds |
+
+: {.striped}
+
+## Appendix B — minimum viable research prototype
+
+A first prototype is intentionally small: NQ futures, QQQ, NASDAQ breadth, a volatility index, 2y/10y
+yields and a dollar proxy; one-minute decisions; a Python / Parquet / TimescaleDB / MLflow / FastAPI
+stack; six initial specialists (trend, volatility, liquidity, structural change, macro-event,
+cross-asset); consensus baselines (equal weighting, majority vote, Bayesian model averaging,
+supervised stacking); five strategy families (trend, mean-reversion, long volatility, market-neutral,
+cash preservation); and a first user output of live market state, confidence, disagreement, evidence,
+strategy suitability and risk recommendation. The first research milestone is concrete: **demonstrate
+that market-state information improves at least one of calibration, drawdown, tail risk or strategy
+selection out of sample.**
 
 ## Literature review
 
-A full **[thematic literature review](literature-review/index.qmd)** surveys the seven literatures the
+A full **[thematic literature review](literature-review/index.qmd)** surveys the literatures the
 proposal integrates — market efficiency and the limits of predictability, regime detection and
-non-stationarity, volatility, reinforcement learning for trading, NLP and LLMs in finance, multi-agent
-systems, and backtest methodology — read critically and, crucially, positioned against the 2024–2026 wave
-of multi-agent LLM trading systems (TradingAgents, FinRobot) whose own critics have begun to document the
-gap this proposal fills: control-first, regime-aware, risk-governed, and honestly evaluated. Structured
-notes on individual papers follow below.
+non-stationarity, volatility, ensemble learning and prediction with expert advice, NLP and LLMs in
+finance, multi-agent systems, and backtest methodology — read critically and positioned against the
+2024–2026 wave of multi-agent LLM trading systems (TradingAgents, FinRobot) whose own critics document
+the gap this proposal fills: **control-first, calibrated, regime-aware, risk-governed and honestly
+evaluated.** Structured notes on individual papers follow.
 
 ::: {#literature}
 :::
 
 ::: {.status-note}
-The full formatted proposal (including the ten-chapter thesis structure, the complete evaluation
-framework, and the appendix of formal definitions) is available as a
-[PDF](David-Maguire-PhD-Proposal-Outline.pdf). Institution-specific requirements, the final
-literature base, data-access arrangements and formal ethics sections will be completed during
-proposal development with supervisors.
+The full formatted proposal — the ten-chapter thesis structure, the complete evaluation framework and
+the appendix of formal definitions — is available as a
+[PDF](David-Maguire-PhD-Proposal-Updated-August-2026.pdf). Institution-specific requirements, the final
+literature base, data-access arrangements and formal ethics sections will be completed during proposal
+development with supervisors.
 :::
