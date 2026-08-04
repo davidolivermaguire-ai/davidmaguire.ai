@@ -344,7 +344,7 @@ yet on the site.
 | Macro & narrative specialist | ✅ | [Schema-constrained extraction](../ai-systems/schema-constrained-extraction/index.qmd), [narrative/surprise features](../ai-systems/sentiment-and-narrative/index.qmd), [transformers/embeddings](../ml/transformers/index.qmd) |
 | Evidence standardisation — calibration | ✅ | [Calibration & conformal prediction](../ml/probability-calibration/index.qmd) (ECE 0.105→0.062) |
 | Conditional expert reliability | ◐ | Calibration built; **condition-specific reliability histories to formalise** |
-| Consensus — ensemble baselines (equal, vote, **BMA**, **stacking**) | ○ | Named for RQ5; **no dedicated ensemble-combination entry yet** |
+| Consensus — ensemble baselines (equal, vote, **BMA**, **stacking**) | ✅ | [Ensemble methods & model combination](../ml/ensemble-methods/index.qmd) — four combiners on a forecastable target; BMA edges the best single model, and the gain is small *by design* (base models 0.97-correlated) — the diversity lesson that motivates specialist decorrelation |
 | Consensus — hypothesis reconciliation (posterior over states) | ○ | [Credit assignment / Markov games built](../ml/multi-agent-systems/index.qmd); **Bayesian hypothesis-comparison layer to build** |
 | Adaptive expert weighting (prediction with expert advice / Hedge) | ○ | Central to RQ7–RQ8; **to build** |
 | Strategy council — regime-conditioned suitability | ◐ | Evidence built ([conditioning OOS](../quant-lab/regime-conditioning-oos/index.qmd), [transitions](../quant-lab/benefit-at-transitions/index.qmd), [hard limits](../quant-lab/hard-risk-limits/index.qmd)); **formal suitability council to build** |

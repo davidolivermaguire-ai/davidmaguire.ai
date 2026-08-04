@@ -15,8 +15,9 @@ behind my work in quantitative finance, machine learning, and AI. The aim is
 simple: to demonstrate understanding rather than claim it — a record of research
 capability I am building as I develop a PhD proposal. The two core libraries and a
 full decision-systems tier — 74 entries, every number verified against real market
-data — are now [complete](capstone.qmd), and together they build the entire
-methodological foundation of the proposal.
+data — are [complete](capstone.qmd) and build the methodological foundation of the
+proposal; a **market-state specialist tier** is now being added as the updated
+proposal requires.
 :::
 :::
 
@@ -59,7 +60,7 @@ Background in banking analytics, my quant-finance interests, and the AI research
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
 #### <i class="bi bi-diagram-3 card-ic" aria-hidden="true"></i> [Machine Learning Library](ml/index.qmd)
-**Complete — 37 models.** From linear regression to transformers to a full reinforcement-learning and decision-systems tier: assumptions, mechanics, failure modes, and an honest market test for every one.
+**37 core models, plus a growing specialist tier.** From linear regression to transformers to a full reinforcement-learning and decision-systems tier — and now the market-state specialist methods the proposal requires: assumptions, mechanics, failure modes, and an honest market test for every one.
 :::
 
 ::: {.g-col-12 .g-col-md-4 .section-card}
