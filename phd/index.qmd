@@ -203,7 +203,7 @@ schema-constrained output** — never a raw trading instruction.
 
 | Specialist | Candidate methods | Structured output |
 |------------|-------------------|-------------------|
-| **Trend & persistence** | [HMM](../ml/regime-aware-modelling/index.qmd), Kalman filter, state-space models, [gradient boosting](../ml/xgboost/index.qmd) | Direction, persistence, transition probability, model agreement |
+| **Trend & persistence** | [HMM](../ml/regime-aware-modelling/index.qmd), [Kalman filter & state-space](../ml/kalman-state-space/index.qmd), [gradient boosting](../ml/xgboost/index.qmd) | Direction, persistence, transition probability, model agreement |
 | **Volatility** | [GARCH](../equations/garch/index.qmd) family, EGARCH, HAR-RV, boosting, [sequence models](../ml/lstms/index.qmd) | Expansion probability, expected horizon, tail-risk condition |
 | **Liquidity & microstructure** | Anomaly detection, supervised stress models, [order-book/impact features](../ml/market-microstructure/index.qmd) | Liquidity condition, execution risk, stress probability |
 | **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), CUSUM, drift detection | Break probability, detection delay, affected variables |
@@ -336,7 +336,7 @@ yet on the site.
 | Regime detection — HMM & Markov-switching | ✅ | [2-state HMM, point-in-time filter](../ml/regime-aware-modelling/index.qmd); [beta doubling by regime](../ml/markov-switching-regression/index.qmd) |
 | Structural change — online change-point | ✅ | [BOCPD](../ml/change-point-detection/index.qmd) flags COVID and 2022 onset point-in-time |
 | Structural change — CUSUM & drift detection | ○ | Named for the structural-change specialist; **to build** alongside BOCPD |
-| Trend specialist — state-space / Kalman filter | ○ | Named as a primary trend method; **to build** (also underpins belief filtering) |
+| Trend specialist — state-space / Kalman filter | ✅ | [Kalman filter & state-space](../ml/kalman-state-space/index.qmd) — from scratch, verified vs statsmodels to 2.8e-10; real-time time-varying β (median 1.04, drifting 0.67–1.27) with honest ±2σ bands and the filtered-vs-smoothed look-ahead |
 | Volatility — GARCH & dynamics | ✅ | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
 | Volatility — EGARCH/GJR & HAR-RV | ◐ | Asymmetry noted in the GARCH entry; **dedicated EGARCH and HAR-RV entries to build** (HAR is used in a [Quant-Lab experiment](../quant-lab/volatility-forecasting-horizon/index.qmd) but not yet a library entry) |
 | Liquidity specialist — stress / anomaly detection | ○ | Order-book and [impact modelling built](../ml/market-microstructure/index.qmd); **liquidity-stress anomaly model to build** |
@@ -350,7 +350,7 @@ yet on the site.
 | Strategy council — regime-conditioned suitability | ◐ | Evidence built ([conditioning OOS](../quant-lab/regime-conditioning-oos/index.qmd), [transitions](../quant-lab/benefit-at-transitions/index.qmd), [hard limits](../quant-lab/hard-risk-limits/index.qmd)); **formal suitability council to build** |
 | Risk governance | ✅ | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [hard risk budget](../quant-lab/hard-risk-limits/index.qmd) |
 | Optional RL layer (MDP → PPO, constrained) | ✅ | [MDPs](../ml/markov-decision-processes/index.qmd) → [Q-learning](../ml/q-learning/index.qmd), [policy gradients](../ml/policy-gradients/index.qmd), [PPO](../ml/ppo/index.qmd), [constrained RL](../ml/risk-constrained-rl/index.qmd) |
-| Optional RL — POMDP belief filtering & contextual bandits | ◐ | POMDP belief state named in the [MDP entry](../ml/markov-decision-processes/index.qmd); **explicit belief filter and contextual-bandit comparator to build** |
+| Optional RL — POMDP belief filtering & contextual bandits | ◐ | Linear-Gaussian **belief filter now built** ([Kalman & state-space](../ml/kalman-state-space/index.qmd)); contextual-bandit comparator still to build |
 | Validation & anti-overfitting toolkit | ✅ | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [PBO/DSR](../ml/overfitting-trading/index.qmd) |
 | Explainability & audit | ✅ | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
 
