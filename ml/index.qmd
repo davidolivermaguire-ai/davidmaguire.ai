@@ -72,8 +72,8 @@ verified standard as everything above.*
 ### Market-state specialist methods — *the proposal build tier*
 The updated [Adaptive Market Intelligence proposal](../phd/index.qmd) adds an econometrics-heavier
 specialist and combination layer, built out here one entry at a time to the same verified standard:
-[ensemble methods & model combination](ensemble-methods/) — *live*. To follow: state-space & Kalman
-filtering, EGARCH & HAR-RV, dynamic conditional correlation, CUSUM & drift detection, online expert
-weighting, and Bayesian hypothesis reconciliation.
+[ensemble methods & model combination](ensemble-methods/) and [online expert weighting](online-expert-weighting/) — *live*.
+To follow: state-space & Kalman filtering, EGARCH & HAR-RV, dynamic conditional correlation, CUSUM &
+drift detection, and Bayesian hypothesis reconciliation.
 
 :::

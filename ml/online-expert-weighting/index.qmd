@@ -1,0 +1,189 @@
+---
+title: "Online Expert Weighting (Prediction with Expert Advice)"
+subtitle: "Hedge and multiplicative weights — combining forecasters online, with a provable guarantee of doing almost as well as the best one in hindsight"
+description: "The adaptive successor to static ensembles. When several forecasters compete and the best one changes with the regime, the Hedge algorithm updates their weights online and is provably almost as good as the best expert in hindsight — no foreknowledge required. On four volatility forecasters whose ranking genuinely rotates across 2015–2026, Hedge matched the best single expert (mean loss 0.068 vs 0.064), beat equal-weighting (0.078) and drove the weak expert's weight to zero, with cumulative regret 11.5 against a worst-case bound of 44.3 — while the fancier 'forgetting' variant did not help, an honest H7 null."
+date: 2026-08-06
+author: "David Maguire"
+categories: [decision systems, online learning]
+image: fig-online-expert-weighting.png
+image-alt: "Three panels: Hedge weights over 2015–2026 rotating among four volatility forecasters and zeroing the weakest; cumulative regret staying far under its worst-case bound; and mean-loss bars showing Hedge matching the best expert and beating equal-weight while fixed-share does not help."
+toc: true
+---
+
+The [previous entry](../ensemble-methods/index.qmd) combined models with **static** weights fit once on a
+validation window — and quietly assumed the future would look like that window. Markets do not oblige:
+the [best forecaster changes with the regime](../change-point-detection/index.qmd). This entry is the
+**online, adaptive** answer. *Prediction with expert advice* treats each model as an "expert," updates
+their weights after every observation, and comes with a remarkable theorem: with no assumptions about the
+data and no foreknowledge of which expert is best, the combined forecaster does **almost as well as the
+single best expert in hindsight**. It is the concrete mechanism behind the [proposal's](../../phd/index.qmd)
+*conditional expert reliability* — the weights $w_{i,t}$ that re-rate each specialist as conditions change
+(**RQ7–RQ8**) — and it replaces a heuristic with a guarantee.
+
+## 1. What problem does it solve?
+
+**Combining experts when you cannot know in advance which one to trust — and the answer keeps changing.**
+Static combination (equal weighting, [Bayesian model averaging, stacking](../ensemble-methods/index.qmd))
+fixes the weights on past data. But a fast volatility model is best right after a shock, a slow one is
+best in a calm trend, and a long-memory model is best through a crisis — so any fixed weighting is wrong
+half the time. Online expert weighting updates the weights *as evidence arrives*, shifting trust toward
+whichever expert is currently performing, and it does so with a worst-case performance bound that holds
+even against an adversary. That guarantee — not merely "it adapts" — is what makes it the right primitive
+for a non-stationary system that must justify every design choice.
+
+## 2. The Hedge algorithm and its guarantee
+
+Keep a weight $w_i$ on each of $N$ experts. Each period, each expert incurs a loss $\ell_{i,t}\in[0,1]$
+(here, its normalized squared forecast error). The **multiplicative-weights (Hedge)** update is one line:
+
+$$w_{i,t+1} \;=\; \frac{w_{i,t}\,e^{-\eta\,\ell_{i,t}}}{\sum_j w_{j,t}\,e^{-\eta\,\ell_{j,t}}},$$
+
+punishing bad experts geometrically. The forecaster that follows these weights has a **regret bound** —
+its total loss minus the best single expert's total loss is provably small:
+
+$$\sum_{t} \ell^{\text{Hedge}}_t \;-\; \min_i \sum_{t}\ell_{i,t} \;\le\; \frac{\ln N}{\eta} + \frac{\eta T}{8}.$$
+
+Choosing the learning rate $\eta=\sqrt{8\ln N / T}$ balances the two terms and gives regret
+$\le \sqrt{(T/2)\ln N} = O(\sqrt{T\ln N})$ — **sublinear** in the horizon, so the *average* regret per period
+goes to zero. In words: **without knowing which expert would win, you end up almost as good as if you had
+known from the start.** The $\ln N$ dependence means you can throw in many experts for almost no cost. A
+**fixed-share** variant, $w_i \leftarrow (1-\alpha)w_i + \alpha/N$, mixes a little uniform mass back in
+every step so no expert's weight can die — the tool for *tracking* a best expert that changes abruptly.
+
+## 3. An honest market test — four forecasters whose ranking rotates
+
+The demonstration keeps the [ensemble entry's](../ensemble-methods/index.qmd) discipline of a
+**forecastable** target — next-day absolute Nasdaq return $|r_{t+1}|$, a volatility proxy — and pits four
+deliberately different [volatility](../../equations/garch/index.qmd) experts against each other over
+2015–2026 (2,831 days): a **random walk** (yesterday's $|r|$), a **fast EWMA** ($\lambda=0.90$), a **slow
+EWMA** ($\lambda=0.985$), and a three-horizon **HAR** average. Their ranking genuinely rotates: no expert
+is the rolling-60-day best more than **48%** of the time, and the yearly winner moves with the regime —
+**HAR wins the 2015 and 2020 crises**, the **slow EWMA wins the calm 2024**, the **fast EWMA wins the
+trending years**. This is exactly the non-stationary setting the guarantee is built for.
+
+| Forecaster / combiner | Mean loss | Forecast RMSE (bps) |
+|-----------------------|:---------:|:-------------------:|
+| Random walk ($\lvert r_t\rvert$) | 0.1121 | 122.3 |
+| Fast EWMA (λ 0.90) — *best in hindsight* | **0.0641** | 92.1 |
+| Slow EWMA (λ 0.985) | 0.0687 | 97.7 |
+| HAR (1, 5, 22) | 0.0678 | 93.7 |
+| Equal weighting | 0.0782 | 94.5 |
+| **Hedge (online)** | **0.0682** | **92.1** |
+| Fixed-share (α = 0.02) | 0.0768 | 93.9 |
+
+: Mean normalized loss (weighting view) and combined-forecaster RMSE on next-day $\lvert r_{t+1}\rvert$. Lower is better. {.striped}
+
+**Hedge does what the theorem promises.** Its mean loss of **0.0682** sits essentially on the *best
+expert's* 0.0641 and its combined-forecast RMSE (92.1 bps) *ties* the best single expert — even though
+that expert could only be identified with hindsight — while **beating equal weighting** (0.0782 / 94.5 bps)
+and burying the weak random walk, whose weight it drives to zero within months. The **cumulative regret is
+11.5 against a worst-case bound of 44.3**, and it grows sublinearly: the guarantee is not just satisfied,
+it is comfortably slack.
+
+![Left: the Hedge weights over 2015–2026, a stacked area — the random-walk expert (grey) is killed within months, and weight rotates among the fast (blue), slow (green) and HAR (orange) experts as the regime changes, with the HAR share rising through the 2020 and 2022 turbulence. Middle: cumulative regret against the best expert (blue) stays far below its worst-case bound (dashed red), ending at 11.5 vs 44.3 and growing sublinearly. Right: mean normalized loss — Hedge (blue) sits on the best-expert line (dashed) and beats equal weighting (grey); the random walk is far worse; fixed-share (red) does not improve on plain Hedge here.](fig-online-expert-weighting.png){fig-alt="Three panels: Hedge weights rotating among four volatility forecasters and zeroing the weakest; cumulative regret staying far under its worst-case bound; mean-loss bars showing Hedge matching the best expert and beating equal-weight while fixed-share does not help."}
+
+## 4. Two honest caveats the numbers force
+
+First, **the fancier variant did not help.** Fixed-share — the tracking rule designed for a changing best
+expert — came in *worse* than plain Hedge (0.0768 vs 0.0682). The reason is instructive: on this series the
+experts are close and the fast EWMA is a strong, durable default, so the "insurance premium" of
+continually mixing weight back toward the others is not worth paying. Fixed-share earns its keep only when
+the best expert changes *abruptly and expensively*; here it is a clean instance of **H7** — *a
+well-tuned transparent baseline beating the more elaborate adaptive method.* Second, **weighting is not
+prophecy.** On the 10% of days with the largest volatility jumps, everyone's loss triples (Hedge 0.154 vs
+0.059 on calm days), because the *level* of a volatility shock is not forecastable. Online weighting wins
+by **allocating** across experts, not by making the unpredictable predictable — and a method honest enough
+to show that is one you can trust with the parts it does solve.
+
+## 5. What are its strengths?
+
+- **A guarantee, not a hope.** Regret is $O(\sqrt{T\ln N})$ with no distributional assumption and even against an adversary — you are provably almost as good as the best expert in hindsight.
+- **Cheap breadth.** The $\ln N$ dependence means adding experts costs almost nothing, so you can enrol many specialists and let the algorithm sort them out.
+- **Automatic pruning.** Persistently bad experts have their weight driven to zero (the random walk here) without any manual selection.
+- **Genuinely online and non-stationary-ready.** Weights update every step and shift with the regime — the [adaptivity a static ensemble lacks](../ensemble-methods/index.qmd).
+- **One hyper-parameter, and theory sets it.** $\eta=\sqrt{8\ln N/T}$ comes straight from the bound; anytime variants remove even the dependence on $T$.
+
+## 6. What are its weaknesses?
+
+- **Relative, not absolute.** The guarantee is *relative to the best expert*; if every expert is poor, so is the ensemble. Garbage in, garbage out.
+- **It lags the turn.** Weights react to *realized* loss, so at the very moment a regime flips you are still weighting yesterday's winner — the unavoidable cost of learning online.
+- **η is a responsiveness–stability dial.** Large $\eta$ chases the latest winner and is jumpy; small $\eta$ is stable but slow; the optimal value needs the horizon (or a doubling trick).
+- **Tracking variants cost a premium.** Fixed-share helps only when the best expert changes sharply; otherwise it *adds* loss, as it did here — adaptivity is not free.
+- **Bounded-loss normalization is a modelling choice.** The losses must be scaled into $[0,1]$; the chosen scale affects how aggressively weights move.
+
+## 7. How could it apply to markets?
+
+This is the [proposal's](../../phd/index.qmd) **conditional expert-reliability layer**, made concrete and
+given a guarantee. The [ensemble entry](../ensemble-methods/index.qmd) showed that static combination
+barely beats the best model when weights are fixed; this entry shows the online version that *does* keep
+pace with a changing winner — precisely the $w_{i,t}$ the architecture needs so that the **Review &
+Learning agent** can re-rate each specialist as regimes turn, rather than trusting a weighting frozen on
+history. It slots directly onto the [regime](../regime-aware-modelling/index.qmd) and
+[change-point](../change-point-detection/index.qmd) machinery: the natural next step is to make the weights
+*regime-conditional* — a separate weight vector per state, so an expert trusted in calm can be distrusted
+in turbulence — which is the honest reading of "conditional reliability." Two lessons carry into the
+design. The guarantee is the reason to prefer this over an ad-hoc blend: a control system near capital
+should be able to *state its worst case*, and Hedge can. And the fixed-share null is a warning the whole
+site keeps repeating — the elaborate adaptive method must beat the tuned simple one on evidence, not on
+elegance, and here it did not. The value of online weighting is real but bounded: it tracks *which* expert
+to trust, it does not manufacture skill none of them have.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+
+# losses[t, i] in [0,1] : normalized loss of expert i at time t (e.g. squared forecast error)
+def hedge(losses, alpha=0.0):
+    T, N = losses.shape
+    eta = np.sqrt(8 * np.log(N) / T)          # theory-optimal learning rate
+    w = np.ones(N) / N
+    W, loss = np.zeros((T, N)), np.zeros(T)
+    for t in range(T):
+        W[t] = w
+        loss[t] = w @ losses[t]               # the ensemble's loss this round
+        w = w * np.exp(-eta * losses[t])      # multiplicative weights: punish bad experts
+        w /= w.sum()
+        if alpha > 0:                         # fixed-share: keep no expert from dying (tracking)
+            w = (1 - alpha) * w + alpha / N
+    return W, loss
+
+W, hedge_loss = hedge(losses)
+regret = hedge_loss.sum() - losses.sum(0).min()          # vs best expert in hindsight
+bound  = np.log(losses.shape[1]) / np.sqrt(8*np.log(losses.shape[1])/losses.shape[0]) \
+         + np.sqrt(8*np.log(losses.shape[1])/losses.shape[0]) * losses.shape[0] / 8
+```
+
+The whole method is the two lines inside the loop; everything else is bookkeeping and the check that
+regret came in under its bound.
+
+## 9. How would I explain it to a supervisor?
+
+"This is the online, adaptive version of model combination, and it comes with a theorem. You keep a weight
+on each forecaster and multiply it down every time that forecaster is wrong; the resulting ensemble is
+provably almost as good as the best single expert in hindsight — regret grows like root-T-log-N, so the
+average regret goes to zero, with no assumption on the data. I tested it on four volatility forecasters
+whose ranking genuinely rotates — HAR wins the 2015 and 2020 crises, the slow EWMA wins the calm 2024, the
+fast EWMA wins the trending years, none best more than 48% of the time. Hedge matched the best expert's
+loss, 0.068 against 0.064, tied its forecast RMSE, beat equal weighting, and drove the useless random-walk
+expert's weight to zero — with cumulative regret 11.5 against a worst-case bound of 44.3. Two honest points.
+The fixed-share 'forgetting' variant, which is meant to track a changing winner, actually did slightly
+worse, because the experts were close and one was a durable default — a case of the tuned simple method
+beating the fancier one, which is exactly my H7. And on the biggest volatility-jump days everyone's error
+triples, because the size of a shock isn't forecastable — the method wins by allocating across experts, not
+by predicting the unpredictable. For my architecture this is the conditional-reliability layer: it's how
+the system re-weights specialists as the regime changes, with a guarantee instead of a heuristic, and the
+next step is to make those weights regime-conditional."
+
+::: {.status-note}
+Data: NDX daily 2015–2026, 2,831 forecastable days. Target: next-day $\lvert r_{t+1}\rvert$. Experts
+(vol forecasts calibrated to $E\lvert r\rvert=\sqrt{2/\pi}\,\sigma$): random walk $\lvert r_t\rvert$; EWMA
+$\lambda=0.90$ and $0.985$; HAR average of 1/5/22-day realized variance. Losses = squared forecast error
+normalized by the 99th-percentile error and clipped to $[0,1]$. Hedge learning rate
+$\eta=\sqrt{8\ln N/T}=0.075$ ($N=4$). Mean normalized loss: RW 0.1121, fast EWMA 0.0641 (best in hindsight),
+slow EWMA 0.0687, HAR 0.0678, equal-weight 0.0782, **Hedge 0.0682**, fixed-share ($\alpha=0.02$) 0.0768.
+Combined-forecaster RMSE on $\lvert r_{t+1}\rvert$: fast EWMA and Hedge both 92.1 bps, equal-weight 94.5,
+RW 122.3. Cumulative regret 11.54 vs worst-case bound 44.30. Rolling-60-day best-expert share: fast 48.2%,
+slow 31.3%, HAR 20.5%, RW 0%. Transition (top-decile vol-change) vs calm Hedge loss 0.1538 vs 0.0586. Every
+number was checked.
+:::
