@@ -134,6 +134,19 @@ strategy selection under deterministic risk constraints.
 > and does this information improve out-of-sample strategy selection, risk control and decision
 > robustness?
 
+> **The sharp, testable core.** Within that broad aim sits one identified, falsifiable claim the thesis
+> is built to settle: *does conditioning on a real-time, **filtered** market-state estimate improve the
+> out-of-sample **calibration and risk-adjusted robustness** of equity decisions — concentrated at
+> **regime transitions** — beyond a **continuous volatility signal using the same information**, after
+> costs and multiple-testing correction?* The load-bearing clause is "beyond a continuous volatility
+> signal": it fixes the benchmark and names the null the
+> [Quant Lab](../quant-lab/regime-conditioning-oos/index.qmd) has already tested — a discrete regime
+> added nothing beyond volatility for *sizing*, yet sharpened *calibration* and paid *at transitions*.
+> Identification rests on a same-information benchmark, filtered point-in-time state, orthogonalisation
+> against volatility and volume, a pre-committed metric, and a survivorship-bias-free equity
+> cross-section (CRSP/Compustat) held to deflated-Sharpe and PBO standards. This falsifiable core gives
+> the broader architecture an empirical spine without narrowing its ambition.
+
 | Ref. | Supporting research question |
 |------|------------------------------|
 | RQ1 | Which statistical, econometric and ML methods most reliably identify trend, volatility, liquidity and structural-change states out of sample? |
@@ -419,6 +432,27 @@ calibration and reliability; macro-event agent; ensemble versus consensus method
 dashboard; second paper. **Year 3** — regime-conditioned strategies and risk controls; adaptive
 weighting; ablations and robustness; institutional prototype and commercialisation chapter; submit
 thesis.
+
+## Supervision and fit
+
+The proposal draws on two distinct bodies of expertise, and is explicit about where each guides it. Its
+**empirical and econometric core** — [regime detection](../ml/regime-aware-modelling/index.qmd),
+[volatility modelling](../ml/egarch-har/index.qmd) (GARCH, EGARCH, HAR-RV and implied measures),
+[forecasting](../quant-lab/volatility-forecasting-horizon/index.qmd),
+[probability calibration](../ml/probability-calibration/index.qmd) and the
+[deflated-Sharpe / PBO evaluation discipline](../ml/overfitting-trading/index.qmd) — sits in quantitative
+finance, financial econometrics and forecasting, where a primary supervisor in those areas would most
+directly lead, sharpen and examine the work. Much of that core is already built and verified on this site,
+which should make supervision concrete rather than speculative.
+
+The **AI and agentic-systems layer** — [LLM narrative extraction](../ai-systems/schema-constrained-extraction/index.qmd),
+[multi-agent coordination](../ai-systems/multi-agent-coordination/index.qmd) and the
+[control and governance stack](../ai-systems/ai-risk-controls/index.qmd) — is a genuinely separate
+competency, and the proposal treats it as one: kept deliberately subordinate to the econometric core (the
+LLM is a measured information source, never an execution authority) and well-suited to **co-supervision**
+with machine-learning-systems or applied-AI expertise. Positioning the AI component as a co-supervised
+extension, rather than the centrepiece, keeps the thesis anchored in defensible empirical finance while
+still pursuing the AI direction that motivates it.
 
 ## Scope, limitations and risks
 
