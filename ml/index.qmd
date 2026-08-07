@@ -73,8 +73,8 @@ verified standard as everything above.*
 The updated [Adaptive Market Intelligence proposal](../phd/index.qmd) adds an econometrics-heavier
 specialist and combination layer, built out here one entry at a time to the same verified standard:
 [ensemble methods & model combination](ensemble-methods/), [online expert weighting](online-expert-weighting/)
-[state-space & Kalman filtering](kalman-state-space/) and [EGARCH, GJR & HAR-RV](egarch-har/) — *live*.
-To follow: dynamic conditional correlation, CUSUM & drift detection, and Bayesian hypothesis
-reconciliation.
+[state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/) and
+[cross-asset dependence (DCC)](cross-asset-dependence/) — *live*.
+To follow: CUSUM & drift detection, and Bayesian hypothesis reconciliation.
 
 :::

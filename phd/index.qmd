@@ -208,7 +208,7 @@ schema-constrained output** — never a raw trading instruction.
 | **Liquidity & microstructure** | Anomaly detection, supervised stress models, [order-book/impact features](../ml/market-microstructure/index.qmd) | Liquidity condition, execution risk, stress probability |
 | **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), CUSUM, drift detection | Break probability, detection delay, affected variables |
 | **Macro & narrative** | [Schema-constrained LLM](../ai-systems/schema-constrained-extraction/index.qmd), [event/surprise extraction](../ai-systems/sentiment-and-narrative/index.qmd) | Event class, direction, novelty, duration, affected assets, evidence |
-| **Cross-asset confirmation** | Dynamic correlation (DCC), factor models, graphical methods | Confirming/contradicting markets; risk-on vs risk-off evidence |
+| **Cross-asset confirmation** | [Dynamic correlation (DCC), factor & graphical methods](../ml/cross-asset-dependence/index.qmd) | Confirming/contradicting markets; risk-on vs risk-off evidence |
 
 : {.striped .hover}
 
@@ -340,7 +340,7 @@ yet on the site.
 | Volatility — GARCH & dynamics | ✅ | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
 | Volatility — EGARCH/GJR & HAR-RV | ✅ | [EGARCH, GJR & HAR-RV](../ml/egarch-har/index.qmd) — leverage effect significant (GJR γ t 4.2, EGARCH t −5.7; BIC 9202→9118), and HAR-RV on a realized measure forecasts best OOS (QLIKE 0.70 vs GARCH 0.87) |
 | Liquidity specialist — stress / anomaly detection | ○ | Order-book and [impact modelling built](../ml/market-microstructure/index.qmd); **liquidity-stress anomaly model to build** |
-| Cross-asset confirmation — DCC, factor & graphical models | ○ | Single-factor [CAPM/beta built](../equations/beta-capm/index.qmd); **multivariate DCC, factor and Gaussian-graphical methods to build** — the thinnest domain |
+| Cross-asset confirmation — DCC, factor & graphical models | ✅ | [Cross-asset dependence](../ml/cross-asset-dependence/index.qmd) — from-scratch DCC (a+b=0.99) shows correlation tripling calm→crisis (0.23→0.76) and the defensive staple re-coupling (0.31→0.70): the risk-on/off signal |
 | Macro & narrative specialist | ✅ | [Schema-constrained extraction](../ai-systems/schema-constrained-extraction/index.qmd), [narrative/surprise features](../ai-systems/sentiment-and-narrative/index.qmd), [transformers/embeddings](../ml/transformers/index.qmd) |
 | Evidence standardisation — calibration | ✅ | [Calibration & conformal prediction](../ml/probability-calibration/index.qmd) (ECE 0.105→0.062) |
 | Conditional expert reliability | ◐ | Calibration built; **condition-specific reliability histories to formalise** |
