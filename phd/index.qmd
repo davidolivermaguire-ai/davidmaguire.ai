@@ -206,7 +206,7 @@ schema-constrained output** — never a raw trading instruction.
 | **Trend & persistence** | [HMM](../ml/regime-aware-modelling/index.qmd), [Kalman filter & state-space](../ml/kalman-state-space/index.qmd), [gradient boosting](../ml/xgboost/index.qmd) | Direction, persistence, transition probability, model agreement |
 | **Volatility** | [GARCH](../equations/garch/index.qmd) family, [EGARCH & HAR-RV](../ml/egarch-har/index.qmd), boosting, [sequence models](../ml/lstms/index.qmd) | Expansion probability, expected horizon, tail-risk condition |
 | **Liquidity & microstructure** | Anomaly detection, supervised stress models, [order-book/impact features](../ml/market-microstructure/index.qmd) | Liquidity condition, execution risk, stress probability |
-| **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), CUSUM, drift detection | Break probability, detection delay, affected variables |
+| **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), [CUSUM & drift detection](../ml/cusum-drift/index.qmd) | Break probability, detection delay, affected variables |
 | **Macro & narrative** | [Schema-constrained LLM](../ai-systems/schema-constrained-extraction/index.qmd), [event/surprise extraction](../ai-systems/sentiment-and-narrative/index.qmd) | Event class, direction, novelty, duration, affected assets, evidence |
 | **Cross-asset confirmation** | [Dynamic correlation (DCC), factor & graphical methods](../ml/cross-asset-dependence/index.qmd) | Confirming/contradicting markets; risk-on vs risk-off evidence |
 
@@ -335,7 +335,7 @@ yet on the site.
 | Regime detection — clustering & mixtures | ✅ | [K-means](../ml/k-means/index.qmd), [GMM](../ml/gaussian-mixture-models/index.qmd) recover calm/sell-off/crisis states |
 | Regime detection — HMM & Markov-switching | ✅ | [2-state HMM, point-in-time filter](../ml/regime-aware-modelling/index.qmd); [beta doubling by regime](../ml/markov-switching-regression/index.qmd) |
 | Structural change — online change-point | ✅ | [BOCPD](../ml/change-point-detection/index.qmd) flags COVID and 2022 onset point-in-time |
-| Structural change — CUSUM & drift detection | ○ | Named for the structural-change specialist; **to build** alongside BOCPD |
+| Structural change — CUSUM & drift detection | ✅ | [CUSUM & concept drift](../ml/cusum-drift/index.qmd) — the cheap online tripwire; flags COVID 2020-02-25 (one day after BOCPD) and 2022, with the ARL false-alarm/delay trade-off made explicit |
 | Trend specialist — state-space / Kalman filter | ✅ | [Kalman filter & state-space](../ml/kalman-state-space/index.qmd) — from scratch, verified vs statsmodels to 2.8e-10; real-time time-varying β (median 1.04, drifting 0.67–1.27) with honest ±2σ bands and the filtered-vs-smoothed look-ahead |
 | Volatility — GARCH & dynamics | ✅ | [GARCH](../equations/garch/index.qmd), [Hurst](../equations/hurst-exponent/index.qmd), [stationarity/ADF](../equations/stationarity-adf/index.qmd) |
 | Volatility — EGARCH/GJR & HAR-RV | ✅ | [EGARCH, GJR & HAR-RV](../ml/egarch-har/index.qmd) — leverage effect significant (GJR γ t 4.2, EGARCH t −5.7; BIC 9202→9118), and HAR-RV on a realized measure forecasts best OOS (QLIKE 0.70 vs GARCH 0.87) |

@@ -74,7 +74,7 @@ The updated [Adaptive Market Intelligence proposal](../phd/index.qmd) adds an ec
 specialist and combination layer, built out here one entry at a time to the same verified standard:
 [ensemble methods & model combination](ensemble-methods/), [online expert weighting](online-expert-weighting/)
 [state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/) and
-[cross-asset dependence (DCC)](cross-asset-dependence/) — *live*.
-To follow: CUSUM & drift detection, and Bayesian hypothesis reconciliation.
+[cross-asset dependence (DCC)](cross-asset-dependence/) and [CUSUM & concept-drift detection](cusum-drift/) — *live*.
+To follow: Bayesian hypothesis reconciliation — the consensus engine that ties the specialists together.
 
 :::

@@ -1,0 +1,173 @@
+---
+title: "CUSUM & Concept-Drift Detection"
+subtitle: "The cheap, online tripwire for a changed distribution — and the average-run-length trade-off that governs every change detector"
+description: "The lightweight, frequentist complement to Bayesian change-point detection. A from-scratch CUSUM detects a known 1σ shift in 7 steps, and its operating characteristic makes the fundamental trade-off explicit: raising the threshold moves the in-control false-alarm interval from 18 to 3,300 steps but slows detection from 3 to 16 steps — no free lunch. On the Nasdaq it flags 69 volatility-regime onsets point-in-time, catching the COVID crash on 2020-02-25, one day after BOCPD, at a fraction of the compute."
+date: 2026-08-06
+author: "David Maguire"
+categories: [decision systems, change detection]
+image: fig-cusum-drift.png
+image-alt: "Three panels: a CUSUM statistic flat in-control then climbing to cross its threshold after a known change; the average-run-length trade-off between false alarms and detection delay; and CUSUM flagging real Nasdaq volatility-regime onsets including COVID and 2022."
+toc: true
+---
+
+The [change-point entry](../change-point-detection/index.qmd) built a *Bayesian* detector — BOCPD, which
+carries a full posterior over how long the current regime has lasted. That richness costs compute. This
+entry builds its **frequentist, lightweight complement**: **CUSUM**, a one-line recursion that accumulates
+evidence of a shift and trips an alarm, with an explicit, tunable false-alarm rate. It is the always-on
+**tripwire** a real-time system wants alongside the considered posterior — and its operating characteristic
+teaches the single most important fact about *any* change detector: you cannot have both instant detection
+and no false alarms. For the [proposal's](../../phd/index.qmd) structural-change specialist, CUSUM is the
+cheap, low-latency alarm; BOCPD is the second opinion.
+
+## 1. What problem does it solve?
+
+**Noticing that the distribution changed — fast, online, and with a controllable false-alarm rate.** A
+market system runs continuously on a stream, and the most dangerous moment is the one where the process
+generating that stream shifts: volatility expands, a correlation breaks, a model's error rate creeps up.
+You need to detect that **as it happens**, from a single pass over the data, cheaply enough to run on
+everything at once, and with a *dial* that sets how trigger-happy the alarm is. CUSUM does exactly this. It
+is the canonical **sequential change detector** — provably the fastest way (Lorden, Moustakides) to detect
+a shift of a given size for a given tolerated false-alarm rate — and the same machinery, pointed at a
+model's error stream, is **concept-drift detection**: the signal that the world has moved and the model
+must be refit.
+
+## 2. The CUSUM recursion
+
+CUSUM accumulates the deviations of a stream $x_t$ from an in-control reference $\mu_0$, with a **slack**
+$k$ that it must overcome before it starts to build, and trips when the accumulation crosses a **threshold**
+$h$:
+
+$$S^{+}_t = \max\!\big(0,\; S^{+}_{t-1} + (x_t - \mu_0 - k)\big), \qquad S^{-}_t = \max\!\big(0,\; S^{-}_{t-1} - (x_t - \mu_0 + k)\big),$$
+
+with an alarm when $\max(S^{+}_t, S^{-}_t) > h$. In control, each increment is negative on average (the
+slack drags it down), so the statistic sits pinned at zero; after a shift the increments turn positive and
+it **climbs steadily** until it crosses $h$. The two knobs have clean meanings: $k$ is set to half the
+shift you want to catch (so the detector is tuned to a *size* of change), and $h$ sets the false-alarm rate.
+A close cousin, the **Page-Hinkley** test — $m_t=\sum_{i\le t}(x_i-\mu_0-\delta)$, alarm when
+$m_t-\min_{i\le t}m_i>\lambda$ — is the version the concept-drift literature usually cites; it is the same
+idea in a different accumulator.
+
+## 3. Verifying it, and the trade-off that governs it
+
+Two checks, both in the figure. First, **it detects a known change**: on a synthetic stream that shifts
+by $1\sigma$ at $t=500$, the CUSUM statistic stays at zero, then climbs after the change and crosses $h=5$
+at $t=507$ — a **detection delay of 7** (left panel). Second, and more important, the **average-run-length
+(ARL) trade-off**. There is exactly one free parameter, $h$, and it trades the two things you care about
+against each other:
+
+| threshold $h$ | in-control ARL₀ (steps between false alarms) | detection delay (1σ shift) |
+|:---:|:---:|:---:|
+| 2 | 18 | 3.4 |
+| 3 | 59 | 5.5 |
+| 4 | 164 | 7.4 |
+| 5 | 467 | 9.5 |
+| 6 | 1,223 | 11.4 |
+| 8 | 3,300 | 15.5 |
+
+: Monte-Carlo operating characteristic (k=0.5). Raising h buys far fewer false alarms at the cost of slower detection. {.striped}
+
+This is **the** lesson of change detection, and it is not a shortcoming of CUSUM specifically — it is
+fundamental. A lower threshold catches the change faster but cries wolf constantly (ARL₀ of 18 means a
+false alarm every 18 steps in pure noise); a higher one is calm but slow. Every detector, Bayesian or
+frequentist, lives on this curve; the only question is where you choose to sit. The middle panel plots it
+directly — detection delay against the false-alarm interval — and the right operating point depends
+entirely on what a false alarm *costs* you versus what a slow detection does.
+
+![Left: on a synthetic stream that shifts by 1σ at t=500, the CUSUM statistic sits at zero in-control, then climbs and crosses its threshold h=5 at t=507 — a delay of 7. Middle: the average-run-length trade-off — as the threshold rises (h=2→8), the in-control interval between false alarms grows from 18 to 3,300 steps but detection delay grows from 3.4 to 15.5; the h=6 operating point is circled. Right: CUSUM on the standardized absolute Nasdaq return flags 69 volatility-regime onsets point-in-time over 2015–2026, including the COVID crash on 2020-02-25 (one day after BOCPD) and the 2022 sell-off from late January.](fig-cusum-drift.png){fig-alt="A CUSUM statistic climbing to cross its threshold after a known change; the average-run-length trade-off curve; and CUSUM flagging real Nasdaq volatility-regime onsets including COVID and 2022."}
+
+## 4. On real data — the cheap tripwire, matching BOCPD
+
+Pointed at the Nasdaq, CUSUM earns its place. Taking the standardized absolute return as the stream, with
+the in-control mean and scale fixed on 2015 (no look-ahead) and $h=6$, it fires **69 times over eleven
+years** — each a genuine volatility-regime onset: the August 2015 sell-off, February 2018's volmageddon,
+the fourth quarter of 2018, and, cleanly, the **COVID crash on 2020-02-25 — one day after
+[BOCPD's](../change-point-detection/index.qmd) 2020-02-24** — and the **2022 sell-off from 28 January**. It
+finds the same major structural breaks the Bayesian detector does, point-in-time, but at a tiny fraction of
+the compute: two `max` operations per observation versus a run-length posterior. That is precisely the
+division of labour the specialist wants — CUSUM running always-on as the low-latency alarm that can trigger
+a cheap immediate response (de-risk, widen intervals, flag for review), with BOCPD's richer posterior
+consulted when the considered picture is needed.
+
+## 5. What are its strengths?
+
+- **Cheap and online.** One pass, O(1) memory, two additions per point — you can run it on every stream in the system at once, which BOCPD cannot afford.
+- **Provably efficient.** For a shift of a known size and a tolerated false-alarm rate, CUSUM achieves the minimum possible detection delay (Lorden/Moustakides optimality) — it is not a heuristic.
+- **One interpretable knob with explicit control.** The threshold $h$ maps directly to an average-run-length, so you set the false-alarm rate in units you can reason about, and $k$ targets the shift size.
+- **Model-agnostic.** It monitors any stream — a return, a volatility, a correlation, or a model's error rate, which turns it straight into a **concept-drift** detector.
+- **A clean complement to BOCPD.** Frequentist tripwire beside a Bayesian posterior — the two disagree rarely and reinforce each other, which is exactly what a robust specialist wants.
+
+## 6. What are its weaknesses?
+
+- **The ARL trade-off is inescapable.** You cannot have fast detection *and* rare false alarms; every threshold is a compromise, and choosing it needs a real cost model, not a default.
+- **It needs a trustworthy in-control reference.** A wrong baseline $\mu_0,\sigma_0$ mis-calibrates everything, and markets' "normal" itself drifts, so the reference must be maintained.
+- **It says *that*, not *what*.** CUSUM signals a change occurred; it does not give the new regime's parameters or a probability over where the break was — BOCPD's posterior is richer for that.
+- **Tuned to a shift size.** $k$ optimises for one magnitude of change; much smaller or larger shifts are detected sub-optimally, and a two-sided setup still assumes a mean-shift form.
+- **Detection lags by construction.** The delay is the price of certainty — at the very moment the regime turns, the statistic has not yet accumulated enough evidence, so like every real-time detector it is always a little late.
+
+## 7. How could it apply to markets?
+
+CUSUM plays two roles in the [proposal](../../phd/index.qmd). As part of the **structural-change
+specialist**, it is the always-on tripwire that complements [BOCPD](../change-point-detection/index.qmd):
+run continuously and cheaply on volatility, spreads, correlations and breadth, it emits a low-latency
+"something just changed" that can trigger an immediate, conservative response before the more expensive
+posterior is even computed — and because change detection concentrates value
+[at transitions](../../quant-lab/benefit-at-transitions/index.qmd), a fast, cheap transition alarm is
+worth a great deal. Its second role is quieter but just as important: pointed at the **system's own
+agents' error streams**, CUSUM (or Page-Hinkley, or their ML descendants DDM and ADWIN) is how the **Review
+& Learning layer** detects *concept drift* — the moment a specialist that was reliable stops being
+reliable, so its [reliability weight](../online-expert-weighting/index.qmd) should fall and it may need
+refitting. And the ARL trade-off is a governance lesson the whole architecture must internalise: an alarm
+system's threshold is a risk decision, not a technical default — a system near capital should set it
+deliberately, knowing exactly the false-alarm rate and detection delay it is buying.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+
+def cusum(x, mu0, sigma0, k=0.5, h=6.0):
+    """Two-sided CUSUM on a standardized stream. Returns alarm indices (resets on alarm)."""
+    z = (x - mu0) / sigma0                       # standardize against an in-control reference
+    sp = sm = 0.0
+    alarms = []
+    for t, zt in enumerate(z):
+        sp = max(0.0, sp + (zt - k))             # accumulate upward deviations beyond the slack k
+        sm = max(0.0, sm - (zt + k))             # ... and downward
+        if max(sp, sm) > h:                      # threshold h sets the false-alarm rate (via ARL)
+            alarms.append(t); sp = sm = 0.0      # trip and reset to keep detecting online
+    return alarms
+
+# concept drift is the same detector pointed at a model's error stream:
+#   cusum(rolling_error, mu0=baseline_error, sigma0=baseline_sd)  ->  "retrain me"
+```
+
+The detector is the two `max` lines; everything that matters — the false-alarm rate, the detection speed —
+is set by the single threshold `h`, chosen on the ARL curve.
+
+## 9. How would I explain it to a supervisor?
+
+"CUSUM is the cheap, online complement to the Bayesian change-point detector. It accumulates how far a
+stream has drifted from its in-control mean and trips when that sum crosses a threshold — two operations
+per data point, versus a full run-length posterior. I checked it recovers a known 1σ shift, which it caught
+in seven steps, and then I mapped its operating characteristic, which is the real lesson: the threshold is
+one knob that trades false alarms against detection speed — raising it takes the in-control false-alarm
+interval from 18 steps to 3,300 but slows detection from 3 to 16 steps. There's no free lunch, and every
+change detector lives on that curve. On the Nasdaq, run point-in-time on absolute returns, it flagged 69
+volatility-regime onsets over eleven years, including the COVID crash one day after the Bayesian detector,
+at a fraction of the cost. For my proposal it's the always-on tripwire in the structural-change specialist
+— a fast, cheap alarm that fires a conservative response before the expensive posterior is computed — and
+the same detector on my own agents' error rates is concept-drift detection, how the system knows a
+specialist has gone stale and needs down-weighting or refitting. And the trade-off is a governance point:
+the alarm threshold is a risk decision, so it should be set deliberately, knowing the exact false-alarm
+rate and delay it buys."
+
+::: {.status-note}
+Two-sided standardized CUSUM (slack $k=0.5$, optimal for a $1\sigma$ shift). Synthetic: $N(0,1)$ for 500
+steps then $N(1,1)$; with $h=5$ the one-sided statistic crosses at $t=507$ (delay 7). ARL operating
+characteristic by Monte Carlo (3,000 runs each): $h$ = 2/3/4/5/6/8 gives in-control ARL₀ ≈
+18/59/164/467/1,223/3,300 and mean detection delay for a $1\sigma$ shift ≈ 3.4/5.5/7.4/9.5/11.4/15.5. Real:
+Nasdaq daily 2015–2026, stream = standardized $|r_t|$ with in-control $\mu_{|r|}=0.0082$, $\sigma=0.0077$
+fixed on 2015; $k=0.5$, $h=6$ → 69 detections, including COVID 2020-02-25 (one day after the
+[BOCPD](../change-point-detection/index.qmd) run's 2020-02-24) and the 2022 sell-off from 2022-01-28. Every
+number was checked.
+:::
