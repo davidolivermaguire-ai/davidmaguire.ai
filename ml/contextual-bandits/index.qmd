@@ -1,0 +1,173 @@
+---
+title: "Contextual Bandits — Conditional Reliability, Learned"
+subtitle: "Choosing which expert to trust given the regime, from partial feedback — the transparent, provably-efficient alternative to full reinforcement learning"
+description: "The mechanism for condition-specific expert reliability, and the RL alternative the proposal names. LinUCB, verified on a task where each expert is best in a different regime, reaches the oracle exactly (0.75 vs 0.49 context-free) and recovers the routing perfectly. But pointed at real volatility forecasters routed by regime, it does not beat a fixed best expert (0.535 vs 0.539) — the conditional structure is real but too weak to exploit. Contextual bandits are the right tool for conditional reliability; whether it pays is an empirical question, and here it is another H7 null."
+date: 2026-08-06
+author: "David Maguire"
+categories: [decision systems, reinforcement learning]
+image: fig-contextual-bandits.png
+image-alt: "Three panels: LinUCB's cumulative regret flattening while a context-free bandit's grows linearly; a routing heatmap showing LinUCB sending each regime to its best expert; and a comparison showing contextual bandits reach the oracle on synthetic data but give no lift on real volatility forecasting."
+toc: true
+---
+
+The [expert-weighting entry](../online-expert-weighting/index.qmd) left a puzzle: adaptive weighting barely
+beat a simple average, because it combined the experts *unconditionally* — it never learned that a
+forecaster reliable in a calm market is useless in a crisis. The fix, in principle, is to **condition on the
+regime**: learn which expert to trust in which state. That is exactly what a **contextual bandit** does —
+it observes a context, picks an action, sees only the reward of what it picked, and learns a
+context→action policy with a regret guarantee. It is the [proposal's](../../phd/index.qmd) transparent
+alternative to full reinforcement learning, and the concrete mechanism for **conditional expert
+reliability**. This entry builds it, verifies it recovers conditional reliability perfectly when the
+structure is there — and reports honestly that, on real volatility forecasting, the structure is too weak
+to exploit.
+
+## 1. What problem does it solve?
+
+**Learning which action is best *for the current situation*, from partial feedback.** A full supervised
+model needs to know the right answer for every case; a bandit only ever sees the reward of the action it
+actually took, which is the realistic setting for a decision system — you find out how the trade you made
+did, not how the trades you didn't make would have done. The *contextual* bandit adds the crucial twist:
+the best action depends on an observed **context**, so it must learn a *policy*, not a single best action.
+Point the context at the market regime and the actions at the specialists, and the bandit learns
+**condition-specific reliability** — trust the volatility model in a crisis, the trend model in a calm
+trend — the missing ingredient from unconditional weighting. And it does this without the machinery of full
+[reinforcement learning](../markov-decision-processes/index.qmd): no long-horizon credit assignment, just a
+one-step decision with a provable regret bound, which is why the proposal treats it as the **transparent,
+auditable** option.
+
+## 2. LinUCB — optimism under uncertainty
+
+The workhorse is **LinUCB**. It assumes each arm's expected reward is linear in the context,
+$\mathbb{E}[r\mid x,a]=x^\top\theta_a$, keeps a ridge-regression estimate $\hat\theta_a=A_a^{-1}b_a$ per
+arm, and — the clever part — chooses the arm that maximises an **upper confidence bound**:
+
+$$a_t = \arg\max_a\; x_t^\top\hat\theta_a \;+\; \alpha\sqrt{x_t^\top A_a^{-1}x_t},$$
+
+then updates only the chosen arm, $A_{a}\mathrel{+}=x_tx_t^\top$, $b_{a}\mathrel{+}=r_t x_t$. The first term
+is exploitation (the estimated reward); the second is **exploration** — it inflates the value of arms whose
+reward is *uncertain* in this context, so the bandit tries them until it knows better. This "optimism under
+uncertainty" delivers a regret that grows only like $O(\sqrt{T})$: the average regret vanishes, so the
+policy converges to the best context-dependent one, with no hand-tuned exploration schedule.
+
+## 3. Verifying it recovers conditional reliability
+
+The clean test uses a task where the answer is known: three regimes, three experts, each expert reliable in
+a *different* regime (75% accurate in its own, 35% elsewhere) — the archetype of conditional reliability.
+The results are decisive. A **context-free** bandit, which cannot see the regime, is stuck at **0.49
+average reward** (it can only find one global-best arm, and there isn't one); **LinUCB reaches 0.750 —
+exactly the oracle**, the best any policy could do. And its learned routing (middle panel) is a **perfect
+identity**: it sends regime 0 to expert 0, regime 1 to expert 1, regime 2 to expert 2. Its cumulative
+regret flattens while the context-free bandit's grows linearly (left panel). When conditional reliability
+is real, the contextual bandit finds it, optimally — this is the mechanism working, verified against ground
+truth.
+
+![Left: cumulative regret against the oracle on the synthetic task — LinUCB's (blue) flattens as it learns the context→expert policy, while a context-free bandit's (grey) grows linearly because the best arm depends on a context it cannot see. Middle: LinUCB's learned routing is a perfect identity — each regime is sent to the expert that is reliable in it. Right: average reward — on synthetic data with strong conditional structure LinUCB equals the oracle (0.75 vs context-free 0.49), but on real volatility forecasting, where the conditional structure is weak, it gives no lift over a context-free bandit or a fixed best expert.](fig-contextual-bandits.png){fig-alt="LinUCB regret flattening while context-free grows; a routing heatmap showing perfect regime-to-expert routing; and a comparison where contextual bandits reach the oracle on synthetic data but give no lift on real volatility forecasting."}
+
+## 4. On real data — an honest null
+
+Now the real test. The arms are the three volatility forecasters from the
+[expert-weighting entry](../online-expert-weighting/index.qmd) — fast EWMA, slow EWMA, and HAR — the context
+is the current volatility regime, and the reward is each forecaster's accuracy; the bandit learns which
+forecaster to trust in which regime. The conditional structure *is* there: HAR is marginally best in calm
+and mid-volatility, the fast EWMA in high volatility. But the margins are **within the noise** — in the
+calm regime HAR scores 0.676 against the fast EWMA's 0.670 — and the consequence is unambiguous:
+**LinUCB (0.535) does not beat a context-free bandit (0.535) or simply always using the single best
+forecaster (0.539)**. The best-per-day oracle (0.635) is unreachable because most of that gap is luck, not
+learnable context. The contextual bandit paid nothing, and its exploration cost made it, if anything,
+marginally worse than the fixed choice.
+
+This is the same lesson the whole combination arc keeps returning: [ensembles](../ensemble-methods/index.qmd)
+help in proportion to *diversity*, adaptive [expert weighting](../online-expert-weighting/index.qmd) in
+proportion to a *changing winner*, and contextual bandits in proportion to *exploitable context-dependence*
+— and real markets often do not supply enough of any of them. It is a clean instance of the proposal's
+**H7**: the transparent baseline is not beaten by the more elaborate adaptive method, because the structure
+it needs to exploit is too weak. That the *method* is provably optimal when the structure exists (§3) and
+*still* does not pay here (§4) is exactly the honest, evidence-first result the proposal is built to
+produce.
+
+## 5. What are its strengths?
+
+- **A regret guarantee from partial feedback.** LinUCB learns a context→action policy at $O(\sqrt{T})$ regret, seeing only the reward of the action it took — the realistic decision setting, handled with a proof.
+- **It is the conditional-reliability mechanism.** Context = regime, arms = experts: it learns which specialist to trust in which state, and recovers that routing exactly when it exists (verified identity map).
+- **Transparent and auditable.** A linear reward model per arm with inspectable weights is the control-first alternative to opaque deep RL — you can see *why* it routed as it did.
+- **Principled, schedule-free exploration.** Optimism under uncertainty explores exactly the arms it is unsure about, with no hand-tuned $\epsilon$ or annealing.
+- **One-step and sample-efficient.** No long-horizon credit assignment, so it is far more stable and data-thrifty than full sequential RL — the right tool when the decision is essentially myopic.
+
+## 6. What are its weaknesses?
+
+- **It only pays with exploitable context-dependence.** The real null is the headline weakness: when the best action barely depends on context, or the dependence is within estimation noise, the bandit gives no lift and its exploration can cost — verify the structure, do not assume it.
+- **Linearity is an assumption.** LinUCB models reward as linear in the context; poor or nonlinear features mislead it (kernel and neural bandits relax this, at the cost of the clean guarantee).
+- **Exploration has a price.** Trying suboptimal arms to learn is costly in high-stakes, low-repetition settings — you may not get enough pulls to justify the exploration before the world changes.
+- **It is myopic.** It optimises immediate reward and ignores that today's action can change tomorrow's state — the gap that full [reinforcement learning](../ppo/index.qmd) exists to fill, at the price of stability.
+- **Stationarity is assumed.** Reliability that drifts breaks a vanilla bandit; it needs discounting or sliding windows, the same non-stationarity caveat as everything on this site.
+
+## 7. How could it apply to markets?
+
+In the [proposal](../../phd/index.qmd) contextual bandits are the **transparent RL comparator** for the
+weighting and allocation decision — the method §9.2 lists alongside deterministic rules and Bayesian
+updating precisely because it offers a regret guarantee and an auditable policy without full RL's opacity
+and instability. Their natural job is **conditional expert reliability**: routing among specialists by
+regime, which is the honest version of the "condition-specific reliability histories" the architecture
+needs so the [consensus engine](../hypothesis-reconciliation/index.qmd) can weight each specialist by what
+it is worth *now*. The demonstration sets the design rule directly. The mechanism is correct and provably
+optimal when reliability is context-dependent — so it belongs in the toolkit — but the real-data null says
+it must earn its place on evidence: only deploy context-conditional routing where the conditional structure
+is *shown* to be strong enough to beat a fixed best expert, exactly as the [regime-conditioning
+experiment](../../quant-lab/regime-conditioning-oos/index.qmd) found that a discrete regime added nothing
+over volatility for sizing. Contextual bandits are how a control-first system does adaptive selection with a
+guarantee and an audit trail; the discipline is to use them where they pay and to say so honestly when they
+do not.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+
+def linucb(contexts, reward, K, alpha=1.0):
+    """contexts: T x d. reward(t, a): bandit feedback for the chosen arm only."""
+    T, d = contexts.shape
+    A = [np.eye(d) for _ in range(K)]          # per-arm covariance (ridge)
+    b = [np.zeros(d) for _ in range(K)]
+    chosen = np.zeros(T, int)
+    for t in range(T):
+        x = contexts[t]
+        ucb = np.empty(K)
+        for a in range(K):
+            Ainv = np.linalg.inv(A[a]); theta = Ainv @ b[a]
+            ucb[a] = x @ theta + alpha * np.sqrt(x @ Ainv @ x)   # exploit + optimism
+        a = int(np.argmax(ucb)); r = reward(t, a)                # see only the chosen arm's reward
+        A[a] += np.outer(x, x); b[a] += r * x                    # update just that arm
+        chosen[t] = a
+    return chosen
+```
+
+With `contexts = onehot(regime)` and the arms as experts, the learned policy *is* a table of which
+specialist to trust in which regime — conditional reliability, learned online with a guarantee.
+
+## 9. How would I explain it to a supervisor?
+
+"Contextual bandits are the transparent alternative to full RL, and they're how I'd learn condition-specific
+expert reliability — trust the volatility model in a crisis, the trend model in a calm market. LinUCB keeps
+a linear reward estimate per arm and picks the arm with the highest upper confidence bound, so it explores
+exactly what it's unsure about, with square-root-T regret. I verified it on a task where each of three
+experts is best in a different regime: a context-free bandit is stuck at 0.49 average reward, but LinUCB
+reaches 0.75 — exactly the oracle — and its learned routing is a perfect identity, each regime to its
+expert. So the mechanism works. Then I ran it for real, routing among three volatility forecasters by
+volatility regime, and it was an honest null — LinUCB scored 0.535 versus 0.539 for just using the single
+best forecaster, because the conditional structure, while real, is within the noise. That's the same lesson
+as my ensemble and expert-weighting work and it's my H7: adaptive methods only beat simple baselines in
+proportion to the structure there is to exploit, and real markets often don't supply enough. For my
+proposal, contextual bandits are the right, auditable tool for conditional reliability — but the discipline
+is to deploy them only where the context-dependence is demonstrably strong, not assumed."
+
+::: {.status-note}
+Synthetic: 3 regimes × 3 arms, each arm reliable in one regime (P = 0.75 in-regime, 0.35 otherwise),
+T = 6,000, one-hot context. Average reward: random 0.494, best-fixed-arm 0.485, context-free UCB 0.491,
+**LinUCB 0.750, oracle 0.750**; LinUCB routing is the exact identity (second-half arm-choice frequency 1.00
+on the diagonal). Regret vs oracle sublinear for LinUCB, linear for context-free. Real: NDX daily 2015–2026;
+arms = fast EWMA (λ0.90), slow EWMA (λ0.985), HAR volatility forecasts of $|r_{t+1}|$; reward
+$=1/(1+\text{sq.\,error}/\text{median})$; context = one-hot volatility tercile of 20-day realized vol;
+LinUCB $\alpha=0.3$. Mean reward: fast 0.535, slow 0.495, HAR 0.539; best-fixed 0.539, context-free bandit
+0.535, **LinUCB 0.535**, best-per-day oracle 0.635. Per-context best forecaster: low-vol HAR (0.676 vs fast
+0.670), mid-vol HAR, high-vol fast EWMA — margins within noise. Every number was checked.
+:::
