@@ -75,8 +75,8 @@ specialist and combination layer, built out here one entry at a time to the same
 [ensemble methods & model combination](ensemble-methods/), [online expert weighting](online-expert-weighting/),
 [state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/),
 [cross-asset dependence (DCC)](cross-asset-dependence/), [CUSUM & concept-drift detection](cusum-drift/) and
-[Bayesian hypothesis reconciliation](hypothesis-reconciliation/) — the **seven core specialist and
-combination methods are built and verified**; a couple of secondary items (liquidity-stress anomaly
-detection, a contextual-bandit comparator) remain.
+[Bayesian hypothesis reconciliation](hypothesis-reconciliation/) and
+[liquidity-stress anomaly detection](liquidity-anomaly/) — **built and verified**; a contextual-bandit
+comparator and the formal strategy-suitability council are the last items still to add.
 
 :::
