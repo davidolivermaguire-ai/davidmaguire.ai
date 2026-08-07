@@ -2,7 +2,7 @@
 title: "Model Explainability"
 subtitle: "Opening the black box — what the model uses, how it uses it, and why the default answer misleads"
 description: "Explainability turns 'the model predicts X' into 'the model predicts X because…'. Global versus local explanations, why impurity-based feature importance is biased, permutation importance, partial dependence — demonstrated on a Nasdaq volatility model with a planted noise feature."
-date: 2026-07-27
+order: 35
 author: "David Maguire"
 categories: [quant-specific ML, explainability]
 image: fig-model-explainability.png

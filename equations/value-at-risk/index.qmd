@@ -2,7 +2,7 @@
 title: "Value at Risk & Expected Shortfall"
 subtitle: "The loss you won't exceed most days — and the average of the days you do"
 description: "VaR and Expected Shortfall (CVaR): the two standard tail-risk numbers. Historical vs Gaussian VaR, why ES is the coherent measure, and a Nasdaq-100 example where the normal model understates the tail."
-date: 2026-07-22
+order: 32
 author: "David Maguire"
 categories: [quant finance, risk]
 image: fig-var-es.png

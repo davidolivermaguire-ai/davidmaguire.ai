@@ -2,7 +2,7 @@
 title: "Sortino Ratio"
 subtitle: "Sharpe, but only the downside counts — reward per unit of harmful risk"
 description: "The Sortino ratio: excess return over downside deviation instead of total volatility. Why it stops penalising upside, the divide-by-n convention, and a Nasdaq-100 basket where it reranks Sharpe."
-date: 2026-07-22
+order: 24
 author: "David Maguire"
 categories: [quant finance, performance]
 image: fig-sharpe-vs-sortino.png

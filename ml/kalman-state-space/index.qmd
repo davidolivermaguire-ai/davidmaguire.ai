@@ -2,7 +2,7 @@
 title: "The Kalman Filter & State-Space Models"
 subtitle: "Optimal real-time estimation of a hidden, drifting state — the linear-Gaussian filter behind trend extraction, time-varying beta, and the belief state a POMDP needs"
 description: "The workhorse for estimating a latent state that evolves over time, in real time, with honest uncertainty. Implemented from scratch and verified against statsmodels to 2.8e-10, it recovers a known drifting β on synthetic data (95.9% coverage of its 2σ band) and tracks AAPL's genuinely time-varying β to the Nasdaq (median 1.04, drifting 0.67–1.27). It is the linear-Gaussian cousin of the HMM forward filter — and it makes the site's filtered-vs-smoothed look-ahead point exactly: the smoothed estimate 'peeks', revising the real-time one by 0.08 using the future."
-date: 2026-08-06
+order: 8
 author: "David Maguire"
 categories: [decision systems, filtering]
 image: fig-kalman-state-space.png

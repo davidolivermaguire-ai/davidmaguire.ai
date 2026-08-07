@@ -6,7 +6,7 @@ description: >
   case for it — hallucination, non-determinism, miscalibration, and above all prompt injection through
   the untrusted text the News Agent reads — and the deterministic risk gate that enforces it, so that a
   useful but untrustworthy model can inform every decision and make none.
-date: 2026-07-31
+order: 11
 author: "David Maguire"
 categories: [safety]
 toc: true

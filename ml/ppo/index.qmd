@@ -2,7 +2,7 @@
 title: "Proximal Policy Optimisation (PPO)"
 subtitle: "A clipped objective that makes policy updates safe to repeat — the workhorse of modern RL"
 description: "PPO fixes the two failings of vanilla policy gradients — step-size fragility and no sample reuse — with a clipped surrogate objective that acts as a built-in trust region. Demonstrated on the regime environment: stable convergence to the analytic optimum, and the clip capping updates on a fixed batch."
-date: 2026-07-31
+order: 18
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-ppo.png

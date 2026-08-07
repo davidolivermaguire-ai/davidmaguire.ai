@@ -7,7 +7,7 @@ description: >
   aggressive 2× Nasdaq strategy takes its drawdown from −63% to −26% at a return cost — but the test
   also shows which limits earn their keep (leverage caps, volatility budgets) and which backfire
   (drawdown kill-switches).
-date: 2026-07-31
+order: 3
 author: "David Maguire"
 categories: [risk, constraints, out-of-sample, viability]
 image: fig-hard-risk-limits.png

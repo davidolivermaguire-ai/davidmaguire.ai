@@ -2,7 +2,7 @@
 title: "The Cost Function"
 subtitle: "The thing a model minimises — how learning becomes optimisation"
 description: "The cost function J(θ): one number scoring how wrong a model is, as a function of its parameters. Loss vs cost, convex vs non-convex landscapes, why the choice of cost defines the model, and Nasdaq examples."
-date: 2026-07-22
+order: 27
 author: "David Maguire"
 categories: [machine learning, optimisation]
 image: fig-cost-landscape.png

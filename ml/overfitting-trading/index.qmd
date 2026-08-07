@@ -2,7 +2,7 @@
 title: "Overfitting in Trading Systems"
 subtitle: "Try enough strategies and one looks brilliant by luck — backtest overfitting and how to deflate it"
 description: "Even with clean data, no leakage, and honest validation, searching over many strategies inflates the best in-sample performance. The maximum-of-N mechanism, why in-sample rank says nothing about out-of-sample, the deflated Sharpe ratio, and the probability of backtest overfitting."
-date: 2026-07-27
+order: 37
 author: "David Maguire"
 categories: [quant-specific ML, validation]
 image: fig-overfitting-trading.png

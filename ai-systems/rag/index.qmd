@@ -6,7 +6,7 @@ description: >
   RAG is the layer that grounds the model in retrieved, current, authoritative source text so it reasons
   over facts you provide rather than facts it half-remembers. How it works, the real code, why every
   retrieval must be point-in-time, and what it does and does not fix.
-date: 2026-07-31
+order: 6
 author: "David Maguire"
 categories: [news agent, safety]
 toc: true

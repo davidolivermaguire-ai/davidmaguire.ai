@@ -6,7 +6,7 @@ description: >
   That framing is already out of date: by 2026 there are three distinct families, and the useful
   question is not which is best but which belongs where — a discrimination a market system depends on,
   and one the efficient market puts a hard ceiling on.
-date: 2026-07-31
+order: 4
 author: "David Maguire"
 categories: [foundations]
 toc: true

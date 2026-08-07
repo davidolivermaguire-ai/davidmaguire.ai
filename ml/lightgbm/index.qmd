@@ -2,7 +2,7 @@
 title: "LightGBM"
 subtitle: "Gradient boosting, made fast — leaf-wise growth and histogram binning"
 description: "LightGBM is gradient boosting like XGBoost, but with leaf-wise tree growth and histogram-based splits that make it 25–50× faster at the same accuracy. What's different, why it's faster, and when leaf-wise growth overfits."
-date: 2026-07-27
+order: 31
 author: "David Maguire"
 categories: [foundation models, ensembles]
 image: fig-lightgbm.png

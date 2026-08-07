@@ -2,7 +2,7 @@
 title: "The Sigmoid Function"
 subtitle: "Turning any score into a probability — the S-curve behind logistic regression"
 description: "The sigmoid σ(z)=1/(1+e⁻ᶻ): squashing any real score into (0,1). The logit inverse, the σ(1−σ) derivative and vanishing gradients, logistic regression, and an honest Nasdaq up/down fit."
-date: 2026-07-22
+order: 30
 author: "David Maguire"
 categories: [machine learning, classification]
 image: fig-sigmoid.png

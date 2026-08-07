@@ -2,7 +2,7 @@
 title: "Z-score & the Normal Distribution"
 subtitle: "Standardising a value, the bell curve it lives on — and why returns refuse to fit it"
 description: "The z-score (how many standard deviations from the mean) and the normal distribution it maps onto: the 68-95-99.7 rule, the central limit theorem, and the fat-tailed reality that breaks the Gaussian assumption in markets."
-date: 2026-07-22
+order: 35
 author: "David Maguire"
 categories: [core statistics, distributions]
 image: fig-normal.png

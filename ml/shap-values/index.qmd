@@ -2,7 +2,7 @@
 title: "SHAP Values"
 subtitle: "Game-theoretic attribution — the unique fair split of a prediction across its features"
 description: "SHAP assigns each feature its Shapley value: the fair share of a prediction under axioms from cooperative game theory, with contributions that sum exactly to the prediction minus the baseline. Exact Shapley computation, a per-day waterfall on the Nasdaq volatility model, and the beeswarm view."
-date: 2026-07-27
+order: 42
 author: "David Maguire"
 categories: [quant-specific ML, explainability]
 image: fig-shap-values.png

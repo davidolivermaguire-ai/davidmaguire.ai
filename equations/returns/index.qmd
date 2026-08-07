@@ -2,7 +2,7 @@
 title: "Simple, Log & Cumulative Returns"
 subtitle: "Turning prices into returns — the two conventions, and how to chain them over time"
 description: "The three ways to express a return: simple (percentage change), log (continuously compounded), and cumulative (total over a period). Why log returns add across time and simple returns average across assets, and the classic compounding trap."
-date: 2026-07-22
+order: 22
 author: "David Maguire"
 categories: [quant finance, returns]
 image: fig-simple-vs-log.png

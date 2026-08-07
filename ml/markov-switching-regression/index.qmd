@@ -2,7 +2,7 @@
 title: "Markov-Switching Regression"
 subtitle: "When the relationship itself has regimes — a regression whose coefficients switch with a hidden Markov state"
 description: "The HMM switches the distribution of returns; Markov-switching regression switches a relationship. Fit to a defensive stock's beta on the Nasdaq, it finds that beta doubles in the turbulent regime — the 'correlations converge in a crisis' effect, made a parameter. Validated by recovering a known switching-beta model exactly, with an independent Hamilton filter reproducing the likelihood to twelve decimals."
-date: 2026-07-31
+order: 14
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-markov-switching-regression.png

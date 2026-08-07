@@ -6,7 +6,7 @@ description: >
   the natural question: can you trade it? A pre-specified test of volatility-managed
   portfolios on the Nasdaq-100 — in-sample vs out-of-sample, leverage-capped,
   net of costs — with the answer that risk control, not alpha, is what survives.
-date: 2026-07-31
+order: 1
 author: "David Maguire"
 categories: [strategy, volatility, out-of-sample, replication]
 image: fig-volatility-managed.png

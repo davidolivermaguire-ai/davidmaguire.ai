@@ -2,7 +2,7 @@
 title: "K-Means Clustering"
 subtitle: "The first unsupervised model — finding groups in data with no labels to guide it"
 description: "K-means partitions unlabelled data into k groups by minimising within-cluster distance to a centroid. Lloyd's algorithm, the elbow and silhouette for choosing k, and a Nasdaq test where it recovers calm, sell-off, and rally regimes it was never told about."
-date: 2026-07-27
+order: 30
 author: "David Maguire"
 categories: [foundation models, clustering]
 image: fig-kmeans.png

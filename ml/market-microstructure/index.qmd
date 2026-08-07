@@ -2,7 +2,7 @@
 title: "Market Microstructure & Execution Modelling"
 subtitle: "The last mile — the spread you pay, the price you move, and how to liquidate optimally"
 description: "A signal is worthless if execution costs eat the edge. Market microstructure is the anatomy of a traded price — spread, order flow, impact — and optimal execution is the discipline of trading a position at least cost. The Almgren–Chriss efficient frontier of execution, its closed-form trajectory verified against a numerical optimizer to machine precision, and the square-root impact law calibrated to the Nasdaq."
-date: 2026-07-31
+order: 12
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-market-microstructure.png

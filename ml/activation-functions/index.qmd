@@ -2,7 +2,7 @@
 title: "Activation Functions"
 subtitle: "The nonlinearity that makes depth work — and why ReLU unlocked deep learning"
 description: "Activation functions inject the nonlinearity without which a deep network collapses to a single linear map. Sigmoid, tanh, ReLU and its variants, the vanishing-gradient problem that stalled deep learning, and why ReLU fixed it."
-date: 2026-07-27
+order: 21
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-activation-functions.png

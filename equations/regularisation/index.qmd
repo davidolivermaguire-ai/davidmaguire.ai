@@ -2,7 +2,7 @@
 title: "Regularisation"
 subtitle: "Penalising complexity to fight overfitting — trading a little bias for a lot less variance"
 description: "Regularisation adds a complexity penalty λR(θ) to the loss, so a model fits the data while staying simple. The bias-variance dial, weight shrinkage, why markets demand it, and an honest Nasdaq overfitting experiment."
-date: 2026-07-22
+order: 20
 author: "David Maguire"
 categories: [machine learning, optimisation]
 image: fig-regularisation.png

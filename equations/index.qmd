@@ -5,12 +5,11 @@ listing:
   id: published-equations
   contents: "*/index.qmd"
   type: default
-  sort: "date desc"
-  fields: [date, title, description, categories, reading-time]
+  sort: "order"
+  fields: [title, description, categories, reading-time]
   categories: true
   sort-ui: false
   filter-ui: false
-  feed: true
 toc: true
 ---
 

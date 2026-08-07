@@ -2,7 +2,7 @@
 title: "EGARCH, GJR & HAR-RV — Asymmetric and Realized Volatility"
 subtitle: "Two things vanilla GARCH misses: the leverage effect (down moves raise vol more) and the forecasting power of a realized measure"
 description: "Extending the GARCH entry with the models a volatility specialist actually uses. On the Nasdaq, next-day realized vol is 0.95% after down days vs 0.77% after up days — a leverage effect that GJR (γ=+0.15, t 4.2) and EGARCH (γ=−0.13, t −5.7) both capture, beating symmetric GARCH decisively on BIC (9202→9143→9118). And HAR-RV, a three-line regression on a Garman-Klass realized measure, forecasts next-day volatility better out-of-sample (QLIKE 0.70) than GARCH (0.87) or a random walk (0.99) — because it is fit directly on the realized measure."
-date: 2026-08-06
+order: 5
 author: "David Maguire"
 categories: [decision systems, volatility]
 image: fig-egarch-har.png

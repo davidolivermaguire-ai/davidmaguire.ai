@@ -2,7 +2,7 @@
 title: "Multi-Agent Systems & Credit Assignment"
 subtitle: "When several agents share one P&L — Markov games, and the fair attribution of a joint outcome"
 description: "The proposal is a team of agents that together produce one P&L; the Review & Learning Agent must say who earned it. Markov games are the formal framework, and Shapley values the fair attribution. Applied to a four-agent Nasdaq strategy, credit assignment overturns the naïve story: leave-one-out gets vol-targeting's sign wrong, and the same agents earn opposite credit under a drawdown objective — with the efficiency axiom verified to machine precision."
-date: 2026-07-31
+order: 15
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-multi-agent-systems.png

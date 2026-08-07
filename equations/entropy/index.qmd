@@ -2,7 +2,7 @@
 title: "Entropy"
 subtitle: "The average surprise in a distribution — the unit of uncertainty behind cross-entropy and decision trees"
 description: "Shannon entropy H = −Σ p log p: the average surprise, or uncertainty, in a distribution. Bits vs nats, why it maxes at uniform, the link to cross-entropy and information gain, and the Nasdaq's near-maximal daily uncertainty."
-date: 2026-07-22
+order: 10
 author: "David Maguire"
 categories: [machine learning, information theory]
 image: fig-entropy.png

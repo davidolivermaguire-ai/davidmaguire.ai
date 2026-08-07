@@ -2,7 +2,7 @@
 title: "Time-Series Cross-Validation"
 subtitle: "From one honest backtest to a distribution of them — purged K-fold and combinatorial purged CV"
 description: "Walk-forward gives one out-of-sample path; you can't tell a robust edge from a lucky split. The family of leakage-free temporal CV schemes — purged K-fold and combinatorial purged cross-validation — turns a single backtest into a distribution, on a Nasdaq volatility task."
-date: 2026-07-27
+order: 44
 author: "David Maguire"
 categories: [quant-specific ML, validation]
 image: fig-time-series-cross-validation.png

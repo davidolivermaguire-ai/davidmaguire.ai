@@ -2,7 +2,7 @@
 title: "Cross-Entropy Loss"
 subtitle: "Scoring probabilities by their surprise — the loss that pairs with sigmoid and softmax"
 description: "Cross-entropy: −Σ y·log p, the classification loss. Why it punishes confident-wrong predictions, equals maximum likelihood, has a clean (p−y) gradient with sigmoid/softmax, and an honest Nasdaq log-loss scorecard."
-date: 2026-07-22
+order: 9
 author: "David Maguire"
 categories: [machine learning, classification]
 image: fig-cross-entropy.png

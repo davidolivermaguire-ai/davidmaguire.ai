@@ -2,7 +2,7 @@
 title: "Gradient Descent"
 subtitle: "Rolling downhill to the minimum — the algorithm that trains almost everything"
 description: "Gradient descent: θ ← θ − η∇J(θ). Step against the gradient to minimise a cost. The learning rate, convergence and divergence, batch vs stochastic, and why it scales where formulas can't."
-date: 2026-07-22
+order: 13
 author: "David Maguire"
 categories: [machine learning, optimisation]
 image: fig-gradient-descent.png

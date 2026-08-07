@@ -7,7 +7,7 @@ description: >
   must not build. Real coordination is a structured, typed shared state, a fixed decision flow, a
   deterministic arbiter with the final say, and honest uncertainty carried through. The engineering of
   coordination, and how it meets the game theory the ML tier already formalised.
-date: 2026-07-31
+order: 5
 author: "David Maguire"
 categories: [agents, safety]
 toc: true

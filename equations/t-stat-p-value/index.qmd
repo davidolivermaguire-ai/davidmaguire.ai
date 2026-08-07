@@ -2,7 +2,7 @@
 title: "t-statistic, p-value & Confidence Interval"
 subtitle: "Is the result real or noise? — the standard error, and the three numbers that decide"
 description: "Statistical significance for a mean or a strategy: the standard error, the t-statistic, the p-value, and the confidence interval. Why the t-stat of a year's return equals its Sharpe, and why proving an edge takes so long."
-date: 2026-07-22
+order: 36
 author: "David Maguire"
 categories: [core statistics, inference]
 image: fig-years-to-significance.png

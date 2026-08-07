@@ -2,7 +2,7 @@
 title: "Feature Engineering for Returns"
 subtitle: "Turning raw prices into stationary, informative, leak-free predictors — where most of the edge lives"
 description: "In applied quant ML the features matter more than the model. Making prices stationary, building lag/volatility/momentum features point-in-time, the stationarity–memory trade-off, and an honest test of which features predict direction versus volatility on the Nasdaq."
-date: 2026-07-27
+order: 28
 author: "David Maguire"
 categories: [quant-specific ML, feature engineering]
 image: fig-feature-engineering.png

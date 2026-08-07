@@ -2,7 +2,7 @@
 title: "Support Vector Machines"
 subtitle: "The maximum-margin classifier — and the kernel trick for nonlinear boundaries"
 description: "SVMs find the separating boundary with the widest margin, defined by a few support vectors, and use kernels to draw nonlinear boundaries without mapping to high dimensions. The margin, hinge loss, soft-margin C, and a Nasdaq test."
-date: 2026-07-27
+order: 43
 author: "David Maguire"
 categories: [foundation models, classification]
 image: fig-svm.png

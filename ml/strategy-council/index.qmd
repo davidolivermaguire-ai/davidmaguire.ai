@@ -2,7 +2,7 @@
 title: "The Strategy-Suitability Council"
 subtitle: "Turning the market-state estimate into a strategy choice — and the honest test of whether regime-conditioned selection actually helps"
 description: "The proposal's strategy layer, and the test of H5. A council that routes among trend, mean-reversion and defensive strategies by regime, with a hand-designed suitability mapping, underperforms plain diversification (Sharpe 0.39 vs 0.58) — because the intuitive mapping is empirically wrong: trend beats mean-reversion even in 'range' regimes, and mean-reversion beats cash in 'stress.' Learn the mapping from data instead and the council flips to 0.66, beating static — but buy-and-hold's 0.84 still tops all timing. Suitability must be learned, not assumed."
-date: 2026-08-06
+order: 9
 author: "David Maguire"
 categories: [decision systems, strategy]
 image: fig-strategy-council.png

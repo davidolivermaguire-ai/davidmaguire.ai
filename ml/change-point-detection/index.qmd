@@ -2,7 +2,7 @@
 title: "Bayesian Change-Point Detection"
 subtitle: "Detecting a regime shift the day it happens — the run-length posterior, and a real-time alarm for the market's turning points"
 description: "The HMM labels regimes in hindsight; a live system needs to know a regime has changed as it happens, from data up to today only. Bayesian Online Change-Point Detection maintains a posterior over the time since the last change and signals when it collapses. Validated on synthetic ground truth (latency 1/8/3 steps), then run online on the Nasdaq — flagging the COVID crash and the 2022 bear onset with no look-ahead."
-date: 2026-07-31
+order: 11
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-change-point-detection.png

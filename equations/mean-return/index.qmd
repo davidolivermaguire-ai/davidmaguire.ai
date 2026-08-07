@@ -2,7 +2,7 @@
 title: "Mean Return"
 subtitle: "The first moment of a return series — and why it is not the growth you earned"
 description: "The arithmetic mean return: estimator of E[r], its gap to compound growth (the volatility drag), and a worked Nasdaq-100 example — by hand, in Python, and in Excel."
-date: 2026-07-07
+order: 37
 author: "David Maguire"
 categories: [core statistics, returns]
 image: fig-ndx-mean-return.png

@@ -2,7 +2,7 @@
 title: "Bayesian Hypothesis Reconciliation — the Consensus Engine"
 subtitle: "Comparing competing market-state explanations instead of averaging incompatible model scores — the layer that turns a pile of specialists into a system"
 description: "The capstone of the specialist tier. Instead of averaging model outputs, it treats each specialist as evidence with a learned, state-dependent reliability and computes a posterior over competing market-state hypotheses. On a known three-state process it beats averaging and voting on both accuracy (0.78 vs 0.73 vs 0.70) and calibration (log-loss 0.55 vs 0.64 vs 0.83), because each specialist is reliable in a different state; its posterior entropy runs 31% higher at transitions — it knows when it doesn't know; and it holds on real Nasdaq vol-states (0.74 vs 0.68)."
-date: 2026-08-06
+order: 1
 author: "David Maguire"
 categories: [decision systems, consensus]
 image: fig-hypothesis-reconciliation.png

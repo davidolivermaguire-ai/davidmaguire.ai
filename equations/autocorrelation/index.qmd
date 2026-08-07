@@ -2,7 +2,7 @@
 title: "Autocorrelation"
 subtitle: "How a series relates to its own past — and why returns forget but volatility remembers"
 description: "Autocorrelation: the correlation of a time series with a lagged version of itself. The ACF, the significance band, and the two great stylised facts — returns are barely predictable, but volatility clusters."
-date: 2026-07-22
+order: 3
 author: "David Maguire"
 categories: [time series, core statistics]
 image: fig-acf.png

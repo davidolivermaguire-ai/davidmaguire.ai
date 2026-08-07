@@ -4,10 +4,9 @@ description: "Reproducible strategy experiments — explicit hypotheses, sound m
 listing:
   contents: "*/index.qmd"
   type: default
-  sort: "date desc"
-  fields: [date, title, description, categories, reading-time]
+  sort: "order"
+  fields: [title, description, categories, reading-time]
   categories: true
-  feed: true
 toc: true
 ---
 

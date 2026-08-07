@@ -2,7 +2,7 @@
 title: "Long Short-Term Memory (LSTM)"
 subtitle: "The gated cell state that lets gradients flow across hundreds of steps"
 description: "LSTMs fix the RNN's vanishing gradient with a cell state whose additive, gated updates make the gradient through time a product of forget gates rather than repeated weight multiplication. The cell, the gates, the constant error carousel, and why longer memory still finds nothing in returns."
-date: 2026-07-27
+order: 34
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-lstms.png

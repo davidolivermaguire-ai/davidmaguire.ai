@@ -2,7 +2,7 @@
 title: "Liquidity-Stress Anomaly Detection"
 subtitle: "Learning what 'normal' market conditions look like, and flagging the departures — the unsupervised tripwire of the liquidity specialist"
 description: "The liquidity specialist's detector: unsupervised anomaly detection on microstructure-stress features. An Isolation Forest recovers injected anomalies at 0.95 precision/recall, and on the Nasdaq it flags 5% of days that concentrate 5.4× into known crises and precede sharply higher volatility (41.6% vs 17.3% forward). Crucially, 18% of its flags are 'quiet illiquidity' — wide intraday ranges with no big close-to-close move — exactly the stress a simple return threshold misses."
-date: 2026-08-06
+order: 6
 author: "David Maguire"
 categories: [decision systems, anomaly detection]
 image: fig-liquidity-anomaly.png

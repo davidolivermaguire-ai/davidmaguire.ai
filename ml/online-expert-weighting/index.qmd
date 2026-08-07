@@ -2,7 +2,7 @@
 title: "Online Expert Weighting (Prediction with Expert Advice)"
 subtitle: "Hedge and multiplicative weights — combining forecasters online, with a provable guarantee of doing almost as well as the best one in hindsight"
 description: "The adaptive successor to static ensembles. When several forecasters compete and the best one changes with the regime, the Hedge algorithm updates their weights online and is provably almost as good as the best expert in hindsight — no foreknowledge required. On four volatility forecasters whose ranking genuinely rotates across 2015–2026, Hedge matched the best single expert (mean loss 0.068 vs 0.064), beat equal-weighting (0.078) and drove the weak expert's weight to zero, with cumulative regret 11.5 against a worst-case bound of 44.3 — while the fancier 'forgetting' variant did not help, an honest H7 null."
-date: 2026-08-06
+order: 7
 author: "David Maguire"
 categories: [decision systems, online learning]
 image: fig-online-expert-weighting.png

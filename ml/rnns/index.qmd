@@ -2,7 +2,7 @@
 title: "Recurrent Neural Networks"
 subtitle: "Processing sequences step by step with a hidden state — memory, and the gradient that won't reach back"
 description: "An RNN reads a sequence one step at a time, carrying a hidden state as memory, with the same weights shared across time. Backpropagation through time, the vanishing/exploding gradient that caps its memory, and an honest Nasdaq sequence test."
-date: 2026-07-27
+order: 40
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-rnns.png

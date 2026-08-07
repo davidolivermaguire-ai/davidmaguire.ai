@@ -2,7 +2,7 @@
 title: "Neural Networks"
 subtitle: "The multilayer perceptron — stacked nonlinear units that can approximate any function"
 description: "A neural network stacks layers of weighted sums and nonlinear activations, trained by backpropagation and gradient descent. The forward pass, why the nonlinearity matters, universal approximation — and an honest Nasdaq test where its power mostly lets it overfit."
-date: 2026-07-27
+order: 36
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-neural-networks.png

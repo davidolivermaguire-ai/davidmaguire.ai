@@ -2,7 +2,7 @@
 title: "Principal Component Analysis"
 subtitle: "Compressing many correlated features into a few uncorrelated directions of maximum variance"
 description: "PCA rotates correlated features onto orthogonal axes ordered by variance, keeping the few that matter. The eigen-decomposition, the scree plot, and a Nasdaq test where PC1 turns out to be the market factor and PC2 a staples-vs-tech contrast."
-date: 2026-07-27
+order: 38
 author: "David Maguire"
 categories: [foundation models, dimensionality reduction]
 image: fig-pca.png

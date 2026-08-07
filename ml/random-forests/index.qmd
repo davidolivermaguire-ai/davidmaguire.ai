@@ -2,7 +2,7 @@
 title: "Random Forests"
 subtitle: "Averaging many decorrelated trees — variance cancelled, overfitting tamed"
 description: "A random forest bootstraps rows and randomises features to grow many decorrelated trees, then averages them so their variance cancels. The bagging maths, OOB validation, and a Nasdaq test where it finds volatility signal a single tree misses."
-date: 2026-07-27
+order: 39
 author: "David Maguire"
 categories: [foundation models, ensembles]
 image: fig-random-forests.png

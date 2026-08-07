@@ -2,7 +2,7 @@
 title: "Sharpe Ratio"
 subtitle: "Return per unit of risk — the number that turns a return series into a verdict"
 description: "The Sharpe ratio: excess return over volatility, the field's standard risk-adjusted performance measure. √252 annualisation, the risk-free rate, and a Nasdaq-100 basket where the highest return is not the highest Sharpe."
-date: 2026-07-22
+order: 21
 author: "David Maguire"
 categories: [quant finance, performance]
 image: fig-risk-return.png

@@ -2,7 +2,7 @@
 title: "Attention"
 subtitle: "Content-based retrieval — the mechanism, the √d scaling, and self vs cross"
 description: "Attention is a differentiable, content-based lookup: a query retrieves a similarity-weighted blend of values. Scaled dot-product attention and why the √d matters, multi-head attention, and the difference between self- and cross-attention."
-date: 2026-07-27
+order: 22
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-attention.png

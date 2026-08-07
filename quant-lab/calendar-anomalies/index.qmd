@@ -7,7 +7,7 @@ description: >
   corrections, exactly one clears p<0.05 (fewer than chance predicts), none survive multiple-testing
   correction, and it fails to replicate out of sample. A worked demonstration of the discipline the
   whole site runs on.
-date: 2026-07-31
+order: 2
 author: "David Maguire"
 categories: [statistics, multiple-testing, anomalies, discipline]
 image: fig-calendar-anomalies.png

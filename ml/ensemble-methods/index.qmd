@@ -2,7 +2,7 @@
 title: "Ensemble Methods & Model Combination"
 subtitle: "Equal weighting, majority vote, Bayesian model averaging and stacking — and the diversity that decides whether combining helps at all"
 description: "The consensus baselines any fancier reconciliation layer must beat. On a genuinely forecastable target (next-day turbulence, AUC≈0.67), four base models combined four ways: Bayesian model averaging edged the best single model (Brier 0.2099 vs 0.2102), equal-weight matched it, stacking over-fit, and hard majority-vote was catastrophic — because the base models were 0.97-correlated. The lesson is the variance-reduction identity: an ensemble helps in proportion to base-model *diversity*, not count."
-date: 2026-08-04
+order: 10
 author: "David Maguire"
 categories: [decision systems, ensembles]
 image: fig-ensemble-methods.png

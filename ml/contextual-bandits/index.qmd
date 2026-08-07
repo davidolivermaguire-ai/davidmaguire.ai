@@ -2,7 +2,7 @@
 title: "Contextual Bandits — Conditional Reliability, Learned"
 subtitle: "Choosing which expert to trust given the regime, from partial feedback — the transparent, provably-efficient alternative to full reinforcement learning"
 description: "The mechanism for condition-specific expert reliability, and the RL alternative the proposal names. LinUCB, verified on a task where each expert is best in a different regime, reaches the oracle exactly (0.75 vs 0.49 context-free) and recovers the routing perfectly. But pointed at real volatility forecasters routed by regime, it does not beat a fixed best expert (0.535 vs 0.539) — the conditional structure is real but too weak to exploit. Contextual bandits are the right tool for conditional reliability; whether it pays is an empirical question, and here it is another H7 null."
-date: 2026-08-06
+order: 3
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-contextual-bandits.png

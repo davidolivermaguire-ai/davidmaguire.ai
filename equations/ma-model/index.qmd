@@ -2,7 +2,7 @@
 title: "The MA Model (Moving Average)"
 subtitle: "A series built from its own past shocks — finite memory, and the mirror image of AR"
 description: "The moving-average model: y_t = μ + ε_t + θ ε_{t-1}. Regression on past shocks (not values), why its ACF cuts off after lag q, invertibility, the AR(∞) duality, and why it isn't the SMA/EMA."
-date: 2026-07-22
+order: 29
 author: "David Maguire"
 categories: [time series, core statistics]
 image: fig-ar-vs-ma.png

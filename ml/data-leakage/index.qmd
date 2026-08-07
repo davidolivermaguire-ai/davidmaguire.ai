@@ -2,7 +2,7 @@
 title: "Avoiding Data Leakage"
 subtitle: "The many ways information sneaks from test to train — and the one rule that stops most of them"
 description: "Data leakage is any time information from the test set, the future, or the outcome contaminates training, silently inflating results. The taxonomy of leakage, the preprocess-inside-the-split rule, and a demonstration where leakage manufactures a 0.81 AUC from pure noise."
-date: 2026-07-27
+order: 23
 author: "David Maguire"
 categories: [quant-specific ML, validation]
 image: fig-data-leakage.png

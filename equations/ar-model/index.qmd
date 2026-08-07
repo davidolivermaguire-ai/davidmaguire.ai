@@ -2,7 +2,7 @@
 title: "The AR Model (Autoregression)"
 subtitle: "Regressing a series on its own past — the one coefficient that separates mean reversion from a random walk"
 description: "The autoregressive model: y_t = c + φ y_{t-1} + ε. How the AR coefficient φ controls memory, why φ = 1 is the unit-root boundary, the link to the ACF and the ADF test, and an honest Nasdaq fit."
-date: 2026-07-22
+order: 26
 author: "David Maguire"
 categories: [time series, core statistics]
 image: fig-ar1.png

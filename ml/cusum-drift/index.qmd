@@ -2,7 +2,7 @@
 title: "CUSUM & Concept-Drift Detection"
 subtitle: "The cheap, online tripwire for a changed distribution — and the average-run-length trade-off that governs every change detector"
 description: "The lightweight, frequentist complement to Bayesian change-point detection. A from-scratch CUSUM detects a known 1σ shift in 7 steps, and its operating characteristic makes the fundamental trade-off explicit: raising the threshold moves the in-control false-alarm interval from 18 to 3,300 steps but slows detection from 3 to 16 steps — no free lunch. On the Nasdaq it flags 69 volatility-regime onsets point-in-time, catching the COVID crash on 2020-02-25, one day after BOCPD, at a fraction of the compute."
-date: 2026-08-06
+order: 2
 author: "David Maguire"
 categories: [decision systems, change detection]
 image: fig-cusum-drift.png

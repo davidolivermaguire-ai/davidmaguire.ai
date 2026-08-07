@@ -2,7 +2,7 @@
 title: "Regime-Aware Modelling"
 subtitle: "Markets switch states — detecting regimes with a hidden Markov model, and modelling accordingly"
 description: "Markets are not one stationary process but alternate between persistent regimes. A hidden Markov model — a GMM with dynamics — detects calm and turbulent states on the Nasdaq, and a point-in-time regime-scaled strategy shows what regime awareness buys: real risk control, honestly framed. The final entry of the ML Library."
-date: 2026-07-27
+order: 41
 author: "David Maguire"
 categories: [quant-specific ML, regimes]
 image: fig-regime-aware-modelling.png

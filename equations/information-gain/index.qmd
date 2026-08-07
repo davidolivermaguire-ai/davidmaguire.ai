@@ -2,7 +2,7 @@
 title: "Information Gain"
 subtitle: "How much a split cuts uncertainty — the rule a decision tree uses to choose its questions"
 description: "Information gain = parent entropy − weighted child entropy: the uncertainty a split removes. Why decision trees maximise it, its identity with mutual information, the high-cardinality bias, and a near-zero Nasdaq split."
-date: 2026-07-22
+order: 14
 author: "David Maguire"
 categories: [machine learning, information theory]
 image: fig-information-gain.png

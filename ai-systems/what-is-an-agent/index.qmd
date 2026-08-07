@@ -6,7 +6,7 @@ description: >
   worth being precise: the difference between a language model and an agent is the difference between a
   system that answers and one that acts, and in finance that difference is everything. The agent loop,
   the real Anthropic API code behind it, and why the proposal keeps its agents deliberately un-autonomous.
-date: 2026-07-31
+order: 10
 author: "David Maguire"
 categories: [foundations, agents]
 toc: true

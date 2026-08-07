@@ -2,7 +2,7 @@
 title: "Probability Calibration & Conformal Prediction"
 subtitle: "Honesty, not skill — making a model's probabilities mean what they say, and its intervals cover what they promise"
 description: "A next-day direction model has no skill (AUC≈0.50) — but it must still be honest about its uncertainty. Calibration turns over-confident scores into trustworthy probabilities (ECE 0.105→0.062) without touching the absent skill; conformal prediction wraps a point forecast in an interval with a distribution-free coverage guarantee, and vol-normalization makes that interval honest in every regime."
-date: 2026-07-31
+order: 17
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-probability-calibration.png

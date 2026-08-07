@@ -8,7 +8,7 @@ description: >
   out-of-sample and net of costs — and finds the honest answer: regime awareness buys risk
   control, but the discrete regime adds nothing a volatility signal doesn't, and no edge is
   statistically significant.
-date: 2026-07-31
+order: 4
 author: "David Maguire"
 categories: [regime, out-of-sample, hypothesis-test, risk]
 image: fig-regime-conditioning.png

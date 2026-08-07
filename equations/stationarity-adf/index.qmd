@@ -2,7 +2,7 @@
 title: "Stationarity & the ADF Test"
 subtitle: "The assumption every model rests on — is the series stable, or is it wandering?"
 description: "Stationarity: constant mean and variance over time. Why prices aren't and returns are, the unit-root idea, the Augmented Dickey-Fuller test, and the spurious-regression trap of ignoring it."
-date: 2026-07-22
+order: 25
 author: "David Maguire"
 categories: [time series, core statistics]
 image: fig-stationarity.png

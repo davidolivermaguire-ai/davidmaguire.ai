@@ -2,7 +2,7 @@
 title: "GARCH"
 subtitle: "Modelling the volatility, not the mean — why calm follows calm and storms follow storms"
 description: "GARCH(1,1): σ²_t = ω + α ε²_{t-1} + β σ²_{t-1}. Conditional variance, volatility clustering, the reaction/persistence split, why α+β matters, fat tails from normal shocks, and a Nasdaq fit."
-date: 2026-07-22
+order: 11
 author: "David Maguire"
 categories: [time series, quant finance]
 image: fig-garch-vol.png

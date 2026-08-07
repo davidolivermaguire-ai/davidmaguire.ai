@@ -2,7 +2,7 @@
 title: "Variance & Standard Deviation"
 subtitle: "The second moment — how far returns scatter around their mean, and the root that turns it into risk"
 description: "Variance and its square root, standard deviation (volatility): the spread of a return series, sample vs population (n−1), √252 annualisation, and a worked Nasdaq-100 example — including the numpy/pandas ddof trap."
-date: 2026-07-22
+order: 33
 author: "David Maguire"
 categories: [core statistics, risk]
 image: fig-ndx-returns-histogram.png

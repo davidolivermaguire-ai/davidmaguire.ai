@@ -2,7 +2,7 @@
 title: "Convolutional Neural Networks"
 subtitle: "Weight sharing and local filters — the architecture that put a prior into the network"
 description: "A CNN slides small shared filters across grid-structured data to detect local, translation-invariant patterns at a fraction of a dense net's parameters. Convolution, pooling, the inductive bias, and an honest 1D-CNN test on Nasdaq sequences."
-date: 2026-07-27
+order: 25
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-cnns.png

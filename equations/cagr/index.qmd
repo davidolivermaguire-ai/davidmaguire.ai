@@ -2,7 +2,7 @@
 title: "CAGR"
 subtitle: "The smooth annual growth rate — what your money actually compounded at"
 description: "Compound Annual Growth Rate: the constant yearly rate that connects a start value to an end value. Why it is the geometric mean, why it sits below the arithmetic average (volatility drag), and why it says nothing about the path."
-date: 2026-07-22
+order: 6
 author: "David Maguire"
 categories: [quant finance, returns]
 image: fig-cagr.png

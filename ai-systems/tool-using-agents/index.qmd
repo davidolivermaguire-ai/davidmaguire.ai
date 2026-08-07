@@ -6,7 +6,7 @@ description: >
   fix for its worst weakness — recalling facts it should look up. But every tool is also an attack surface,
   so the tool set is where control lives. The mechanics in real code, the design rules for a market system,
   and why the tools you withhold matter as much as the ones you grant.
-date: 2026-07-31
+order: 9
 author: "David Maguire"
 categories: [agents, safety]
 toc: true

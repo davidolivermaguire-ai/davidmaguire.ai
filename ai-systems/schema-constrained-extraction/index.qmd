@@ -6,7 +6,7 @@ description: >
   it to produce inputs a trading system will act on. The single decision that makes that safe rather than
   reckless is to constrain the output to a bounded schema — typed features, never instructions. The real
   Anthropic API code that enforces it, the guardrails around it, and why the schema is the safety mechanism.
-date: 2026-07-31
+order: 7
 author: "David Maguire"
 categories: [news agent, safety]
 toc: true

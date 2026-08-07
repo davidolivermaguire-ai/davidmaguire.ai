@@ -2,7 +2,7 @@
 title: "Gaussian Mixture Models"
 subtitle: "Soft, probabilistic clustering — and the model that explains fat tails as calm plus crisis"
 description: "A GMM models data as a mixture of Gaussians, fit by EM, giving each point a probability of membership rather than a hard label. It generalises K-means. On Nasdaq returns a two-component mixture — a calm Gaussian and a crisis Gaussian — reproduces the fat tails a single Gaussian misses."
-date: 2026-07-27
+order: 29
 author: "David Maguire"
 categories: [foundation models, clustering]
 image: fig-gmm.png

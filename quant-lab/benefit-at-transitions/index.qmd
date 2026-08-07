@@ -7,7 +7,7 @@ description: >
   decomposition on the Nasdaq confirm it — for the benefit that matters. Downside protection is
   overwhelmingly earned at transitions and in the turbulence they open, is a mild liability in
   calm, and is paid for by upside given up in exactly those windows.
-date: 2026-07-31
+order: 6
 author: "David Maguire"
 categories: [regime, event-study, risk, transitions]
 image: fig-benefit-at-transitions.png

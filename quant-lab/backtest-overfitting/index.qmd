@@ -5,7 +5,7 @@ description: >
   Test enough strategies and one will look great even with zero true edge. A
   Monte-Carlo demonstration, the √(2 ln N) scaling of the best spurious Sharpe,
   and how to correct for the number of trials.
-date: 2026-06-20
+order: 8
 author: "David Maguire"
 categories: [backtesting, statistics, overfitting]
 image: fig-max-sharpe-vs-trials.png

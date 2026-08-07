@@ -2,7 +2,7 @@
 title: "Walk-Forward Validation"
 subtitle: "Train on the past, test on the future — the only honest way to backtest a temporal model"
 description: "Standard k-fold cross-validation shuffles time and leaks the future into training, inflating results. Walk-forward validation respects the arrow of time. Expanding vs rolling windows, purge and embargo, and a Nasdaq demo where shuffled CV reports a 0.87 'signal' that is really 0.60."
-date: 2026-07-27
+order: 46
 author: "David Maguire"
 categories: [quant-specific ML, validation]
 image: fig-walk-forward-validation.png

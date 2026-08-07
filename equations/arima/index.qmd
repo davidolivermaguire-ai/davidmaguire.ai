@@ -2,7 +2,7 @@
 title: "ARIMA"
 subtitle: "The Box-Jenkins synthesis — autoregression, differencing and moving average in one model"
 description: "ARIMA(p,d,q): difference d times to reach stationarity, then fit p AR and q MA terms. The Box-Jenkins workflow, the special cases, and an honest Nasdaq forecast that collapses to a random walk with drift."
-date: 2026-07-22
+order: 1
 author: "David Maguire"
 categories: [time series, quant finance]
 image: fig-arima-forecast.png

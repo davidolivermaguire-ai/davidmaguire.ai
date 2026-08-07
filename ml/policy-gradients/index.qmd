@@ -2,7 +2,7 @@
 title: "Policy Gradients & Actor-Critic"
 subtitle: "Learning the policy directly — continuous actions, the score-function trick, and why baselines matter"
 description: "Policy-gradient methods optimise the policy itself by gradient ascent on expected reward, handling continuous actions natively. A Gaussian-policy actor-critic learns the analytically optimal exposure on the regime environment, and the baseline's variance reduction is measured: 3,176×."
-date: 2026-07-31
+order: 16
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-policy-gradients.png

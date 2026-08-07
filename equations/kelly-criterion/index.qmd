@@ -2,7 +2,7 @@
 title: "Kelly Criterion"
 subtitle: "The bet size that maximises long-run growth — and why you should bet less than it says"
 description: "The Kelly criterion: the fraction of capital that maximises the growth rate of wealth. The edge/odds and mu/sigma-squared forms, the link to the Sharpe ratio, over-betting, and why practitioners use fractional Kelly."
-date: 2026-07-22
+order: 15
 author: "David Maguire"
 categories: [quant finance, performance]
 image: fig-kelly.png

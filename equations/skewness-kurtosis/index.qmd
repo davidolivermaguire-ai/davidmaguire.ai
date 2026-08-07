@@ -2,7 +2,7 @@
 title: "Skewness & Kurtosis"
 subtitle: "The third and fourth moments — the asymmetry and the fat tails that variance can't see"
 description: "Skewness and kurtosis: the shape of a return distribution beyond mean and variance — asymmetry, fat tails, excess kurtosis, and why a single σ understates crash risk. A Nasdaq-100 example against the normal."
-date: 2026-07-22
+order: 23
 author: "David Maguire"
 categories: [core statistics, risk]
 image: fig-ndx-vs-normal.png

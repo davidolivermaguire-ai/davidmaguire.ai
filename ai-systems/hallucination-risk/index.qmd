@@ -6,7 +6,7 @@ description: >
   fluently, do not. In a chatbot that is an annoyance. In a system that trades on the output it is a
   liability. The taxonomy of financial hallucination, the honest limits of every fix, and the one rule
   that matters most: use the model for text, never for numbers you can look up.
-date: 2026-07-31
+order: 3
 author: "David Maguire"
 categories: [safety]
 toc: true

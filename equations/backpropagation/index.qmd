@@ -2,7 +2,7 @@
 title: "Backpropagation"
 subtitle: "The chain rule that trains neural networks — every gradient in one backward pass"
 description: "Backpropagation applies the chain rule backward through a network to compute the gradient of the loss w.r.t. every weight in one pass. The forward/backward passes, δ error signals, vanishing gradients, and an honest Nasdaq net."
-date: 2026-07-22
+order: 4
 author: "David Maguire"
 categories: [machine learning, neural networks]
 image: fig-backprop.png

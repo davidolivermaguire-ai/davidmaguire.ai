@@ -2,7 +2,7 @@
 title: "Backpropagation as an Algorithm"
 subtitle: "Reverse-mode automatic differentiation — the whole gradient in one backward pass, exact and cheap"
 description: "Backpropagation is the algorithm that trains every neural network: reverse-mode autodiff that computes the gradient of the loss w.r.t. all parameters in one backward pass, exact to machine precision and at a cost independent of the parameter count. Gradient checking and the efficiency that makes deep learning possible."
-date: 2026-07-27
+order: 24
 author: "David Maguire"
 categories: [deep learning, neural networks]
 image: fig-backpropagation.png

@@ -2,7 +2,7 @@
 title: "Cointegration"
 subtitle: "When two wandering prices stay tethered — the statistical basis of pairs trading"
 description: "Cointegration: two non-stationary series whose linear combination is stationary. The hedge ratio, the Engle-Granger test, why it isn't the same as correlation, and why genuinely cointegrated pairs are rare."
-date: 2026-07-22
+order: 7
 author: "David Maguire"
 categories: [time series, quant finance]
 image: fig-cointegration.png

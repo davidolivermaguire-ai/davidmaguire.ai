@@ -2,7 +2,7 @@
 title: "Moving Averages (SMA & EMA)"
 subtitle: "Smoothing price into trend — equal weights vs recent-weighted, and the lag you pay for it"
 description: "Simple and exponential moving averages: averaging the last k prices to reveal trend. The smoothing factor α = 2/(k+1), the lag-versus-responsiveness trade-off, crossovers, and an honest Nasdaq backtest."
-date: 2026-07-22
+order: 19
 author: "David Maguire"
 categories: [time series, quant finance]
 image: fig-sma-ema.png

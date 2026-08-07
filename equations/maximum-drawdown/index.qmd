@@ -2,7 +2,7 @@
 title: "Maximum Drawdown"
 subtitle: "The deepest peak-to-trough loss — the risk you have to survive, not just measure"
 description: "Maximum drawdown: the largest decline from a running peak in an equity curve. Drawdown, recovery, the Calmar ratio, and a Nasdaq-100 example where the worst loss was −36% and NVDA fell two-thirds."
-date: 2026-07-22
+order: 17
 author: "David Maguire"
 categories: [quant finance, risk]
 image: fig-drawdown.png

@@ -6,7 +6,7 @@ description: >
   agent capable of more than a single call — and both are autonomy dials that a system near capital turns
   down, not up. Short-term versus long-term memory, the planning patterns, why long-horizon planning is
   unreliable, and the point-in-time, bounded, gated discipline that keeps them safe.
-date: 2026-07-31
+order: 2
 author: "David Maguire"
 categories: [agents, safety]
 toc: true

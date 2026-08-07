@@ -2,7 +2,7 @@
 title: "Decision Trees"
 subtitle: "A flowchart of if-then splits — nonlinear, interpretable, and prone to overfitting"
 description: "Decision trees recursively split feature space to cut impurity (Gini/entropy). Nonparametric and interpretable, they capture nonlinearities — but a single tree overfits, memorising the Nasdaq's noise while generalising to the base rate."
-date: 2026-07-27
+order: 26
 author: "David Maguire"
 categories: [foundation models, trees]
 image: fig-decision-trees.png

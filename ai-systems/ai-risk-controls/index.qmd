@@ -6,7 +6,7 @@ description: >
   component. This entry synthesises the whole section into one control stack — input, invocation, output,
   action and monitoring — governed by two principles: defence in depth, and fail safe. The layers, what
   each defends against, and the honest limit that this buys bounded, auditable failure, not none.
-date: 2026-07-31
+order: 1
 author: "David Maguire"
 categories: [safety]
 toc: true

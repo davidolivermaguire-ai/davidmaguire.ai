@@ -2,7 +2,7 @@
 title: "Covariance & Correlation"
 subtitle: "Do two return series move together — and the normalised number that makes it comparable"
 description: "Covariance and correlation: whether two return series move together, correlation as normalised covariance in [−1,1], the diversification link, and a Nasdaq-100 basket example where the correlations aren't what you'd guess."
-date: 2026-07-22
+order: 8
 author: "David Maguire"
 categories: [core statistics, risk]
 image: fig-correlation-matrix.png

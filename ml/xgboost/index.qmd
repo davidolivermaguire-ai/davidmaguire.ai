@@ -2,7 +2,7 @@
 title: "XGBoost (Gradient Boosting)"
 subtitle: "Trees built one at a time, each fixing the last one's errors — the tabular-data champion"
 description: "Gradient boosting adds shallow trees sequentially, each fitting the negative gradient of the loss — gradient descent in function space. XGBoost's regularisation and shrinkage, why it overfits without early stopping, and a Nasdaq volatility test."
-date: 2026-07-27
+order: 47
 author: "David Maguire"
 categories: [foundation models, ensembles]
 image: fig-xgboost.png

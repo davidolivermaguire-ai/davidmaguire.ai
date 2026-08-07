@@ -2,7 +2,7 @@
 title: "Annualisation"
 subtitle: "Scaling returns and volatility to a common horizon — and why they scale differently"
 description: "Turning per-period figures into annual ones: returns scale with time (×N), volatility with the square root of time (×√N), because variance adds. The √252 rule, why the Sharpe ratio scales with √time, and where the assumption breaks."
-date: 2026-07-22
+order: 2
 author: "David Maguire"
 categories: [quant finance, risk]
 image: fig-sqrt-time.png

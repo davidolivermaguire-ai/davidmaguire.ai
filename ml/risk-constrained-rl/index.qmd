@@ -2,7 +2,7 @@
 title: "Risk-Sensitive & Constrained RL"
 subtitle: "Making a learner safe — soft risk objectives, hard limits, and the shadow price of risk"
 description: "Plain RL maximises reward, which in finance means it will take catastrophic risk for marginal return. Risk-sensitive objectives trade return for risk continuously; constrained MDPs impose hard limits the policy cannot cross. A CVaR-budgeted agent that wants 6.3× leverage, capped to 1.41× — the proposal's Risk Agent, formalised."
-date: 2026-07-31
+order: 20
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-risk-constrained-rl.png

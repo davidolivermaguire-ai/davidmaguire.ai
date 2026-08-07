@@ -2,7 +2,7 @@
 title: "Logistic Regression"
 subtitle: "A probability from a linear score — the classification baseline"
 description: "Logistic regression squashes a linear score through the sigmoid into a probability, trained by cross-entropy. Log-odds interpretability, the linear decision boundary, and an honest Nasdaq direction test (AUC ≈ 0.51)."
-date: 2026-07-27
+order: 33
 author: "David Maguire"
 categories: [foundation models, classification]
 image: fig-logistic-regression.png

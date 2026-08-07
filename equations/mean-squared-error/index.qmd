@@ -2,7 +2,7 @@
 title: "Mean Squared Error (MSE)"
 subtitle: "The default regression loss — average squared error, and why it fears outliers"
 description: "Mean squared error: MSE = mean of squared residuals, RMSE its root. Why squaring makes it smooth and outlier-sensitive, MSE vs MAE, the link to variance and R², and a fat-tailed Nasdaq example."
-date: 2026-07-22
+order: 18
 author: "David Maguire"
 categories: [machine learning, optimisation]
 image: fig-mse.png

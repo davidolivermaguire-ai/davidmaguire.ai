@@ -5,12 +5,11 @@ listing:
   id: published-models
   contents: "*/index.qmd"
   type: default
-  sort: "date desc"
-  fields: [date, title, description, categories, reading-time]
+  sort: "order"
+  fields: [title, description, categories, reading-time]
   categories: true
   sort-ui: false
   filter-ui: false
-  feed: true
 toc: true
 ---
 
@@ -75,7 +74,7 @@ specialist and combination layer, built out here one entry at a time to the same
 [ensemble methods & model combination](ensemble-methods/), [online expert weighting](online-expert-weighting/),
 [state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/),
 [cross-asset dependence (DCC)](cross-asset-dependence/), [CUSUM & concept-drift detection](cusum-drift/),
-[Bayesian hypothesis reconciliation](hypothesis-reconciliation/), [liquidity-stress anomaly detection](liquidity-anomaly/)
+[Bayesian hypothesis reconciliation](hypothesis-reconciliation/), [liquidity-stress anomaly detection](liquidity-anomaly/),
 [contextual bandits](contextual-bandits/) and [the strategy-suitability council](strategy-council/) —
 ***the specialist tier is now complete***: every specialist, combination and consensus method the proposal
 names is built, verified and honestly evaluated on this site.

@@ -2,7 +2,7 @@
 title: "Gini Impurity"
 subtitle: "How mixed a node is, without the logarithms — the default splitting criterion of CART trees"
 description: "Gini impurity = 1 − Σp²: the chance of mislabelling a random sample by a node's class mix. Binary 2p(1−p), why CART/scikit-learn default to it, how it compares to entropy, and an honest Nasdaq split."
-date: 2026-07-22
+order: 12
 author: "David Maguire"
 categories: [machine learning, classification]
 image: fig-gini.png

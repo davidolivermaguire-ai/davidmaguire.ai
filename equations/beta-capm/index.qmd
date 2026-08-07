@@ -2,7 +2,7 @@
 title: "Beta, CAPM & Alpha"
 subtitle: "Market risk, the return it should earn, and whatever is left over"
 description: "Beta as sensitivity to the market, CAPM's prediction of expected return from beta, and alpha as the miss. Systematic vs idiosyncratic risk, the Security Market Line, and a Nasdaq-100 basket including a negative-beta name."
-date: 2026-07-22
+order: 5
 author: "David Maguire"
 categories: [quant finance, factor models]
 image: fig-sml.png

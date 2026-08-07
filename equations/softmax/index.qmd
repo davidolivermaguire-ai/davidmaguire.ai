@@ -2,7 +2,7 @@
 title: "The Softmax Function"
 subtitle: "A vector of scores into a probability distribution — sigmoid for many classes"
 description: "Softmax: exp-then-normalise a vector of scores into probabilities that sum to 1. Why it reduces to the sigmoid, shift-invariance and numerical stability, temperature, and a 3-class Nasdaq regime example."
-date: 2026-07-22
+order: 31
 author: "David Maguire"
 categories: [machine learning, classification]
 image: fig-softmax.png

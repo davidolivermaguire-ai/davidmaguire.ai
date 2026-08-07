@@ -2,7 +2,7 @@
 title: "Q-Learning & Deep Q-Networks"
 subtitle: "Learning optimal decisions from experience alone — checked against the exact answer"
 description: "Q-learning solves an MDP without knowing its transition probabilities or rewards, from sampled experience, off-policy. Demonstrated on the regime MDP whose exact Q* is known: tabular and DQN-style learners recover the optimal policy exactly — even while behaving randomly."
-date: 2026-07-31
+order: 19
 author: "David Maguire"
 categories: [decision systems, reinforcement learning]
 image: fig-q-learning.png

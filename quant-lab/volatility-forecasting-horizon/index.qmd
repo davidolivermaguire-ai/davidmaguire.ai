@@ -7,7 +7,7 @@ description: >
   GARCH(1,1), EWMA and persistence on the Nasdaq-100 — with the answer that a volatility
   shock half-lives in about a month, and that beating naive persistence matters more the
   further ahead you look.
-date: 2026-07-31
+order: 7
 author: "David Maguire"
 categories: [volatility, forecasting, out-of-sample, GARCH]
 image: fig-volatility-forecasting-horizon.png

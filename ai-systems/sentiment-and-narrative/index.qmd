@@ -6,7 +6,7 @@ description: >
   this site says that is mostly noise — obvious news is priced in milliseconds. So this entry goes past
   the sentiment score to what text can genuinely offer a market system: novelty, narrative, and risk
   context — and is honest that its home is the Regime and Risk agents, not a buy signal.
-date: 2026-07-31
+order: 8
 author: "David Maguire"
 categories: [news agent]
 toc: true

@@ -7,7 +7,7 @@ description: >
   might really lie. This tests exactly that: does conditioning a tail-probability forecast on
   regime improve it out-of-sample? By a proper score and its resolution/reliability
   decomposition, the answer is yes — and here the regime edges volatility.
-date: 2026-07-31
+order: 5
 author: "David Maguire"
 categories: [regime, calibration, out-of-sample, probabilistic-forecasting]
 image: fig-regime-conditional-calibration.png

@@ -25,6 +25,15 @@ The direction I'm most curious about is where AI meets markets — how large
 language models and agents might support decision-making, provided they can be
 made transparent and kept under proper control.
 
+## How this site was built
+
+I build this site with AI assistance — for writing code, generating figures, and drafting prose —
+working from my own research questions, design choices, and interpretation. That does not lower the bar
+each entry has to clear: every number is computed and checked in code before it goes up, every model is
+one I can derive and defend from first principles, and the judgement throughout — what to test, what it
+means, and what to conclude — is mine. I use these tools deliberately and say so openly; they help me
+build faster, but they do not stand in for the understanding this site exists to demonstrate.
+
 ## Contact
 
 - Email: [davidolivermaguire@gmail.com](mailto:davidolivermaguire@gmail.com)

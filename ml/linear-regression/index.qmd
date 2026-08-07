@@ -2,7 +2,7 @@
 title: "Linear Regression"
 subtitle: "The best straight line — the baseline every other model has to beat"
 description: "Linear regression fits a line by minimising squared error; its slope is cov/var and its coefficients are interpretable effect sizes. Assumptions, how it learns, and an honest Nasdaq test — strong for beta, useless for prediction."
-date: 2026-07-27
+order: 32
 author: "David Maguire"
 categories: [foundation models, regression]
 image: fig-linear-regression.png
