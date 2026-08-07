@@ -237,7 +237,7 @@ inflation surprise, the specialists report:
 
 : {.striped}
 
-The hypothesis engine then compares **competing explanations** rather than averaging these scores — an
+The hypothesis engine then [compares **competing explanations**](../ml/hypothesis-reconciliation/index.qmd) rather than averaging these scores — an
 ordinary technical pullback (posterior 18%), a macro-driven risk-off transition (76%), or a full
 liquidity crisis (6%) — reconciling supporting and contradictory evidence. The consensus layer emits a
 final state: *macro-driven risk-off transition (76%), volatility expansion (83%), transition
@@ -345,7 +345,7 @@ yet on the site.
 | Evidence standardisation — calibration | ✅ | [Calibration & conformal prediction](../ml/probability-calibration/index.qmd) (ECE 0.105→0.062) |
 | Conditional expert reliability | ◐ | Calibration built; **condition-specific reliability histories to formalise** |
 | Consensus — ensemble baselines (equal, vote, **BMA**, **stacking**) | ✅ | [Ensemble methods & model combination](../ml/ensemble-methods/index.qmd) — four combiners on a forecastable target; BMA edges the best single model, and the gain is small *by design* (base models 0.97-correlated) — the diversity lesson that motivates specialist decorrelation |
-| Consensus — hypothesis reconciliation (posterior over states) | ○ | [Credit assignment / Markov games built](../ml/multi-agent-systems/index.qmd); **Bayesian hypothesis-comparison layer to build** |
+| Consensus — hypothesis reconciliation (posterior over states) | ✅ | [Bayesian hypothesis reconciliation](../ml/hypothesis-reconciliation/index.qmd) — beats averaging & voting on a known 3-state truth (acc 0.78 vs 0.73 vs 0.70; **H4 confirmed**), with a disagreement measure that spikes at transitions |
 | Adaptive expert weighting (prediction with expert advice / Hedge) | ✅ | [Online expert weighting](../ml/online-expert-weighting/index.qmd) — Hedge matches the best of four rotating volatility experts (regret 11.5 vs bound 44.3) and beats equal weighting; fixed-share an honest H7 null |
 | Strategy council — regime-conditioned suitability | ◐ | Evidence built ([conditioning OOS](../quant-lab/regime-conditioning-oos/index.qmd), [transitions](../quant-lab/benefit-at-transitions/index.qmd), [hard limits](../quant-lab/hard-risk-limits/index.qmd)); **formal suitability council to build** |
 | Risk governance | ✅ | [VaR & Expected Shortfall](../equations/value-at-risk/index.qmd), [Kelly](../equations/kelly-criterion/index.qmd), [drawdown](../equations/maximum-drawdown/index.qmd), [hard risk budget](../quant-lab/hard-risk-limits/index.qmd) |
