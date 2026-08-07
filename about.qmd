@@ -38,5 +38,4 @@ build faster, but they do not stand in for the understanding this site exists to
 
 - Email: [davidolivermaguire@gmail.com](mailto:davidolivermaguire@gmail.com)
 - GitHub: [github.com/davidolivermaguire-ai](https://github.com/davidolivermaguire-ai)
-- LinkedIn: [LinkedIn](https://www.linkedin.com/)
-<!-- LinkedIn: replace the URL above with your profile once it's live, e.g. https://www.linkedin.com/in/your-handle -->
+- LinkedIn: [linkedin.com/in/david-maguire-irl](https://www.linkedin.com/in/david-maguire-irl/)
