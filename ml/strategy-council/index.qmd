@@ -1,0 +1,180 @@
+---
+title: "The Strategy-Suitability Council"
+subtitle: "Turning the market-state estimate into a strategy choice — and the honest test of whether regime-conditioned selection actually helps"
+description: "The proposal's strategy layer, and the test of H5. A council that routes among trend, mean-reversion and defensive strategies by regime, with a hand-designed suitability mapping, underperforms plain diversification (Sharpe 0.39 vs 0.58) — because the intuitive mapping is empirically wrong: trend beats mean-reversion even in 'range' regimes, and mean-reversion beats cash in 'stress.' Learn the mapping from data instead and the council flips to 0.66, beating static — but buy-and-hold's 0.84 still tops all timing. Suitability must be learned, not assumed."
+date: 2026-08-06
+author: "David Maguire"
+categories: [decision systems, strategy]
+image: fig-strategy-council.png
+image-alt: "Three panels: equity curves showing the naive regime council below static diversification and the learned council above it but below buy-and-hold; per-regime strategy Sharpe showing the intuitive suitability mapping is wrong; and a Sharpe comparison making the point that suitability must be learned."
+toc: true
+---
+
+Every layer so far has estimated the *state* of the market; this one finally *acts* on it. The
+[proposal's](../../phd/index.qmd) **strategy council** takes the market-state posterior from the
+[consensus engine](../hypothesis-reconciliation/index.qmd) and asks a different question of each strategy
+family — trend, mean-reversion, long-volatility, market-neutral, cash — *is your approach suitable right
+now?* The council is deliberately **separated** from state inference: strategy agents judge their own
+suitability given the consensus state, which lets us test whether market-state intelligence improves
+strategy *selection* without pretending any one model forecasts everything. That test is the proposal's
+**H5**, and this entry runs it honestly. The answer is the most instructive on the whole site: a council
+built on *intuition* fails, a council built on *evidence* works — and the difference is the entire argument
+for the machinery this tier has built.
+
+## 1. What problem does it solve?
+
+**Choosing which kind of strategy to run, given what kind of market it is.** Different strategies suit
+different regimes — momentum rides trends, mean-reversion fades ranges, defensive posture survives stress —
+so a system that has inferred the regime should be able to *select* the fitting approach rather than run one
+strategy through conditions it is unsuited to. The council formalises this: a set of transparent strategy
+families, and a **suitability mapping** from regime to which family is active. The value proposition is
+selection, not prediction — you are not claiming to forecast returns, only to deploy the right tool for the
+conditions. Whether that helps is exactly the question, and it is far from guaranteed.
+
+## 2. The council, and the H5 test
+
+The demonstration uses three transparent families on the Nasdaq — **trend** (hold the sign of 20-day
+momentum), **mean-reversion** (fade the last three days), and **defensive** (flat) — a real-time regime
+classifier (stress when volatility is in its upper quintile, trend when momentum is strong relative to
+volatility, range otherwise, all from expanding quantiles with no look-ahead), and a suitability mapping.
+The intuitive mapping is the obvious one: **range → mean-reversion, trend → trend, stress → cash**. Against
+it stand the honest baselines — **static equal-weight** (run all three families always, i.e. pure
+diversification) and **buy-and-hold**. The verdict is blunt:
+
+| Approach | Sharpe | Ann. return | Max drawdown |
+|----------|:------:|:-----------:|:------------:|
+| **Naive council** (intuitive mapping) | 0.39 | 5.9% | −26.2% |
+| Static equal-weight (diversify) | 0.58 | 5.2% | −15.2% |
+| **Informed council** (learned mapping) | **0.66** | 14.9% | −28.7% |
+| Buy & hold | **0.84** | 18.8% | −39.1% |
+
+: Regime-conditioned strategy selection vs baselines, Nasdaq 2015–2026. {.striped}
+
+The naive council (Sharpe **0.39**) is **beaten by simply diversifying across the three families** (0.58),
+and both are dwarfed by buy-and-hold (0.84). Regime-conditioned selection, done on intuition, does not just
+fail to add value — it *destroys* it relative to holding all three strategies at once.
+
+![Left: cumulative growth of one dollar (log scale) — the naive council (red) sits below static diversification (grey), the informed/learned council (blue) rises above it, and buy-and-hold (green) tops all. Middle: the diagnostic — within each regime, the Sharpe of each family. Trend (blue) beats mean-reversion even in the 'range' regime, and mean-reversion (orange) beats cash by a wide margin in 'stress' — so the intuitive mapping (range→mean-rev, stress→cash) is empirically wrong. Right: the Sharpe verdict — naive council 0.39 < static 0.58 < informed council 0.66 < buy-and-hold 0.84: suitability must be learned, not assumed.](fig-strategy-council.png){fig-alt="Equity curves with the naive council below diversification and the learned council above it but below buy-and-hold; per-regime strategy Sharpe showing the intuitive mapping is wrong; and a Sharpe comparison bar chart."}
+
+## 3. Why it fails — the intuitive mapping is wrong
+
+The middle panel is the whole lesson. Look at what each family actually earns *within* each regime. In the
+**"range"** regime, trend still beats mean-reversion (Sharpe **+0.13 vs −0.04**) — the very regime where
+fading is supposed to win, momentum wins. In the **"stress"** regime, mean-reversion is the *star* (**+0.94**)
+while going to cash earns zero — the regime where the mapping flees to safety is exactly where fading
+turbulent moves paid the most. The intuitive suitability mapping is contradicted by the data in two of the
+three regimes, and a council built on it duly routes to the wrong strategy most of the time. This is the
+proposal's own discipline turned on itself: *do not assume the regime-to-strategy mapping — measure it.*
+
+## 4. Learn the mapping, and it works
+
+Replace the intuitive mapping with the **data-implied** one — route each regime to the family that actually
+performs best in it (trend in range and trend regimes, mean-reversion in stress) — and the informed council
+jumps to **Sharpe 0.66, beating static diversification (0.58)** and lifting annual return to 14.9%. So
+regime-conditioned selection *can* add value over diversification — H5 is not dead — but its entire benefit
+lives in getting the suitability **right**, which means **learning it from evidence**, not hand-coding
+intuition. That is precisely the job of the layers this tier has built: the
+[contextual bandit](../contextual-bandits/index.qmd) that learns which action suits which context, the
+[conditional reliability](../online-expert-weighting/index.qmd) of each specialist, the
+[consensus posterior](../hypothesis-reconciliation/index.qmd) that supplies the state. The council is only
+as good as the learned mapping behind it. (Honestly, the informed mapping here uses full-sample per-regime
+performance, so it is a *ceiling* — a real system must learn it online, and the bandit entry shows that is
+itself hard when the signal is weak — but the direction is unambiguous: assumed suitability loses, learned
+suitability wins.)
+
+## 5. The benchmark that beats everything
+
+One number sits above all the timing strategies: **buy-and-hold, at Sharpe 0.84.** None of the councils, and
+not static diversification, beats simply holding the Nasdaq. This is not a failure of the council so much as
+the site's central finding reasserting itself — the index's drift is real and hard to beat, and strategies
+that trade in and out of it mostly add turnover and drawdown-avoidance, not return. The councils *do* control
+drawdown (the naive council's −26% and static's −15% against buy-and-hold's −39%), which is the honest
+contribution: **regime-conditioned selection is a risk-governance tool, not an alpha engine** — exactly the
+positioning the [proposal](../../phd/index.qmd) has taken from the start, and the same verdict the
+[Quant Lab](../../quant-lab/regime-conditioning-oos/index.qmd) reached for sizing.
+
+## 6. What are its strengths?
+
+- **It separates selection from prediction.** By judging strategy *suitability* given the state, the council tests whether market-state intelligence helps *choice* without claiming to forecast returns — a cleaner, more defensible contribution.
+- **Learned selection genuinely adds value.** With the data-implied mapping the council beats static diversification (0.66 vs 0.58) — regime-conditioned selection is not empty, when the mapping is right.
+- **It is transparent and auditable.** Explicit families and an explicit mapping mean you can always read off which strategy is active and why — the control-first design the proposal requires.
+- **It is risk-governed by construction.** Selecting the fitting family (and standing aside in stress) controls drawdown — the councils roughly halve buy-and-hold's drawdown.
+- **It is the integration layer.** This is where the whole architecture's state estimate becomes an action recommendation — the point of building the specialists and the consensus in the first place.
+
+## 7. What are its weaknesses?
+
+- **H5 is not free — assumed suitability loses.** The headline result: an intuitive regime-to-strategy mapping underperformed simple diversification (0.39 vs 0.58). Getting the mapping wrong is worse than not conditioning at all.
+- **The value hinges entirely on a learned mapping.** And learning it online is hard precisely when the conditional signal is weak, as the [contextual-bandit](../contextual-bandits/index.qmd) null showed — the informed result here is an in-sample ceiling, not a guaranteed live edge.
+- **It does not beat buy-and-hold.** No timing council topped the index's Sharpe; the honest contribution is drawdown control, not return — a risk tool, not alpha.
+- **Errors propagate.** The council sits atop the entire state-estimation stack, so a misclassified regime routes to the wrong strategy — its quality is capped by the specialists and consensus beneath it.
+- **Strategy families are stylised.** Three transparent rules are a demonstration; a real council needs richer, cost-aware strategies whose regime-dependence is itself estimated and can drift.
+
+## 8. How could it apply to markets?
+
+This is the [proposal's](../../phd/index.qmd) **Layer 7**, and it completes the architecture from data →
+specialists → [calibrated evidence](../probability-calibration/index.qmd) →
+[consensus state](../hypothesis-reconciliation/index.qmd) → **strategy suitability** →
+[deterministic risk](../../quant-lab/hard-risk-limits/index.qmd). Its honest result is the capstone of the
+whole build tier and a direct vindication of the proposal's design. A system that *assumes* which strategy
+suits which regime is worse than one that just diversifies — so the elaborate upstream machinery is not
+decoration, it is the only thing that makes the council work: the regime-to-strategy suitability must be
+**learned from evidence**, conditionally and honestly, which is exactly what the
+[reliability](../online-expert-weighting/index.qmd), [bandit](../contextual-bandits/index.qmd) and
+[reconciliation](../hypothesis-reconciliation/index.qmd) layers do. And the fact that even a well-tuned
+council does not beat buy-and-hold on return, only on drawdown, is why the proposal targets **robustness and
+risk-governed decision quality, not alpha**. The council is where the architecture earns or fails to earn
+its keep — and the verdict is that it earns it as a *risk-governance and selection* layer built on *learned*
+suitability, not as a return-prediction engine built on intuition. With this layer, every method the
+proposal names is now built and tested on this site.
+
+## 9. What does the Python code look like?
+
+```python
+import numpy as np, pandas as pd
+
+# transparent strategy families (positions set at t, act on next-day return)
+pos_trend = np.sign(mom20)          # ride the trend
+pos_mr    = -np.sign(r3)            # fade the last 3 days
+R = {"trend": pos_trend*rf, "mean_rev": pos_mr*rf, "cash": np.zeros_like(rf)}
+
+# real-time regime (expanding quantiles -> no look-ahead)
+regime = np.where(vol20 > vol20_q80, "stress",
+         np.where(np.abs(mom20)/vol20 > strength_q60, "trend", "range"))
+
+# the council routes by a suitability mapping -- which MUST be learned, not assumed
+mapping = {"range": "trend", "trend": "trend", "stress": "mean_rev"}   # data-implied, not intuitive
+council = np.array([R[mapping[g]][t] for t, g in enumerate(regime)])
+
+def sharpe(x): x = x[np.isfinite(x)]; return x.mean()/x.std()*np.sqrt(252)
+# naive intuitive mapping -> 0.39 ; learned mapping -> 0.66 ; diversify-all -> 0.58 ; buy&hold -> 0.84
+```
+
+The council is one line of routing; the entire result turns on whether the `mapping` is guessed or learned.
+
+## 10. How would I explain it to a supervisor?
+
+"The strategy council is where my architecture finally acts — it takes the inferred regime and picks which
+strategy family to run, which is my H5. I tested it honestly with three transparent strategies — trend,
+mean-reversion, cash — routed by regime. The result is the most useful on the whole site. A council with the
+*intuitive* mapping, mean-revert in ranges and go to cash in stress, got a Sharpe of 0.39 — *worse* than
+just diversifying across all three, which got 0.58. When I looked at why, the intuitive mapping was
+empirically wrong: trend beat mean-reversion even in range regimes, and mean-reversion, not cash, was the
+best thing to do in stress. So I let the data set the mapping instead, and the council jumped to 0.66,
+beating diversification. The lesson is exactly my proposal's thesis: regime-conditioned selection can help,
+but only if the suitability is *learned from evidence*, not assumed — which is what all my reliability,
+bandit and reconciliation machinery is for. And the honest ceiling: nothing beat buy-and-hold's 0.84 on
+Sharpe; the councils only helped on drawdown. So this is a risk-governance and selection layer built on
+learned suitability, not an alpha engine built on intuition — which is precisely the risk-first case my
+proposal makes."
+
+::: {.status-note}
+Nasdaq daily 2015–2026. Families: trend = $\operatorname{sign}(\text{20-day momentum})$; mean-reversion =
+$-\operatorname{sign}(\text{3-day return})$; defensive = flat. Regime (real-time, expanding-window
+quantiles, ≥250-day warm-up): stress if 20-day vol > its expanding 80th pct (n=632); trend if
+$|\text{mom}_{20}|/\text{vol}_{20}$ > expanding 60th pct (n=952); range otherwise (n=1,038). Positions at
+$t$ act on $r_{t+1}$ (no look-ahead). Sharpe / ann. return / max drawdown: naive council (range→mean-rev,
+trend→trend, stress→cash) 0.39 / 5.9% / −26.2%; static equal-weight 0.58 / 5.2% / −15.2%; informed council
+(range→trend, trend→trend, stress→mean-rev, mapping from full-sample per-regime Sharpe — a ceiling) 0.66 /
+14.9% / −28.7%; buy-and-hold 0.84 / 18.8% / −39.1%. Per-regime family Sharpe — range: trend +0.13, mean-rev
+−0.04; trend: +1.07, −0.23; stress: +0.30, +0.94 (cash 0 throughout). Every number was checked.
+:::
