@@ -334,11 +334,12 @@ value *without* direct execution — is evaluated as a first-class outcome, not 
 
 ## What is already built: the evidence tracker
 
-Much of this architecture's methodological base already exists on this site as verified, tested
-entries. The tracker maps each layer and specialist domain to the evidence, and is **deliberately
-honest about what is only partial and what is not yet built** — the updated proposal introduces an
-econometrics-heavier specialist set (state-space, asymmetric and long-memory volatility, multivariate
-cross-asset dependence, ensemble and expert-weighting methods) that extends the current foundation.
+This architecture's methodological base now exists on this site as verified, tested entries. The
+tracker maps each layer and specialist domain to the evidence. The econometrics-heavier specialist set
+the updated proposal introduced — state-space, asymmetric and long-memory volatility, multivariate
+cross-asset dependence, and ensemble and expert-weighting methods — has been **built and verified**
+alongside the original foundation, so every row below is now green; the work that remains is depth and
+data, not coverage.
 
 **Legend:** ✅ built and verified · ◐ partially built (needs extension) · ○ named in the proposal, not
 yet on the site.
@@ -367,7 +368,7 @@ yet on the site.
 | Validation & anti-overfitting toolkit | ✅ | [Walk-forward](../ml/walk-forward-validation/index.qmd), [purged CV](../ml/time-series-cross-validation/index.qmd), [leakage](../ml/data-leakage/index.qmd), [PBO/DSR](../ml/overfitting-trading/index.qmd) |
 | Explainability & audit | ✅ | [Permutation importance & PD](../ml/model-explainability/index.qmd), [exact SHAP](../ml/shap-values/index.qmd) |
 
-: The foundation is largely green; the amber and open rows are the specialist and combination methods the updated architecture adds — and form the concrete build list for Year 1. {.striped .hover}
+: Every row is now built and verified — the specialist and combination layer the updated architecture adds is complete, each mapped to its evidence. The three-year plan below rebuilds this prototype core on a proper cross-section. {.striped .hover}
 
 The site's **empirical findings also de-risk the positioning**. The [capstone](../capstone.qmd) shows
 every model from linear regression to a transformer agreeing that next-day *direction* is
@@ -427,7 +428,7 @@ integrated evaluation and commercial prototype; and governance, conclusions and 
 
 **Year 1** — complete the literature review; finalise the taxonomy; acquire and govern data; build the
 point-in-time platform; establish baselines; develop trend, volatility, liquidity and transition
-models (this is where the amber/open tracker rows are built); first paper. **Year 2** — probability
+models (the specialist prototypes already built on this site, re-established on the full equity cross-section); first paper. **Year 2** — probability
 calibration and reliability; macro-event agent; ensemble versus consensus methods; a live research
 dashboard; second paper. **Year 3** — regime-conditioned strategies and risk controls; adaptive
 weighting; ablations and robustness; institutional prototype and commercialisation chapter; submit
