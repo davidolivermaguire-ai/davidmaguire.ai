@@ -195,6 +195,8 @@ task, may consult several models, applies validation rules, and communicates thr
 This distinction is deliberate — it prevents "agent" terminology from becoming a substitute for
 methodological precision.
 
+![**The Adaptive Market Intelligence pipeline** — five decision stages condensing the nine-layer stack below. Point-in-time data becomes calibrated specialist evidence, competing hypotheses, one reconciled market-state posterior, and a risk-governed action; realized outcomes feed back to re-weight the agents. Consistent with the evidence already built, market state is treated as a calibration- and risk-control signal, not a return-timing one — the LLM is a measured input, never an executor — and the online-learning loop is *evaluated, not assumed to pay*.](fig-ami-pipeline.svg){#fig-ami-pipeline fig-alt="Five-stage flowchart: load point-in-time data; apply specialist econometric and ML models in parallel; agents weigh each output into a confidence-weighted hypothesis; an agent council reconciles these into one market-state posterior; a risk-governed decision follows. A feedback loop returns realized outcomes to update the reliability weights." fig-align="center" width="90%"}
+
 | Layer | Function | Illustrative output |
 |:-----:|----------|---------------------|
 | 1 | Data acquisition | Real-time and historical feeds with source, event and *available-at* timestamps |

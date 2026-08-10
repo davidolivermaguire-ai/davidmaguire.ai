@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 780" role="img" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title>The Adaptive Market Intelligence decision pipeline</title>
+<desc>A five-stage vertical flow: load point-in-time data, apply specialist econometric and machine-learning models in parallel, weigh their outputs into confidence-weighted hypotheses, reconcile those into a single market-state posterior in an agent council, and take a risk-governed decision. Realized outcomes feed back to update the reliability weights.</desc>
+<style>
+  text{fill:#2f3a45;}
+  .title{font-size:15px;font-weight:600;}
+  .role{font-size:12.5px;}
+  .meth{font-size:12px;}
+  .anno{font-size:11.5px;fill:#5a6672;}
+  .lgd{font-size:12px;fill:#4a5560;}
+  .g-title{fill:#2f3a45;} .g-sub{fill:#55606b;}
+  .b-title{fill:#1f4460;} .b-sub{fill:#3f6480;}
+  .d-title{fill:#163a57;} .d-sub{fill:#345a78;}
+  .flow{stroke:#5f7488;stroke-width:1.7;fill:none;}
+  .lead{stroke:#b7c2cd;stroke-width:1;stroke-dasharray:3 3;fill:none;}
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5f7488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- legend -->
+<rect x="250" y="18" width="14" height="14" rx="3" fill="#eef1f4" stroke="#8a99a8"/>
+<text class="lgd" x="270" y="29">Data in</text>
+<rect x="356" y="18" width="14" height="14" rx="3" fill="#e6f0f8" stroke="#6f93b8"/>
+<text class="lgd" x="376" y="29">Estimate state</text>
+<rect x="496" y="18" width="14" height="14" rx="3" fill="#d8e6f2" stroke="#2c5f8a"/>
+<text class="lgd" x="516" y="29">Reconcile &amp; act</text>
+
+<!-- Stage 1: data -->
+<rect x="250" y="52" width="400" height="116" rx="10" fill="#eef1f4" stroke="#8a99a8"/>
+<text class="title g-title" x="272" y="80">1 · Load data</text>
+<text class="role g-sub" x="272" y="102">Point-in-time market inputs, no look-ahead</text>
+<text class="meth g-sub" x="272" y="124">Prices · returns · realized vol · volume</text>
+<text class="meth g-sub" x="272" y="146">cross-asset panel · news &amp; narrative text</text>
+
+<!-- Stage 2: models -->
+<rect x="250" y="196" width="400" height="116" rx="10" fill="#e6f0f8" stroke="#6f93b8"/>
+<text class="title b-title" x="272" y="224">2 · Apply models — specialist tier</text>
+<text class="role b-sub" x="272" y="246">Econometric &amp; ML specialists, in parallel</text>
+<text class="meth b-sub" x="272" y="268">Kalman · EGARCH/GJR/HAR-RV · Markov-switching · DCC</text>
+<text class="meth b-sub" x="272" y="290">CUSUM · liquidity anomaly · sentiment · calibration</text>
+
+<!-- Stage 3: agents weigh -->
+<rect x="250" y="340" width="400" height="116" rx="10" fill="#e6f0f8" stroke="#6f93b8"/>
+<text class="title b-title" x="272" y="368">3 · Agents weigh the outputs</text>
+<text class="role b-sub" x="272" y="390">Each output → a hypothesis with a confidence</text>
+<text class="meth b-sub" x="272" y="412">Online expert weighting (Hedge) · contextual bandits</text>
+<text class="meth b-sub" x="272" y="434">BMA / stacking → conditional reliability weights</text>
+
+<!-- Stage 4: council -->
+<rect x="250" y="484" width="400" height="116" rx="10" fill="#d8e6f2" stroke="#2c5f8a"/>
+<text class="title d-title" x="272" y="512">4 · Agent council — consensus</text>
+<text class="role d-sub" x="272" y="534">Reconcile into one market-state posterior</text>
+<text class="meth d-sub" x="272" y="556">Bayesian hypothesis reconciliation · disagreement</text>
+<text class="meth d-sub" x="272" y="578">entropy · strategy-suitability council</text>
+
+<!-- Stage 5: decision -->
+<rect x="250" y="628" width="400" height="116" rx="10" fill="#d8e6f2" stroke="#2c5f8a"/>
+<text class="title d-title" x="272" y="656">5 · Decision — risk-governed</text>
+<text class="role d-sub" x="272" y="678">Calibrated, cost-aware, risk-limited action</text>
+<text class="meth d-sub" x="272" y="700">Calibration-conditioned sizing · volatility scaling</text>
+<text class="meth d-sub" x="272" y="722">hard risk limits · deflated-Sharpe gate</text>
+
+<!-- connectors -->
+<line class="flow" x1="450" y1="168" x2="450" y2="196" marker-end="url(#arrow)"/>
+<line class="flow" x1="450" y1="312" x2="450" y2="340" marker-end="url(#arrow)"/>
+<line class="flow" x1="450" y1="456" x2="450" y2="484" marker-end="url(#arrow)"/>
+<line class="flow" x1="450" y1="600" x2="450" y2="628" marker-end="url(#arrow)"/>
+
+<!-- feedback loop: decision -> agents -->
+<path class="flow" d="M650 686 H712 V400 H654" marker-end="url(#arrow)"/>
+<text class="anno" x="722" y="512">Realized outcomes<tspan x="722" dy="16">update the weights</tspan><tspan x="722" dy="16">(online learning) —</tspan><tspan x="722" dy="16">evaluated, not assumed</tspan></text>
+
+<!-- honest-null annotations -->
+<path class="lead" d="M236 542 H250"/>
+<text class="anno" text-anchor="end" x="232" y="508">Where it matters most —<tspan x="232" dy="16">council disagreement</tspan><tspan x="232" dy="16">(entropy) spikes ~31%</tspan><tspan x="232" dy="16">at regime transitions</tspan></text>
+
+<path class="lead" d="M236 686 H250"/>
+<text class="anno" text-anchor="end" x="232" y="648">State drives calibration<tspan x="232" dy="16">&amp; risk control — not</tspan><tspan x="232" dy="16">return timing. The LLM</tspan><tspan x="232" dy="16">is a measured input,</tspan><tspan x="232" dy="16">never an executor.</tspan></text>
+</svg>
