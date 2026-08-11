@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 552" role="img" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+<title>The AMI decision cockpit — illustrative mock-up</title>
+<desc>A dashboard mock-up. A market-state posterior shows probabilities over five states, led by risk-on trend at 0.46. Two meters show transition probability 0.19 rising and council disagreement entropy 0.63 elevated. A calibration badge reads calibrated, Brier 0.15 over the last 60 days. A specialist-evidence table lists six specialists — trend, volatility, structural, cross-asset, macro, and liquidity — with their reading, confidence, reliability weight, and whether they agree with consensus. A governed decision bar proposes a trend sleeve at target volatility 10 percent, notes the risk gate is within limits, gives suitability scores, and provides review-and-approve and override controls; nothing auto-executes without human sign-off. Numbers are illustrative, not live output.</desc>
+<style>
+  text{fill:#1f2328;}
+  .mut{fill:#6b7280;}
+  .sub{fill:#55606b;}
+</style>
+
+<text x="24" y="27" font-size="16" font-weight="600">AMI console</text>
+<text x="158" y="27" class="mut" font-size="12">NASDAQ-100 · as-of 10 Aug 2026, 15:42 ET</text>
+<rect x="518" y="11" width="206" height="22" rx="11" fill="#e4f0e6"/>
+<text x="530" y="26" font-size="12" fill="#2f7d4f">calibrated · Brier 0.15 · last 60d</text>
+
+<rect x="24" y="52" width="344" height="196" rx="10" fill="#ffffff" stroke="#e6e8eb"/>
+<text x="42" y="78" class="mut" font-size="12">market-state posterior</text>
+<text x="42" y="112" font-size="12.5" font-weight="600">Risk-on trend</text><rect x="170" y="103" width="118" height="9" rx="4.5" fill="#eef1f4"/><rect x="170" y="103" width="109" height="9" rx="4.5" fill="#2c5f8a"/><text x="350" y="112" font-size="12" text-anchor="end" font-weight="600">0.46</text>
+<text x="42" y="138" class="sub" font-size="12.5">Range / mean-revert</text><rect x="170" y="129" width="118" height="9" rx="4.5" fill="#eef1f4"/><rect x="170" y="129" width="52" height="9" rx="4.5" fill="#bcd3e8"/><text x="350" y="138" font-size="12" text-anchor="end" class="sub">0.22</text>
+<text x="42" y="164" class="sub" font-size="12.5">Vol expansion</text><rect x="170" y="155" width="118" height="9" rx="4.5" fill="#eef1f4"/><rect x="170" y="155" width="42" height="9" rx="4.5" fill="#bcd3e8"/><text x="350" y="164" font-size="12" text-anchor="end" class="sub">0.18</text>
+<text x="42" y="190" class="sub" font-size="12.5">Risk-off</text><rect x="170" y="181" width="118" height="9" rx="4.5" fill="#eef1f4"/><rect x="170" y="181" width="21" height="9" rx="4.5" fill="#bcd3e8"/><text x="350" y="190" font-size="12" text-anchor="end" class="sub">0.09</text>
+<text x="42" y="216" class="sub" font-size="12.5">Liquidity stress</text><rect x="170" y="207" width="118" height="9" rx="4.5" fill="#eef1f4"/><rect x="170" y="207" width="12" height="9" rx="4.5" fill="#bcd3e8"/><text x="350" y="216" font-size="12" text-anchor="end" class="sub">0.05</text>
+
+<rect x="384" y="52" width="352" height="90" rx="10" fill="#ffffff" stroke="#e6e8eb"/>
+<text x="402" y="80" class="mut" font-size="12">transition probability</text>
+<text x="402" y="116" font-size="24" font-weight="600">0.19</text><text x="470" y="116" class="mut" font-size="12">↑ rising</text>
+
+<rect x="384" y="158" width="352" height="90" rx="10" fill="#f7efdd" stroke="#ecdcb4"/>
+<text x="402" y="186" font-size="12" fill="#8a6d1f">disagreement · entropy</text>
+<text x="402" y="222" font-size="24" font-weight="600" fill="#8a6d1f">0.63</text><text x="470" y="222" font-size="12" fill="#8a6d1f">elevated — watch transitions</text>
+
+<rect x="24" y="264" width="712" height="180" rx="10" fill="#ffffff" stroke="#e6e8eb"/>
+<text x="42" y="288" class="mut" font-size="12">specialist evidence</text>
+<text x="718" y="288" class="mut" font-size="11.5" text-anchor="end">reading · confidence · weight vs consensus</text>
+<line x1="24" y1="300" x2="736" y2="300" stroke="#eef1f4"/>
+<text x="42" y="320" font-size="12.5"><tspan font-weight="600">Trend</tspan><tspan fill="#9aa4ae"> Kalman/HMM</tspan></text><text x="250" y="320" class="sub" font-size="12">up, persistent</text><text x="486" y="320" class="sub" font-size="12" text-anchor="end">0.71</text><text x="556" y="320" font-size="12" text-anchor="end" font-weight="600">0.22</text><rect x="600" y="308" width="92" height="16" rx="8" fill="#e4f0e6"/><text x="646" y="319" font-size="11" fill="#2f7d4f" text-anchor="middle">agree</text>
+<text x="42" y="341" font-size="12.5"><tspan font-weight="600">Volatility</tspan><tspan fill="#9aa4ae"> EGARCH/HAR</tspan></text><text x="250" y="341" class="sub" font-size="12">expansion risk</text><text x="486" y="341" class="sub" font-size="12" text-anchor="end">0.66</text><text x="556" y="341" font-size="12" text-anchor="end" font-weight="600">0.18</text><rect x="600" y="329" width="92" height="16" rx="8" fill="#f7efdd"/><text x="646" y="340" font-size="11" fill="#8a6d1f" text-anchor="middle">partial</text>
+<text x="42" y="362" font-size="12.5"><tspan font-weight="600">Structural</tspan><tspan fill="#9aa4ae"> CUSUM</tspan></text><text x="250" y="362" class="sub" font-size="12">no break</text><text x="486" y="362" class="sub" font-size="12" text-anchor="end">0.80</text><text x="556" y="362" font-size="12" text-anchor="end" font-weight="600">0.16</text><rect x="600" y="350" width="92" height="16" rx="8" fill="#e4f0e6"/><text x="646" y="361" font-size="11" fill="#2f7d4f" text-anchor="middle">agree</text>
+<text x="42" y="383" font-size="12.5"><tspan font-weight="600">Cross-asset</tspan><tspan fill="#9aa4ae"> DCC</tspan></text><text x="250" y="383" class="sub" font-size="12">risk-on confirm</text><text x="486" y="383" class="sub" font-size="12" text-anchor="end">0.69</text><text x="556" y="383" font-size="12" text-anchor="end" font-weight="600">0.15</text><rect x="600" y="371" width="92" height="16" rx="8" fill="#e4f0e6"/><text x="646" y="382" font-size="11" fill="#2f7d4f" text-anchor="middle">agree</text>
+<text x="42" y="404" font-size="12.5"><tspan font-weight="600">Macro</tspan><tspan fill="#9aa4ae"> LLM narrative</tspan></text><text x="250" y="404" class="sub" font-size="12">hawkish surprise</text><text x="486" y="404" class="sub" font-size="12" text-anchor="end">0.58</text><text x="556" y="404" font-size="12" text-anchor="end" font-weight="600">0.14</text><rect x="600" y="392" width="92" height="16" rx="8" fill="#f6e4e4"/><text x="646" y="403" font-size="11" fill="#a3352f" text-anchor="middle">disagree</text>
+<text x="42" y="425" font-size="12.5"><tspan font-weight="600">Liquidity</tspan><tspan fill="#9aa4ae"> anomaly</tspan></text><text x="250" y="425" class="sub" font-size="12">normal</text><text x="486" y="425" class="sub" font-size="12" text-anchor="end">0.83</text><text x="556" y="425" font-size="12" text-anchor="end" font-weight="600">0.15</text><rect x="600" y="413" width="92" height="16" rx="8" fill="#e4f0e6"/><text x="646" y="424" font-size="11" fill="#2f7d4f" text-anchor="middle">agree</text>
+
+<rect x="24" y="460" width="712" height="80" rx="10" fill="#f7f9fb" stroke="#e6e8eb"/>
+<text x="42" y="482" font-size="11.5" fill="#8a94a0">Governed decision — nothing auto-executes without human sign-off.</text>
+<text x="42" y="506" font-size="13" font-weight="600">Trend sleeve → target vol 10% · <tspan fill="#2f7d4f">risk gate within limits</tspan></text>
+<text x="42" y="526" class="sub" font-size="12">suitability: trend 0.62 · mean-rev 0.20 · cash 0.12</text>
+<rect x="470" y="491" width="96" height="28" rx="6" fill="#ffffff" stroke="#b7c2cd"/><text x="518" y="509" font-size="12.5" fill="#2c5f8a" text-anchor="middle">Override</text>
+<rect x="576" y="491" width="160" height="28" rx="6" fill="#2c5f8a"/><text x="656" y="509" font-size="12.5" fill="#ffffff" text-anchor="middle">Review and approve</text>
+</svg>

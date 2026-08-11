@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 664" role="img" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+<title>Build architecture for the AMI decision cockpit</title>
+<desc>A vertical deployment stack: data feeds flow into a point-in-time store, then server-side specialist services (econometric models plus a schema-constrained LLM), then a consensus and reliability engine, out through an API gateway to a thin React frontend, then to a human approval and audit step. A feedback arc returns realized outcomes to the reliability engine. Callouts note that the Anthropic key stays server-side, the client runs no models, and nothing auto-executes.</desc>
+<style>
+  text{fill:#2f3a45;}
+  .title{font-size:14.5px;font-weight:600;}
+  .sub{font-size:12px;}
+  .anno{font-size:11.5px;fill:#5a6672;}
+  .lgd{font-size:12px;fill:#4a5560;}
+  .flow{stroke:#5f7488;stroke-width:1.7;fill:none;}
+  .lead{stroke:#b7c2cd;stroke-width:1;stroke-dasharray:3 3;fill:none;}
+  .g-t{fill:#2f3a45;} .g-s{fill:#55606b;}
+  .b-t{fill:#1c4460;} .b-s{fill:#3f6480;}
+  .d-t{fill:#163a57;} .d-s{fill:#345a78;}
+  .h-t{fill:#1f5849;} .h-s{fill:#3c6f63;}
+</style>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5f7488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="210" y="16" width="12" height="12" rx="3" fill="#eef1f4" stroke="#8a99a8"/><text class="lgd" x="228" y="26">infra</text>
+<rect x="286" y="16" width="12" height="12" rx="3" fill="#e2eef8" stroke="#6f93b8"/><text class="lgd" x="304" y="26">server inference</text>
+<rect x="430" y="16" width="12" height="12" rx="3" fill="#d8e6f2" stroke="#2c5f8a"/><text class="lgd" x="448" y="26">client</text>
+<rect x="512" y="16" width="12" height="12" rx="3" fill="#e0efe9" stroke="#4f9384"/><text class="lgd" x="530" y="26">human</text>
+
+<rect x="210" y="44" width="300" height="56" rx="9" fill="#eef1f4" stroke="#8a99a8"/><text class="title g-t" x="230" y="70">Data feeds</text><text class="sub g-s" x="230" y="88">market · microstructure · macro · text</text>
+<rect x="210" y="130" width="300" height="56" rx="9" fill="#eef1f4" stroke="#8a99a8"/><text class="title g-t" x="230" y="156">Point-in-time store</text><text class="sub g-s" x="230" y="174">as-of clock · quality flags · lineage</text>
+<rect x="210" y="216" width="300" height="56" rx="9" fill="#e2eef8" stroke="#6f93b8"/><text class="title b-t" x="230" y="242">Specialist services</text><text class="sub b-s" x="230" y="260">econometric models + schema-LLM</text>
+<rect x="210" y="302" width="300" height="56" rx="9" fill="#e2eef8" stroke="#6f93b8"/><text class="title b-t" x="230" y="328">Consensus + reliability</text><text class="sub b-s" x="230" y="346">posterior · entropy · weights · calibration</text>
+<rect x="210" y="388" width="300" height="56" rx="9" fill="#eef1f4" stroke="#8a99a8"/><text class="title g-t" x="230" y="414">API gateway</text><text class="sub g-s" x="230" y="432">REST for history · WebSocket for live</text>
+<rect x="210" y="474" width="300" height="56" rx="9" fill="#d8e6f2" stroke="#2c5f8a"/><text class="title d-t" x="230" y="500">React frontend</text><text class="sub d-s" x="230" y="518">cockpit · drill-down · replay</text>
+<rect x="210" y="560" width="300" height="56" rx="9" fill="#e0efe9" stroke="#4f9384"/><text class="title h-t" x="230" y="586">Human approval + audit</text><text class="sub h-s" x="230" y="604">the decision, and the log</text>
+
+<line class="flow" x1="360" y1="100" x2="360" y2="130" marker-end="url(#ar)"/>
+<line class="flow" x1="360" y1="186" x2="360" y2="216" marker-end="url(#ar)"/>
+<line class="flow" x1="360" y1="272" x2="360" y2="302" marker-end="url(#ar)"/>
+<line class="flow" x1="360" y1="358" x2="360" y2="388" marker-end="url(#ar)"/>
+<line class="flow" x1="360" y1="444" x2="360" y2="474" marker-end="url(#ar)"/>
+<line class="flow" x1="360" y1="530" x2="360" y2="560" marker-end="url(#ar)"/>
+
+<path class="flow" d="M210 588 H170 V330 H210" marker-end="url(#ar)"/>
+<text class="anno" text-anchor="end" x="158" y="451">realized outcomes<tspan x="158" dy="15">update reliability</tspan><tspan x="158" dy="15">weights — the loop</tspan></text>
+
+<path class="lead" d="M510 244 H524"/>
+<text class="anno" x="528" y="234">Anthropic key stays<tspan x="528" dy="15">server-side — never</tspan><tspan x="528" dy="15">in the browser</tspan></text>
+<path class="lead" d="M510 502 H524"/>
+<text class="anno" x="528" y="492">Thin client: renders<tspan x="528" dy="15">the live posterior,</tspan><tspan x="528" dy="15">runs no models</tspan></text>
+<path class="lead" d="M510 588 H524"/>
+<text class="anno" x="528" y="578">Proposes → approves →<tspan x="528" dy="15">logs. Nothing</tspan><tspan x="528" dy="15">auto-executes</tspan></text>
+</svg>

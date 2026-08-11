@@ -227,6 +227,10 @@ schema-constrained output** — never a raw trading instruction.
 
 : {.striped .hover}
 
+::: {.status-note}
+An operational design note — how this architecture becomes a monitored, human-approved interface, and how it would be built — is set out separately in [The AMI Console](../ui/index.qmd).
+:::
+
 ## Data architecture and a worked example
 
 The initial prototype focuses on the **NASDAQ-100 ecosystem** — rich enough to test macro sensitivity,

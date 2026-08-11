@@ -27,6 +27,8 @@ website:
         href: ai-systems/index.qmd
       - text: "PhD"
         href: phd/index.qmd
+      - text: "Console"
+        href: ui/index.qmd
       - text: "Code"
         href: code.qmd
     right:

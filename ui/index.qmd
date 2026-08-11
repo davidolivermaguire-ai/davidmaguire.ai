@@ -1,0 +1,104 @@
+---
+title: "The AMI Console"
+subtitle: "From proposal to interface — a design note on turning the Adaptive Market Intelligence architecture into a glass-box decision cockpit that a human governs."
+description: "How I would operationalise the AMI proposal as a working interface: what it shows, how it is built, and the boundaries that keep it honest — the system proposes and a human approves, the models run server-side, and nothing auto-executes."
+toc: true
+---
+
+The [Adaptive Market Intelligence proposal](../phd/index.qmd) describes a system for inferring
+market state and governing decisions under it. This note takes the obvious next question — *what
+would it be like to use?* — and answers it as a design rather than a promise. It sketches the
+interface and the stack behind it to the same standard as the rest of this site: every claim about
+how it behaves is one the [architecture](../phd/index.qmd) and the
+[experiments](../quant-lab/index.qmd) already support.
+
+The temptation is to picture a trading terminal with a big **Execute** button. That is the wrong
+build for this system, and getting it wrong would contradict the proposal's central discipline. The
+AMI interface is not an order router. It is a **glass-box decision cockpit**: it makes the
+market-state posterior, its uncertainty, and its track record legible, then routes a *proposed*,
+risk-sized action to a human for sign-off. The model proposes; a person governs; the
+[LLM is a measured input, never an executor](../ai-systems/why-llms-never-trade/index.qmd).
+
+## What the interface is organised around
+
+Four choices separate this from a conventional trading screen, and each falls out of the proposal
+rather than out of taste.
+
+**State, not price, is the centre.** The hero object is the posterior over market states and its
+entropy; price is context. A normal terminal answers "what is the price doing?" — this one answers
+"what state are we in, and how sure are we?"
+
+**Disagreement is a first-class signal.** The consensus layer's own disagreement —
+[posterior entropy](../ml/hypothesis-reconciliation/index.qmd) — is the interface's attention
+primitive, because the
+[evidence shows the value of state information concentrates at regime transitions](../quant-lab/benefit-at-transitions/index.qmd),
+exactly where disagreement spikes. When the council splits, the UI says so loudly.
+
+**Calibration is always on screen.** The claim of the whole programme is calibration and risk
+control, not return-timing alpha. So the live
+[calibration](../ml/probability-calibration/index.qmd) status — a rolling Brier score and
+reliability read — sits in the header as the first thing a supervisor or an allocator sees.
+Credibility is a permanent element, not a buried report.
+
+**Every number is traceable.** No output is unexplained: each state estimate decomposes into the
+specialist evidence and the current reliability weights that produced it. The cockpit's job is to
+let you *audit the reasoning*, not to be trusted on faith.
+
+Here is the primary screen — an illustrative mock-up, not live output:
+
+![**The AMI decision cockpit (illustrative).** The market-state posterior and its uncertainty lead; council disagreement and transition probability sit beside them; the specialist-evidence table shows each specialist's reading, confidence, and current reliability weight, with its agreement against consensus. The governed action bar proposes a risk-sized action and requires human sign-off. Every number here is illustrative, not a result.](fig-ui-cockpit.svg){#fig-cockpit fig-alt="Illustrative dashboard mock-up showing a market-state posterior, disagreement and transition meters, a calibration badge, a six-row specialist-evidence table, and a governed decision bar with review and override controls." fig-align="center" width="100%"}
+
+## The views
+
+The cockpit is one of a small set of screens. A **specialist drill-down** opens any evidence row
+into the underlying series, the model's recent hit-rate, and why it currently carries the weight it
+does. A **council view** shows the competing hypotheses and how the
+[Bayesian reconciliation](../ml/hypothesis-reconciliation/index.qmd) combined them into the
+posterior and its disagreement. A **strategy-and-risk view** exposes the regime-conditioned
+[suitability scores](../ml/strategy-council/index.qmd) and the deterministic
+[risk-governance](../ai-systems/ai-risk-controls/index.qmd) constraints that gate any proposed
+action. A **replay-and-evaluation view** re-runs the system over history — walk-forward, net of
+costs, with deflated-Sharpe and backtest-overfitting corrections — so the calibration and
+transition claims can be checked rather than asserted. And a **data-provenance view** surfaces
+feeds, freshness, and available-at timestamps, because point-in-time integrity is a property to be
+shown, not assumed.
+
+For a proposal, the replay-and-evaluation view is the one that matters most: it is where honest
+nulls and calibration are *demonstrated*. The cockpit impresses; the replay screen convinces.
+
+## How it's built
+
+One rule shapes everything: **the browser renders, the server computes.** The specialists —
+[Kalman and state-space](../ml/kalman-state-space/index.qmd),
+[EGARCH and HAR-RV](../ml/egarch-har/index.qmd),
+[cross-asset DCC](../ml/cross-asset-dependence/index.qmd),
+[change-point and drift](../ml/cusum-drift/index.qmd) — and the reconciliation run server-side in
+Python (`statsmodels`, `arch`, `filterpy`), against a single as-of clock that enforces point-in-time
+integrity in one place. The frontend never runs a model; it subscribes to outputs over a WebSocket
+and renders them.
+
+Two consequences are worth stating plainly, because both touch how I build MarketLens AI today.
+First, calling the Anthropic API directly from the browser has to stop for this build: it exposes
+the key client-side, which is tolerable for a personal tool and disqualifying for anything that
+governs capital. The [schema-constrained LLM specialist](../ai-systems/schema-constrained-extraction/index.qmd)
+runs server-side and returns validated JSON; the browser only ever sees the parsed evidence object.
+Second, the human-in-the-loop is not decoration — every proposed action, approval, and override is
+written to an immutable audit log, which is at once the governance record and the raw material for
+the outcome-review loop that updates the reliability weights.
+
+![**Build architecture.** The boundaries are the point: the models and the Anthropic key stay server-side, the client is a thin renderer, and the human-approval step with its audit log is what makes "nothing auto-executes" a property of the system rather than a sentence in a proposal.](fig-ui-architecture.svg){#fig-architecture fig-alt="Vertical build stack from data feeds through a point-in-time store, server-side specialist services and a consensus engine, an API gateway, a thin React frontend, and a human approval and audit step, with a feedback loop returning realized outcomes to the reliability engine." fig-align="center" width="60%"}
+
+## Sequencing, and a caveat
+
+I would build this in four passes, cheapest-credible-thing first: a read-only cockpit over the
+existing NASDAQ-100 prototype data; then live specialist drill-downs over a WebSocket; then the
+governed decision bar with its audit log; then the replay-and-evaluation view. Wherever possible I
+would work **replay-first over stored history** rather than live — it needs no streaming
+infrastructure, is fully reproducible, and is the honest framing for research, with "live" a later
+switch on the same API.
+
+The caveat is deliberate. This interface is a **demonstration and monitoring layer, not the
+research contribution.** The contribution is the econometrics and the honest evaluation; the UI
+exists to make that work legible and governable, and should be built lean enough that it never
+competes with the science for attention — which is, in miniature, the same discipline the
+[whole proposal](../phd/index.qmd) argues for.
