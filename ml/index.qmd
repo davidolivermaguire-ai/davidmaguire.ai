@@ -75,7 +75,7 @@ specialist and combination layer, built out here one entry at a time to the same
 [state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/),
 [cross-asset dependence (DCC)](cross-asset-dependence/), [CUSUM & concept-drift detection](cusum-drift/),
 [Bayesian hypothesis reconciliation](hypothesis-reconciliation/), [liquidity-stress anomaly detection](liquidity-anomaly/),
-[contextual bandits](contextual-bandits/) and [the strategy-suitability council](strategy-council/) —
+[supervised liquidity-stress modelling](supervised-stress/), [contextual bandits](contextual-bandits/) and [the strategy-suitability council](strategy-council/) —
 ***the specialist tier is now complete***: every specialist, combination and consensus method the proposal
 names is built, verified and honestly evaluated on this site.
 

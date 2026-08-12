@@ -17,7 +17,9 @@ label, so it is a job for **unsupervised anomaly detection**: learn what normal 
 data itself, and flag the days that do not belong. This entry builds that detector, verifies it recovers
 known anomalies, and shows on the Nasdaq that it catches real liquidity stress — including the kind a naive
 "big move" rule misses. It is the [proposal's](../../phd/index.qmd) liquidity-condition estimator, and the
-tripwire that tells the risk layer the market has become dangerous to trade.
+tripwire that tells the risk layer the market has become dangerous to trade. Its
+[supervised counterpart](../supervised-stress/index.qmd) turns the same features to a *forward*
+question — forecasting the coming week's stress as a calibrated probability.
 
 ## 1. What problem does it solve?
 

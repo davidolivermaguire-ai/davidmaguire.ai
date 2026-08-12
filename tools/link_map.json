@@ -1,0 +1,30 @@
+{
+  "_comment": "Canonical term -> URL map for tools/link_lint.py. 'url' is the path fragment as it appears inside links (e.g. ../ml/xgboost/index.qmd contains 'ml/xgboost/'). 'qmd' is the entry's own source, skipped so it isn't flagged on its own page. 'aliases' are the terms that, appearing as plain text, are candidates to link. Add entries/aliases as the site grows; keep aliases distinctive to limit noise.",
+  "entries": [
+    { "url": "ml/xgboost/", "qmd": "ml/xgboost/index.qmd", "aliases": ["gradient boosting", "gradient-boosted", "boosting", "XGBoost"] },
+    { "url": "ml/lightgbm/", "qmd": "ml/lightgbm/index.qmd", "aliases": ["LightGBM"] },
+    { "url": "ml/ensemble-methods/", "qmd": "ml/ensemble-methods/index.qmd", "aliases": ["Bayesian model averaging", "model averaging", "stacking", "stacked ensemble", "ensemble combination"] },
+    { "url": "ml/contextual-bandits/", "qmd": "ml/contextual-bandits/index.qmd", "aliases": ["contextual bandits", "LinUCB"] },
+    { "url": "ml/online-expert-weighting/", "qmd": "ml/online-expert-weighting/index.qmd", "aliases": ["expert weighting", "multiplicative weights", "Hedge algorithm", "fixed-share"] },
+    { "url": "ml/kalman-state-space/", "qmd": "ml/kalman-state-space/index.qmd", "aliases": ["Kalman filter", "state-space", "RTS smoother"] },
+    { "url": "ml/egarch-har/", "qmd": "ml/egarch-har/index.qmd", "aliases": ["EGARCH", "GJR", "HAR-RV", "HAR model"] },
+    { "url": "ml/cross-asset-dependence/", "qmd": "ml/cross-asset-dependence/index.qmd", "aliases": ["DCC", "dynamic conditional correlation", "absorption ratio"] },
+    { "url": "ml/cusum-drift/", "qmd": "ml/cusum-drift/index.qmd", "aliases": ["CUSUM", "concept-drift", "concept drift", "Page-Hinkley"] },
+    { "url": "ml/hypothesis-reconciliation/", "qmd": "ml/hypothesis-reconciliation/index.qmd", "aliases": ["hypothesis reconciliation", "posterior entropy", "disagreement entropy"] },
+    { "url": "ml/liquidity-anomaly/", "qmd": "ml/liquidity-anomaly/index.qmd", "aliases": ["Isolation Forest", "anomaly detection", "Mahalanobis"] },
+    { "url": "ml/supervised-stress/", "qmd": "ml/supervised-stress/index.qmd", "aliases": ["supervised stress models", "supervised stress", "supervised liquidity-stress"] },
+    { "url": "ml/strategy-council/", "qmd": "ml/strategy-council/index.qmd", "aliases": ["strategy council", "strategy-suitability council", "suitability council"] },
+    { "url": "ml/regime-aware-modelling/", "qmd": "ml/regime-aware-modelling/index.qmd", "aliases": ["regime-aware", "hidden Markov", "HMM"] },
+    { "url": "ml/change-point-detection/", "qmd": "ml/change-point-detection/index.qmd", "aliases": ["change-point detection", "change point detection", "Bayesian online change-point", "BOCPD"] },
+    { "url": "ml/markov-switching-regression/", "qmd": "ml/markov-switching-regression/index.qmd", "aliases": ["Markov-switching", "Markov switching"] },
+    { "url": "ml/gaussian-mixture-models/", "qmd": "ml/gaussian-mixture-models/index.qmd", "aliases": ["Gaussian mixture", "Gaussian mixtures", "mixture model", "mixtures"] },
+    { "url": "ml/probability-calibration/", "qmd": "ml/probability-calibration/index.qmd", "aliases": ["probability calibration", "conformal prediction", "reliability diagram"] },
+    { "url": "ml/market-microstructure/", "qmd": "ml/market-microstructure/index.qmd", "aliases": ["market microstructure", "price impact", "order-book"] },
+    { "url": "equations/value-at-risk/", "qmd": "equations/value-at-risk/index.qmd", "aliases": ["Expected Shortfall", "Expected-Shortfall", "Value at Risk", "Value-at-Risk", "CVaR"] },
+    { "url": "equations/maximum-drawdown/", "qmd": "equations/maximum-drawdown/index.qmd", "aliases": ["maximum drawdown", "max drawdown"] },
+    { "url": "equations/sharpe-ratio/", "qmd": "equations/sharpe-ratio/index.qmd", "aliases": ["Sharpe ratio"] },
+    { "url": "equations/sortino-ratio/", "qmd": "equations/sortino-ratio/index.qmd", "aliases": ["Sortino ratio"] },
+    { "url": "equations/kelly-criterion/", "qmd": "equations/kelly-criterion/index.qmd", "aliases": ["Kelly criterion", "Kelly sizing"] },
+    { "url": "equations/garch/", "qmd": "equations/garch/index.qmd", "aliases": ["GARCH"] }
+  ]
+}

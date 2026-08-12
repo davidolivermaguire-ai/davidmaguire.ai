@@ -72,7 +72,12 @@ directly](../../quant-lab/volatility-managed-portfolios/index.qmd), finding that
 *risk control, not statistically significant alpha*, and [measures the forecast
 horizon](../../quant-lab/volatility-forecasting-horizon/index.qmd) at roughly a one-month shock half-life.
 This is the empirical backbone of the whole proposal: the forecastable dimension is *risk*, so risk — not
-return — is where the system's edge is sought.
+return — is where the system's edge is sought. Volatility is *priced* as well as forecastable:
+[Ang, Hodrick, Xing & Zhang (2006)](../literature/ang-2006-idiosyncratic-volatility/index.qmd) document
+that both sensitivity to aggregate-volatility shocks and high *idiosyncratic* volatility earn abnormally
+low returns — the idiosyncratic-volatility puzzle — yet the result is notoriously design-fragile
+(weighting, breakpoints and the related lottery-demand *MAX* effect all erode it), a cautionary case that
+underwrites this proposal's insistence on pre-committed robustness grids over single specifications.
 
 ## 4. Reinforcement learning for sequential decisions
 
@@ -173,6 +178,7 @@ depth.
 - Almgren, R., & Chriss, N. (2001). *Optimal Execution of Portfolio Transactions.* Journal of Risk, 3(2).
 - Andersen, T. G., & Bollerslev, T. (1998). *Answering the Skeptics: Yes, Standard Volatility Models Do Provide Accurate Forecasts.* International Economic Review, 39(4).
 - Ang, A., & Bekaert, G. (2002). *International Asset Allocation with Regime Shifts.* Review of Financial Studies, 15(4).
+- Ang, A., Hodrick, R. J., Xing, Y., & Zhang, X. (2006). *The Cross-Section of Volatility and Expected Returns.* Journal of Finance, 61(1).
 - Araci, D. (2019). *FinBERT: Financial Sentiment Analysis with Pre-trained Language Models.* arXiv:1908.10063.
 - Bailey, D. H., & López de Prado, M. (2014). *The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting, and Non-Normality.* Journal of Portfolio Management, 40(5).
 - Bailey, D. H., Borwein, J., López de Prado, M., & Zhu, Q. J. (2017). *The Probability of Backtest Overfitting.* Journal of Computational Finance, 20(4).
