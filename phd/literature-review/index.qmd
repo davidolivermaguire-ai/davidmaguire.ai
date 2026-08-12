@@ -43,7 +43,7 @@ supports, and one that separates this work from the return-chasing it is often m
 ## 2. Regime detection and non-stationarity
 
 If markets are adaptive, the central modelling object is the **regime**. The foundational apparatus is
-Hamilton's (1989) Markov regime-switching model, which lets a series' parameters switch between hidden
+Hamilton's (1989) [Markov regime-switching model](../literature/hamilton-1989-regime-switching/index.qmd), which lets a series' parameters switch between hidden
 states following a Markov chain, and its asset-pricing descendants: Ang & Bekaert (2002) show that regime
 shifts materially change optimal international allocation, and Guidolin & Timmermann (2007) extend this to
 multivariate regime-switching portfolios. A parallel, more operational line treats regimes as *risk states*
@@ -64,7 +64,7 @@ Where returns resist prediction, **volatility** yields. From Engle's (1982) ARCH
 GARCH to the realized-volatility programme — Andersen & Bollerslev's (1998) rebuttal of the "GARCH doesn't
 forecast" sceptics, and Corsi's (2009) HAR model — the literature establishes that conditional variance is
 persistent and genuinely forecastable, if only over short horizons. The natural question is whether that
-forecastability is *tradable*, and here the literature is instructively divided: Moreira & Muir (2017)
+forecastability is *tradable*, and here the literature is instructively divided: [Moreira & Muir (2017)](../literature/moreira-muir-2017-volatility-managed/index.qmd)
 argue that volatility-managed portfolios (scaling exposure by inverse variance) raise Sharpe ratios and
 produce alpha, while Cederburg, O'Doherty, Wang & Yang (2020) show much of that advantage evaporates out of
 sample and net of costs. The proposal sides with neither on faith: it [reproduces the debate
@@ -110,13 +110,13 @@ controls.
 ## 6. LLM agents and multi-agent trading systems — the frontier and its critics
 
 This is where the proposal must be positioned most carefully, because the frontier moved fast. Since 2024 a
-wave of **multi-agent LLM trading systems** has appeared — most prominently TradingAgents (Xiao, Sun, Luo &
+wave of **multi-agent LLM trading systems** has appeared — most prominently [TradingAgents](../literature/tradingagents-2024-multi-agent-llm/index.qmd) (Xiao, Sun, Luo &
 Wang, 2024), which simulates a trading firm with fundamental, sentiment and technical analyst agents,
 researchers, traders and risk managers, and FinRobot (Yang et al., 2024), an open-source agentic platform —
 surveyed in a growing body of work (e.g. the 2024 *Large Language Model Agent in Financial Trading* survey).
 Their shared design is a **swarm of LLM agents deliberating in natural language** toward a trade, and their
 reported backtests are impressive. The proposal is emphatically *not* a fourteenth entry in this line, and
-the reason is that the field's own most rigorous recent work has turned sceptical. Li, Kim, Cucuringu & Ma
+the reason is that the field's own most rigorous recent work has turned sceptical. [Li, Kim, Cucuringu & Ma](../literature/li-2025-finsaber-llm-evaluation/index.qmd)
 (2025), with their FINSABER framework, subject LLM investing strategies to broad-universe, two-decade,
 bias-controlled backtesting and find the reported advantages **largely evaporate** — and, most tellingly for
 this proposal, that LLM strategies are *"overly conservative in bull markets… and overly aggressive in bear
@@ -137,7 +137,7 @@ missing.
 
 The thread that ties the critique of §6 to the discipline of the whole site is the **backtest-overfitting**
 literature. López de Prado (2018) catalogues how standard backtesting silently manufactures false discoveries;
-Bailey & López de Prado (2014) formalise the correction as the **Deflated Sharpe Ratio**, adjusting an
+[Bailey & López de Prado (2014)](../literature/bailey-lopez-de-prado-2014-deflated-sharpe/index.qmd) formalise the correction as the **Deflated Sharpe Ratio**, adjusting an
 observed Sharpe for the number of trials, sample length and non-normality; Bailey et al. (2017) quantify the
 **Probability of Backtest Overfitting**; and Sullivan, Timmermann & White (2001) show, on the classic case
 of calendar effects, that data-mined patterns vanish once the search is accounted for. Together with Harvey,

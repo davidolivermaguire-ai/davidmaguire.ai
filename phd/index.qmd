@@ -219,7 +219,7 @@ schema-constrained output** — never a raw trading instruction.
 | Specialist | Candidate methods | Structured output |
 |------------|-------------------|-------------------|
 | **Trend & persistence** | [HMM](../ml/regime-aware-modelling/index.qmd), [Kalman filter & state-space](../ml/kalman-state-space/index.qmd), [gradient boosting](../ml/xgboost/index.qmd) | Direction, persistence, transition probability, model agreement |
-| **Volatility** | [GARCH](../equations/garch/index.qmd) family, [EGARCH & HAR-RV](../ml/egarch-har/index.qmd), boosting, [sequence models](../ml/lstms/index.qmd) | Expansion probability, expected horizon, tail-risk condition |
+| **Volatility** | [GARCH](../equations/garch/index.qmd) family, [EGARCH & HAR-RV](../ml/egarch-har/index.qmd), [boosting](../ml/xgboost/index.qmd), [sequence models](../ml/lstms/index.qmd) | Expansion probability, expected horizon, tail-risk condition |
 | **Liquidity & microstructure** | [Anomaly detection](../ml/liquidity-anomaly/index.qmd), supervised stress models, [order-book/impact features](../ml/market-microstructure/index.qmd) | Liquidity condition, execution risk, stress probability |
 | **Structural change** | [Bayesian online change-point](../ml/change-point-detection/index.qmd), [CUSUM & drift detection](../ml/cusum-drift/index.qmd) | Break probability, detection delay, affected variables |
 | **Macro & narrative** | [Schema-constrained LLM](../ai-systems/schema-constrained-extraction/index.qmd), [event/surprise extraction](../ai-systems/sentiment-and-narrative/index.qmd) | Event class, direction, novelty, duration, affected assets, evidence |
@@ -297,8 +297,8 @@ commercial prototype.
 [Bayesian online change-point detection](../ml/change-point-detection/index.qmd);
 [logistic regression](../ml/logistic-regression/index.qmd),
 [random forests](../ml/random-forests/index.qmd) and
-[gradient boosting](../ml/xgboost/index.qmd); equal-weight, majority-vote, **Bayesian model averaging
-and stacking** ensembles; static versus regime-conditioned allocation; and single-agent, regime-unaware
+[gradient boosting](../ml/xgboost/index.qmd); equal-weight, majority-vote, **[Bayesian model averaging
+and stacking](../ml/ensemble-methods/index.qmd)** ensembles; static versus regime-conditioned allocation; and single-agent, regime-unaware
 comparators. **Validation** enforces chronological splits, [walk-forward](../ml/walk-forward-validation/index.qmd)
 and rolling windows, [purged cross-validation with embargo](../ml/time-series-cross-validation/index.qmd),
 available-at timestamps and frozen information sets, transaction costs, spreads, slippage and delayed
@@ -309,7 +309,7 @@ testing.
 **Reinforcement learning is not assumed to be necessary.** It is tested only after the state
 representation, specialist evidence and deterministic strategy mappings are validated — as a candidate
 for expert weighting, strategy allocation, exposure scaling or conflict resolution — and compared
-directly against transparent rules, **contextual bandits**, Bayesian updating and supervised
+directly against transparent rules, **[contextual bandits](../ml/contextual-bandits/index.qmd)**, Bayesian updating and supervised
 meta-models. A finding that simpler methods win is an academically valid result. Where a risk-sensitive
 objective is used, it penalises variance, drawdown, cost and turnover rather than maximising raw
 profit,
@@ -329,7 +329,7 @@ sharpness); **transition detection** (lead/delay, false alarms, missed transitio
 **consensus quality** (hypothesis ranking, disagreement resolution, contradiction handling);
 **strategy suitability** ([Sharpe](../equations/sharpe-ratio/index.qmd),
 [Sortino](../equations/sortino-ratio/index.qmd), Calmar,
-[drawdown](../equations/maximum-drawdown/index.qmd), Expected Shortfall, turnover, tail behaviour);
+[drawdown](../equations/maximum-drawdown/index.qmd), [Expected Shortfall](../equations/value-at-risk/index.qmd), turnover, tail behaviour);
 **execution realism** (spread, slippage, impact, latency, implementation shortfall); **agent
 contribution** ([ablation and Shapley-style attribution](../ml/multi-agent-systems/index.qmd),
 overrides); **robustness** (block-bootstrap intervals,
@@ -514,8 +514,8 @@ strategy.
 A first prototype is intentionally small: NQ futures, QQQ, NASDAQ breadth, a volatility index, 2y/10y
 yields and a dollar proxy; one-minute decisions; a Python / Parquet / TimescaleDB / MLflow / FastAPI
 stack; six initial specialists (trend, volatility, liquidity, structural change, macro-event,
-cross-asset); consensus baselines (equal weighting, majority vote, Bayesian model averaging,
-supervised stacking); five strategy families (trend, mean-reversion, long volatility, market-neutral,
+cross-asset); consensus baselines (equal weighting, majority vote, [Bayesian model averaging,
+supervised stacking](../ml/ensemble-methods/index.qmd)); five strategy families (trend, mean-reversion, long volatility, market-neutral,
 cash preservation); and a first user output of live market state, confidence, disagreement, evidence,
 strategy suitability and risk recommendation. The first research milestone is concrete: **demonstrate
 that market-state information improves at least one of calibration, drawdown, tail risk or strategy
