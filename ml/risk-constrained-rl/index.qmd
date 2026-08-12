@@ -39,7 +39,7 @@ or **exponential utility** (a risk-aversion parameter). These express a *prefere
 the policy trades return for risk continuously.
 
 **Hard — constrained MDPs.** Keep the return objective but add **constraints the policy must satisfy** —
-expected cost $\le$ budget, where the cost is CVaR, volatility, [leverage](../../equations/kelly-criterion/index.qmd),
+expected cost $\le$ budget, where the cost is [CVaR](../../equations/value-at-risk/index.qmd), volatility, [leverage](../../equations/kelly-criterion/index.qmd),
 or drawdown. The agent maximises return *within the feasible set*; the constraint is not a preference but
 a rule. This is the formal shape of a risk *limit*, and it is what a Risk Agent enforces.
 

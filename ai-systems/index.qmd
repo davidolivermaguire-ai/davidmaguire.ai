@@ -61,7 +61,7 @@ qualitative counterpart to the proposal's quantitative evidence.*
 A concrete system I want to study — deliberately decomposed so each component can be tested and evaluated
 on its own, rather than trusting a single model end to end:
 
-- **Market Regime Agent** — identifies the current market state and estimates regime probabilities (HMMs, mixtures, change-point detection — foundations [already built](../ml/regime-aware-modelling/index.qmd)).
+- **Market Regime Agent** — identifies the current market state and estimates regime probabilities (HMMs, [mixtures](../ml/gaussian-mixture-models/index.qmd), [change-point detection](../ml/change-point-detection/index.qmd) — foundations [already built](../ml/regime-aware-modelling/index.qmd)).
 - **News & Narrative Agent** — converts unstructured text into bounded, schema-constrained, timestamp-safe market features; never free-form trading instructions.
 - **RL Trading Agent** — selects exposure, timing, and position-management actions from the combined state, trained on risk-adjusted outcomes.
 - **Risk Management Agent** — approves, scales, or rejects any proposed action against hard, pre-defined limits (exposure, drawdown, Expected Shortfall).

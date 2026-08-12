@@ -3,12 +3,17 @@
 
 Targets the specific bug the site's link audit found: inside an *enumeration*
 (a table cell, or a comma/middot-separated list of methods) that already links
-at least one method, a sibling method that has its own page is left as plain
-text. Scoping to enumerations keeps it high-signal - ordinary prose mentions of
-a concept are not flagged, only lists where a peer is already linked.
+one method, a sibling method that has its own page is left as plain text - the
+"one linked, its neighbour plain" pattern.
 
-Reads tools/link_map.json. Standard library only (no pip installs), so it runs
-in the same pass that verifies the site's numbers.
+Scoping keeps it high-signal:
+  - only enumeration lines (table cells / method lists) are checked;
+  - headings, code blocks and figure captions (descriptive prose) are skipped;
+  - links are resolved to a canonical path, so a term already linked on the line
+    via any relative path is not re-flagged.
+
+Reads tools/link_map.json. Standard library only, so it runs in the same pass
+that verifies the site's numbers.
 
 Usage:
     python tools/link_lint.py                 # scan the whole site, warn
@@ -24,13 +29,32 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 MAP = os.path.join(HERE, "link_map.json")
-LINK_RE = re.compile(r"\[[^\]]*\]\([^)]*\)")  # a markdown [text](url) link
+LINK_RE = re.compile(r"\[[^\]]*\]\([^)]*\)")   # a markdown [text](url) link
+URL_RE = re.compile(r"\]\(([^)]+)\)")          # the url inside a link
+
+
+def canon(path):
+    """Canonical key for an internal target: repo-relative, no index.qmd, no slash."""
+    p = path.replace("\\", "/").split("#")[0].split("?")[0]
+    if p.endswith("index.qmd"):
+        p = p[:-len("index.qmd")]
+    return p.rstrip("/")
+
+
+def resolve(url, file_dir):
+    """Resolve a link url (possibly relative) to a canonical repo-relative key."""
+    u = url.strip()
+    if not u or u.startswith(("http://", "https://", "mailto:", "#")):
+        return None
+    full = os.path.normpath(os.path.join(file_dir, u)).replace("\\", "/")
+    return canon(full)
 
 
 def load_entries():
     data = json.load(open(MAP, encoding="utf-8"))
     ents = []
     for e in data["entries"]:
+        e["_canon"] = canon(e["url"])
         e["_res"] = [
             (re.compile(r"(?<![\w-])" + re.escape(a) + r"(?![\w-])", re.I), a)
             for a in e["aliases"]
@@ -49,12 +73,12 @@ def _frontmatter_end(lines):
 
 def check_file(path, ents):
     rel = os.path.relpath(path, ROOT).replace("\\", "/")
+    file_dir = os.path.dirname(rel)
     text = open(path, encoding="utf-8").read()
     lines = text.split("\n")
     start = _frontmatter_end(lines)
 
-    # Blank every link span across the WHOLE file (link text can wrap across lines),
-    # keeping newlines so line numbers and offsets are preserved.
+    # Blank every link span across the WHOLE file (link text can wrap across lines).
     chars = list(text)
     spans = []
     for m in LINK_RE.finditer(text):
@@ -81,8 +105,8 @@ def check_file(path, ents):
         if s.startswith("```"):
             in_code = not in_code
             continue
-        if in_code or not s or s.startswith("#"):
-            continue
+        if in_code or not s or s.startswith("#") or s.startswith("!["):
+            continue                        # code, headings, figure captions
         if set(s) <= set("|:- "):          # table separator row
             continue
         if not has_link(idx):               # must already link something
@@ -90,9 +114,10 @@ def check_file(path, ents):
         seps = line.count(",") + line.count("·") + line.count(";")
         if not (s.startswith("|") or seps >= 2):
             continue                        # only enumerations: table cells / method lists
+        targets = {resolve(u, file_dir) for u in URL_RE.findall(line)}
         plain = blines[idx]                 # link text blanked out, wraps included
         for e in ents:
-            if rel == e["qmd"] or e["url"] in line:
+            if rel == e["qmd"] or e["_canon"] in targets:
                 continue                    # its own page, or already linked on this line
             for rgx, alias in e["_res"]:
                 if rgx.search(plain):

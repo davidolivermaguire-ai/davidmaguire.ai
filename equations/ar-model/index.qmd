@@ -16,7 +16,7 @@ series on its own lagged values, so the past becomes an explicit prediction of t
 present. One number — the AR(1) coefficient $\phi$ — decides almost everything: whether
 the series mean-reverts, drifts as a random walk, or explodes. It is the model sitting
 underneath the two entries you just read, [autocorrelation](../autocorrelation/) and
-[stationarity](../stationarity-adf/), and the base that MA, ARIMA and GARCH build on.
+[stationarity](../stationarity-adf/), and the base that [MA](../ma-model/index.qmd), [ARIMA](../arima/index.qmd) and [GARCH](../garch/index.qmd) build on.
 
 ## The equation
 

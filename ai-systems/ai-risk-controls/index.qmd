@@ -29,8 +29,8 @@ failures it is there to catch:
 | **Input** | treat all external text as untrusted; [point-in-time](../../ml/data-leakage/index.qmd) only; vet and rate-limit sources | prompt injection, look-ahead leakage, poisoned data |
 | **Invocation** | [schema-bounded](../schema-constrained-extraction/index.qmd) output; [grounding](../rag/index.qmd) in retrieved sources; low temperature; guardrail system prompts | free-form actions, hallucination, stale knowledge |
 | **Output** | [verify numbers against a data feed](../hallucination-risk/index.qmd); validate ranges, enums, ticker whitelist; [calibrated](../../ml/probability-calibration/index.qmd) confidence gate; cross-source corroboration | fabricated figures and entities, over-confidence |
-| **Action** | [deterministic risk gate](../why-llms-never-trade/index.qmd), hard limits (exposure, leverage, drawdown, CVaR); human-in-the-loop; kill-switch | catastrophic or irreversible trades |
-| **Monitoring** | log every input, output and decision; drift and anomaly detection; circuit breakers; the [Review Agent](../../ml/multi-agent-systems/index.qmd); adversarial red-teaming | silent failure, distribution shift, novel attacks |
+| **Action** | [deterministic risk gate](../why-llms-never-trade/index.qmd), hard limits (exposure, leverage, [drawdown](../../equations/maximum-drawdown/index.qmd), [CVaR](../../equations/value-at-risk/index.qmd)); human-in-the-loop; kill-switch | catastrophic or irreversible trades |
+| **Monitoring** | log every input, output and decision; drift and [anomaly detection](../../ml/liquidity-anomaly/index.qmd); circuit breakers; the [Review Agent](../../ml/multi-agent-systems/index.qmd); adversarial red-teaming | silent failure, distribution shift, novel attacks |
 
 : Defence in depth — no single layer is trusted; each catches what the last let through. {.striped .hover}
 
