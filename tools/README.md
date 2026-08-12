@@ -14,9 +14,15 @@ It is scoped to enumerations on purpose, so ordinary prose mentions of a concept
 are **not** flagged — only lists where a peer is already linked. That keeps it
 high-signal instead of nagging about every repeat of "GARCH".
 
+It runs **two** checks together: **broken internal links** (dead targets — hard
+errors; code fences and inline `code` are skipped so JS like `f](x.input)` is
+ignored) and the **gap candidates** below (advisory).
+
 ```bash
-python tools/link_lint.py                 # scan the whole site, print candidates
-python tools/link_lint.py --strict        # exit 1 if any candidates (for CI/gating)
+python tools/link_lint.py                 # both checks, whole site
+python tools/link_lint.py --broken        # broken-link check only
+python tools/link_lint.py --siblings      # gap-candidate check only
+python tools/link_lint.py --strict        # exit 1 if any BROKEN links (for CI/gating)
 python tools/link_lint.py phd/index.qmd   # scan specific files
 ```
 
