@@ -18,6 +18,23 @@ reproducible script or notebook. For example, the Monte-Carlo behind
 [How Backtest Selection Inflates the Sharpe Ratio](quant-lab/backtest-overfitting/index.qmd)
 lives in `code/backtest_overfitting.py` in the repository above.
 
+## market-state-lab
+A purpose-built benchmark harness for the proposal's
+[RQ1](phd/index.qmd) — *which methods most reliably identify market state out of sample?*
+Because that is a **comparative** question, the deliverable is a protocol rather than a model:
+one point-in-time data layer, one shared feature set, a pluggable estimator interface, one
+walk-forward engine, and one metrics suite, so that nine methods compete on identical terms.
+
+It currently implements four transparent baselines, a Kalman local-linear-trend filter, a
+Gaussian HMM, a Markov-switching regression, and CUSUM and BOCPD change-point detectors, scored
+across four tiers: recovery on synthetic markets with known regimes, stability, timeliness, and
+[decision value against a volatility-only benchmark](quant-lab/state-decision-value/index.qmd).
+Every estimator must pass an automated look-ahead test asserting that its estimate at time *t*
+is unchanged when future data is appended — filtered, never smoothed.
+
+The harness is being prepared for public release; until then the experiments it produces are
+written up in full, with every parameter and number stated, in the Quant Lab.
+
 ## Principles
 - **Reproducibility first** — code is published alongside the result it produces.
 - **Versioned** — everything is tracked in Git, so results can be traced to the exact code that generated them.

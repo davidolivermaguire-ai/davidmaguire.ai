@@ -182,8 +182,19 @@ distinguishable beyond volatility** ([experiment](../quant-lab/regime-conditioni
 while regime conditioning **does** sharpen probability
 [calibration](../quant-lab/regime-conditional-calibration/index.qmd) and concentrates its benefit
 [at transitions](../quant-lab/benefit-at-transitions/index.qmd). That evidence is exactly why H5–H7
-target calibration, suitability and transitions rather than sizing alpha. A proposal whose own
-experiments can, and do, return nulls is one built on evidence rather than hope.
+target calibration, suitability and transitions rather than sizing alpha.
+
+RQ1 itself has since been put to the same test. Eight state estimators — from a moving-average
+crossover to a Kalman filter, a hidden Markov model, a Markov-switching regression and two
+change-point detectors — were scored against a volatility-only benchmark seeing the same features
+([experiment](../quant-lab/state-decision-value/index.qmd)). All eight made *direction* forecasts
+worse, and four of the twenty-four comparisons are significant **harms**; exactly one
+volatility-calibration gain survived correction — and it came from the **least stable**
+estimator in the panel. That is a
+result RQ1 has to explain rather than average away, and it is why the proposal treats *reliability*
+as a question to be measured across competing methods rather than a property to be assumed of any
+one of them. A proposal whose own experiments can, and do, return nulls is one built on evidence
+rather than hope.
 
 ## Proposed conceptual architecture
 

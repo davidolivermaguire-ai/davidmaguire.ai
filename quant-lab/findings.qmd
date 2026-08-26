@@ -1,7 +1,7 @@
 ---
-title: "Quant Lab — What Eight Experiments Found"
+title: "Quant Lab — What Nine Experiments Found"
 subtitle: "The synthesis: forecastable volatility, regimes that assess rather than size, and the discipline that tells the two from noise"
-description: "A short synthesis of the Quant Lab's eight experiments — what each tested, what it found, and how together they resolve the proposal's central hypotheses and reshape its design."
+description: "A short synthesis of the Quant Lab's nine experiments — what each tested, what it found, and how together they resolve the proposal's central hypotheses and reshape its design."
 date: 2026-07-31
 author: "David Maguire"
 categories: [synthesis]
@@ -9,12 +9,12 @@ toc: true
 ---
 
 The [Quant Lab](index.qmd) set out to do one thing the libraries could not: **test the proposal's bets on
-real data, honestly, with a real chance of a null.** Eight experiments later, the answers cohere into a
+real data, honestly, with a real chance of a null.** Nine experiments later, the answers cohere into a
 single argument — and, because several came back as nulls, one that has already changed the
 [proposal's](../phd/index.qmd) framing rather than merely decorated it. This page is the whole of it, on
 one screen.
 
-## The eight verdicts
+## The nine verdicts
 
 | Experiment | Tests | Verdict |
 |---|:--:|---|
@@ -26,6 +26,7 @@ one screen.
 | [Benefit at transitions](benefit-at-transitions/index.qmd) | **H5** | The risk protection **concentrates at transitions** and the turbulence they open — 142% of it in 38% of days ($p = 0.006$), nothing in the calm middle. |
 | [Hard risk limits](hard-risk-limits/index.qmd) | **H6** | Leverage caps and **volatility/CVaR budgets** make an untradeable strategy viable (−63% → −26% drawdown); reactive **drawdown kill-switches backfire**. |
 | [Calendar anomalies](calendar-anomalies/index.qmd) | discipline | Of 29 seasonal effects, **none survive** an honest multiple-testing correction; the largest $|t|$ is exactly $\sqrt{2\ln N}$. |
+| [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | **RQ1** | Against a volatility-only benchmark, **8 of 8** estimators make direction forecasts worse and **4 of 24** comparisons are significant *harms*; **1 of 24** gains survives deflation — from the *least stable* method. |
 
 : Each experiment, the proposal hypothesis or site finding it tests, and its one-line result. {.striped .hover}
 
@@ -42,21 +43,34 @@ more than reacting to it. Around all of it, hard, forward-looking risk limits ar
 strategy actually **survivable** — while the two discipline experiments stand guard, confirming that the
 best backtest and the best calendar effect are exactly what pure noise produces.
 
+The ninth experiment tests the premise all of that rests on — that a market state can be *identified*
+usefully in the first place — and returns the hardest verdict of the set. Put eight estimators, simple to
+sophisticated, against a volatility-only model with the same information, and every one degrades direction
+forecasting; the single calibration gain that survives correction belongs to the method that changes its
+mind every five days. Reliability decomposes into recovery, stability, timeliness and decision value, and
+these do not co-vary: the best estimator by one is the worst by another. That is not a reason to abandon
+state — it is the reason RQ1 must be answered by **measurement across competing methods** rather than by
+choosing one and defending it.
+
 ## What it means for the proposal
 
-The four hypothesis tests (H4, RQ2, H5, H6) point three times over at the same redesign, and it is a
+The five hypothesis tests (H4, RQ1, RQ2, H5, H6) point repeatedly at the same redesign, and it is a
 sharper proposal for it. The **Regime Agent's** job is **detection and assessment at the turning points —
 not sizing in the stable middle**: a discrete regime earns its place by flagging *when* the market changes
 ([change-point detection](../ml/change-point-detection/index.qmd)), by supplying better-calibrated risk
 probabilities ([calibration](../ml/probability-calibration/index.qmd)), and by conditioning *relationships*
 a scalar cannot ([Markov-switching](../ml/markov-switching-regression/index.qmd)) — while position sizing
 is left to volatility and to the **Risk Agent's** hard, forward-looking limits, which the evidence shows
-are what deliver viability. None of this was assumed; it was tested, including where the test said *no*.
+are what deliver viability. RQ1 adds the constraint that keeps this honest: *which* estimator supplies
+that state is not a detail to be settled by preference, because the panel's rankings on stability and on
+decision value are close to opposite. The proposal therefore commits to a **benchmark protocol** — every
+method scored on the same data, against the same volatility-only benchmark, with a deflated bar — rather
+than to a favoured model. None of this was assumed; it was tested, including where the test said *no*.
 That is the difference the Quant Lab was built to make — and the reason the [proposal](../phd/index.qmd)
 now rests on evidence rather than hope.
 
 ::: {.status-note}
-Every figure in the eight experiments is computed and verified against the same `multi_daily.csv`
-Nasdaq-100 dataset, out-of-sample where a forecast or strategy is involved, and reports nulls as readily as
-positives. Start from any row of the table above.
+Every figure in the first eight experiments is computed and verified against the same `multi_daily.csv`
+Nasdaq-100 dataset; the ninth uses `ndx_daily.csv` over 2015–2026. All are out-of-sample where a forecast
+or strategy is involved, and report nulls as readily as positives. Start from any row of the table above.
 :::
