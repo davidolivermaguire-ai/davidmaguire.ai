@@ -147,20 +147,20 @@ strategy selection under deterministic risk constraints.
 > cross-section (CRSP/Compustat) held to deflated-Sharpe and PBO standards. This falsifiable core gives
 > the broader architecture an empirical spine without narrowing its ambition.
 
-| Ref. | Supporting research question |
-|------|------------------------------|
-| RQ1 | Which statistical, econometric and ML methods most reliably identify trend, volatility, liquidity and structural-change states out of sample? |
-| RQ2 | Can overlapping market *dimensions* be estimated more reliably than a single mutually exclusive regime label? |
-| RQ3 | How should probabilities from heterogeneous models be **calibrated, normalised and compared** across different horizons? |
-| RQ4 | Can structured information from announcements and financial text improve identification of market drivers beyond numerical data? |
-| RQ5 | Does explicit **comparison of competing hypotheses** outperform simple averaging, stacking or voting ensembles? |
-| RQ6 | Does market-state information improve the selection, activation and risk scaling of strategy families after realistic costs? |
-| RQ7 | Can expert reliability be estimated **conditionally**, so models receive different weights in different environments? |
-| RQ8 | Are adaptive-weighting or RL methods superior to transparent deterministic and Bayesian weighting methods? |
-| RQ9 | How stable, explainable and auditable are the outputs across assets, periods, latency assumptions and repeated trials? |
-| RQ10 | Which components create commercially useful decision intelligence even where direct trading performance is not consistently superior? |
+| Ref. | Supporting research question | Evidence so far |
+|------|------------------------------|-----------------|
+| RQ1 | Which statistical, econometric and ML methods most reliably identify trend, volatility, liquidity and structural-change states out of sample? | [Decision value of a state estimate](../quant-lab/state-decision-value/index.qmd) |
+| RQ2 | Can overlapping market *dimensions* be estimated more reliably than a single mutually exclusive regime label? | [Regime-conditional calibration](../quant-lab/regime-conditional-calibration/index.qmd) |
+| RQ3 | How should probabilities from heterogeneous models be **calibrated, normalised and compared** across different horizons? | [Partial — heterogeneous models compared across horizons](../quant-lab/volatility-forecasting-horizon/index.qmd) |
+| RQ4 | Can structured information from announcements and financial text improve identification of market drivers beyond numerical data? | — |
+| RQ5 | Does explicit **comparison of competing hypotheses** outperform simple averaging, stacking or voting ensembles? | — |
+| RQ6 | Does market-state information improve the selection, activation and risk scaling of strategy families after realistic costs? | [Regime-conditioning OOS](../quant-lab/regime-conditioning-oos/index.qmd), [hard risk limits](../quant-lab/hard-risk-limits/index.qmd) |
+| RQ7 | Can expert reliability be estimated **conditionally**, so models receive different weights in different environments? | — |
+| RQ8 | Are adaptive-weighting or RL methods superior to transparent deterministic and Bayesian weighting methods? | — |
+| RQ9 | How stable, explainable and auditable are the outputs across assets, periods, latency assumptions and repeated trials? | [Backtest selection](../quant-lab/backtest-overfitting/index.qmd), [calendar anomalies](../quant-lab/calendar-anomalies/index.qmd) |
+| RQ10 | Which components create commercially useful decision intelligence even where direct trading performance is not consistently superior? | — |
 
-: {.striped}
+: A dash means the question is proposed but not yet tested. Five of the ten already have out-of-sample evidence in the [Quant Lab](../quant-lab/index.qmd) — and where it came back negative, the proposal was changed rather than the result. {.striped}
 
 The testable hypotheses follow directly: **H1** a multidimensional state is more temporally stable and
 useful than a single-label regime; **H2** calibrated ensemble probabilities beat uncalibrated
