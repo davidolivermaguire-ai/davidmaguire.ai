@@ -52,8 +52,11 @@ informative either way.
 
 ## Data & method
 
-Daily Nasdaq-100, 2015–2026 (2,892 days; 2,355 scored after warm-up and walk-forward
-burn-in). Eight state estimators — three transparent baselines (moving-average crossover,
+Daily Nasdaq-100, 2 January 2015 – 6 July 2026 (2,892 days). The scored sample is **not uniform
+across methods**: the three baselines and BOCPD fit nothing and score 2,355 days, while the four
+methods that estimate parameters — Kalman, HMM, Markov-switching and CUSUM — surrender a training
+window and score 1,755. Each is therefore compared against a benchmark run over *its own* sample,
+never against a benchmark that saw a different period. Eight state estimators — three transparent baselines (moving-average crossover,
 trailing-return sign, EWMA slope), a Kalman local-linear-trend filter, a Gaussian HMM, a
 Markov-switching regression, and CUSUM and BOCPD change-point detectors — all producing a
 **filtered** probability vector over {down, range, up}. The harness's ninth estimator, a
@@ -95,8 +98,9 @@ FDR p = 0.0008) and `bocpd` (−0.0074, t = −2.60, FDR p = 0.038) clear the de
 `ewma_slope` result is a ~7% relative improvement on a 0.2407 baseline and is the only one
 comfortably clear of it.
 
-**Risk control: the null holds, and the naive reading is a trap.** Against a volatility-target
-baseline of Sharpe 0.863 at 11.3% volatility with a −16.7% maximum drawdown:
+**Risk control: the null holds, and the naive reading is a trap.** Each overlay is compared against
+a volatility-target baseline run on its own sample — Sharpe 0.863 at 11.3% volatility for the
+2,355-day methods, 0.852 at 11.2% for the 1,755-day ones, both with a −16.7% maximum drawdown:
 
 | measure | how many of the 8 overlays improve on the baseline |
 |---|---|
@@ -149,6 +153,11 @@ the mechanism remains unexplained, which is the honest place to leave it.
   widening of the sample (−0.0074 → −0.0047 → −0.0020) — the signature of a partly
   sample-specific result. The full-panel deflation, where the bar rises to |t| > 3.24 for 189
   comparisons, is the outstanding test.
+- **Unequal samples across methods.** Each estimator is scored fairly against *its own* benchmark,
+  so no single comparison is biased — but the fitted methods see 600 fewer days than the baselines,
+  which include the 2015–2017 stretch. Ranking a fitted method against a baseline is therefore not
+  quite like-for-like, and the survivor, `ewma_slope`, happens to be on the longer sample. A
+  common-window re-run is the clean version of this test.
 - **The DM test is slightly liberal.** Its empirical size measured ~0.07 against a nominal
   0.05, so borderline results deserve more scepticism than their p-values suggest.
 - **One overlay rule.** $(1 - p_{\text{down}})$ is defensible and pre-committed but arbitrary;
@@ -170,7 +179,8 @@ difference between a result and an artefact, and it is the standard the
 conspicuously fails to meet.
 
 ::: {.status-note}
-NDX daily 2015–2026 (`equations/ndx_daily.csv`), 2,892 days, 2,355 scored. Eight estimators
+NDX daily 2015-01-02 – 2026-07-06, 2,892 days; 2,355 scored for the three baselines and BOCPD,
+1,755 for the four fitted methods, each against a benchmark on its own sample. Eight estimators
 via the [market-state-lab](../../code.qmd) harness; all estimates filtered and look-ahead
 tested. Calibration: purged walk-forward logistic regression, `[rv20, rv60]` vs
 `[rv20, rv60, p_down, p_range, p_up]`, plus the estimator's own 60-day flip rate in **both**
@@ -179,6 +189,8 @@ models. Targets at h=5: direction (base rate 0.604, baseline Brier 0.2497), loss
 deflated bar $\sqrt{2\ln 24}$ = 2.52; Benjamini-Hochberg FDR at 10%. Survivors: `ewma_slope`
 volatility −0.0171 (t −3.98, FDR p 0.0008), `bocpd` volatility −0.0074 (t −2.60, FDR p 0.038).
 Significant harms: 4 of 24. Risk control: 10% annualised volatility target, exposure capped at
-2×, overlay $(1-p_{\text{down}})$, 2bp turnover cost; baseline Sharpe 0.863, vol 11.3%, max
-drawdown −16.7%, drawdown/vol −1.476, turnover 7.0×. Every number was checked.
+2×, overlay $(1-p_{\text{down}})$, 2bp turnover cost; baseline Sharpe 0.863 / 0.852, vol 11.3% /
+11.2%, max drawdown −16.7%, drawdown/vol −1.476 / −1.492, turnover 7.0× / 6.1×. Buy-and-hold over
+the same window: Sharpe 0.775, vol 22.2%, max drawdown −39.1%, drawdown/vol −1.760. Every number
+here was re-run from a clean checkout of the harness rather than carried over from a working note.
 :::
