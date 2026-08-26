@@ -19,6 +19,8 @@ reproducible script or notebook. For example, the Monte-Carlo behind
 lives in `code/backtest_overfitting.py` in the repository above.
 
 ## market-state-lab
+[github.com/davidolivermaguire-ai/market-state-lab](https://github.com/davidolivermaguire-ai/market-state-lab)
+
 A purpose-built benchmark harness for the proposal's
 [RQ1](phd/index.qmd) — *which methods most reliably identify market state out of sample?*
 Because that is a **comparative** question, the deliverable is a protocol rather than a model:
@@ -32,8 +34,12 @@ across four tiers: recovery on synthetic markets with known regimes, stability, 
 Every estimator must pass an automated look-ahead test asserting that its estimate at time *t*
 is unchanged when future data is appended — filtered, never smoothed.
 
-The harness is being prepared for public release; until then the experiments it produces are
-written up in full, with every parameter and number stated, in the Quant Lab.
+The repository is public, MIT-licensed, and installable (`pip install -e ".[data,dev]"`). The
+committed Nasdaq CSV is frozen at a fixed date, so
+`msl decision -c configs/trend_indices.yaml --offline` reproduces the published result exactly,
+with no network access. Its README is a working research log rather than a sales pitch: it
+records the estimators that failed on real data and why, a claim generalised from one asset that
+the panel later refuted, and a confound hypothesis that was tested and rejected.
 
 ## Principles
 - **Reproducibility first** — code is published alongside the result it produces.

@@ -1,6 +1,7 @@
 {
   "_comment": "Canonical term -> URL map for tools/link_lint.py. 'url' is the path fragment as it appears inside links (e.g. ../ml/xgboost/index.qmd contains 'ml/xgboost/'). 'qmd' is the entry's own source, skipped so it isn't flagged on its own page. 'aliases' are the terms that, appearing as plain text, are candidates to link. Add entries/aliases as the site grows; keep aliases distinctive to limit noise.",
   "entries": [
+    { "url": "quant-lab/state-decision-value/", "qmd": "quant-lab/state-decision-value/index.qmd", "aliases": ["decision value", "market-state-lab", "deflated bar", "Diebold-Mariano"] },
     { "url": "ml/xgboost/", "qmd": "ml/xgboost/index.qmd", "aliases": ["gradient boosting", "gradient-boosted", "boosting", "XGBoost"] },
     { "url": "ml/lightgbm/", "qmd": "ml/lightgbm/index.qmd", "aliases": ["LightGBM"] },
     { "url": "ml/ensemble-methods/", "qmd": "ml/ensemble-methods/index.qmd", "aliases": ["Bayesian model averaging", "model averaging", "stacking", "stacked ensemble", "ensemble combination"] },
