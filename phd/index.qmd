@@ -178,11 +178,13 @@ stress-tested the load-bearing ones on real data, and the results are **shaping 
 being fitted to it**. A deliberately fair out-of-sample test — a real-time, no-look-ahead
 regime-conditional strategy pitted against a *regime-blind volatility scaler using the same
 information* — found that, for position sizing, a discrete regime adds **nothing statistically
-distinguishable beyond volatility** ([experiment](../quant-lab/regime-conditioning-oos/index.qmd)),
-while regime conditioning **does** sharpen probability
-[calibration](../quant-lab/regime-conditional-calibration/index.qmd) and concentrates its benefit
-[at transitions](../quant-lab/benefit-at-transitions/index.qmd). That evidence is exactly why H5–H7
-target calibration, suitability and transitions rather than sizing alpha.
+distinguishable beyond volatility** ([experiment](../quant-lab/regime-conditioning-oos/index.qmd)). A
+companion test suggested regime conditioning **did** sharpen probability calibration — but that claim was
+measured against a benchmark cruder than the treatment and never significance-tested, and a
+[re-test](../quant-lab/h2-calibration-retest/index.qmd) across three indices found nothing significant in
+six comparisons. **H2 is retracted.** What remains standing is the concentration of benefit
+[at transitions](../quant-lab/benefit-at-transitions/index.qmd) and the value of hard risk limits — and
+neither has yet been tested to the standard that overturned the others.
 
 RQ1 itself has since been put to the same test. Eight state estimators — from a moving-average
 crossover to a Kalman filter, a hidden Markov model, a Markov-switching regression and two

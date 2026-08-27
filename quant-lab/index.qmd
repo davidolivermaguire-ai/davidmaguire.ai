@@ -60,7 +60,8 @@ and out of sample, whether they actually do.
 | [Volatility-managed portfolios](volatility-managed-portfolios/index.qmd) | If volatility is forecastable, can you trade it? | Finding 2 | ✅ Done |
 | [Volatility-forecasting horizon (HAR vs GARCH vs random walk)](volatility-forecasting-horizon/index.qmd) | How many days ahead is volatility actually predictable? | Finding 2 | ✅ Done |
 | [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | Does conditioning on regime beat a regime-blind strategy, net of costs? | H5 | ✅ Done |
-| [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | Does regime-conditioning improve probabilistic forecasts, where it failed at sizing? | H2 | ✅ Done |
+| [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | Does regime-conditioning improve probabilistic forecasts, where it failed at sizing? | H2 | ⚠️ Superseded |
+| [Does regime-conditioning really sharpen tail probabilities?](h2-calibration-retest/index.qmd) | Does the H2 result survive a fair benchmark and a significance test? | H2 | ✅ Done |
 | [Benefit concentration at transitions](benefit-at-transitions/index.qmd) | Do the gains cluster around regime changes rather than in calm periods? | H6 | ✅ Done |
 | [Hard risk limits, net of their cost](hard-risk-limits/index.qmd) | Do deterministic risk caps help *after* the return they sacrifice? | H8 | ✅ Done |
 | [Calendar anomalies after multiple-testing](calendar-anomalies/index.qmd) | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | ✅ Done |
@@ -72,10 +73,9 @@ and out of sample, whether they actually do.
 The verdicts so far sharpen the proposal rather than flatter it: forecastable volatility buys **risk
 control, not alpha**; that foresight is **short — a roughly one-month half-life**; and, most pointedly,
 conditioning on a discrete **regime adds nothing beyond a volatility signal** for position sizing, and no
-edge is statistically significant — yet a companion test shows the same regime **does sharpen and better-
-calibrate the probability of a dangerous day**, where a scalar exposure cannot. Together — **H5** failing
-and **H2** holding — they locate the Regime Agent's value in *detection, calibration and
-relationship-conditioning*, not sizing alpha.
+edge is statistically significant. A companion test appeared to show the same regime **sharpening the
+probability of a dangerous day** — but that result was measured against a weaker benchmark and never
+tested, and it has since been [retracted](h2-calibration-retest/index.qmd). **H5** and **H2** both fail.
 And a test of **H6** confirms it from a third angle — the risk protection of adaptivity is concentrated at
 regime transitions and the turbulence they open (142% of it in 38% of days, p = 0.006), earning nothing in
 the calm middle — so the payoff is dominated by how early the turning points are *detected*. Finally
@@ -105,3 +105,11 @@ label describe the same nine cells and differ only in price (24 parameters again
 assets, and in **18 of 18** comparisons both descriptions are worse than using no state at all. RQ2's
 answer is *yes, and it barely matters*: factoring is the better way to build a state representation, and
 still not a good enough reason to condition on one.
+
+The eleventh is the one I least wanted to run. Every claim that had faced the full protocol had weakened
+or died, and every claim still standing had never faced it — including **H2**, this lab's own surviving
+positive. Re-tested across three indices against a *same-information* benchmark rather than the volatility
+terciles it originally beat, **none of six comparisons is significant**, and on the asset the claim was
+made on the sign reverses. The published edge was 0.002 Brier with no significance test. H2 does not
+survive, which leaves only H6 and H8 untested and the proposal's positive case thinner than this page
+claimed a day ago.

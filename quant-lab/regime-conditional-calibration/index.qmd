@@ -15,6 +15,17 @@ image-alt: "Regime-conditional tail-probability forecasts have more resolution a
 toc: true
 ---
 
+::: {.callout-important appearance="simple"}
+**Superseded.** The headline claim on this page — that regime-conditioning beats a volatility
+benchmark at forecasting a dangerous day — **did not survive re-testing**. The improvement
+reported below is 0.002 Brier, was never significance-tested, and was measured against a
+volatility *tercile* rule that is cruder than the regime model it was compared with. Re-run
+across three indices with a same-information benchmark and Diebold-Mariano tests,
+[**none of six comparisons is significant**](../h2-calibration-retest/index.qmd), and on this
+very asset the sign reverses. The page is kept as written, because deleting it would hide how
+the mistake was made.
+:::
+
 ## Research question
 
 The [regime-sizing experiment](../regime-conditioning-oos/index.qmd) tested **H5** and returned a partial
