@@ -87,9 +87,10 @@ makes the careful positive results worth believing. Tested, not assumed.
 The ninth experiment turns the same benchmark on **RQ1** itself, and is the most uncomfortable of the set.
 Eight state estimators — moving-average crossover through Kalman filter, HMM, Markov-switching regression
 and two change-point detectors — were scored against a volatility-only model seeing the same features. All
-eight made direction forecasts *worse*, two significantly so, and four of the twenty-four comparisons are
-significant **harms** once the loss target is included; of those same twenty-four, exactly one
+eight made direction forecasts *worse*, though none significantly; of twenty-four comparisons exactly one
 volatility-calibration gain survived a deflated significance bar, and it came from the **least stable**
 estimator in the panel. The risk-control half of the claim dissolved once exposure was controlled for: 8 of
 8 overlays improved raw drawdown, 3 of 8 improved it per unit of volatility. Reliability, it turns out, is
-not one property but several, and they do not point the same way.
+not one property but several, and they do not point the same way. The experiment also **corrected itself in
+public**: a first version scored each method on its own usable span and reported four significant harms,
+which a common-window re-run showed were a property of 2015–2018 rather than of the methods.

@@ -26,7 +26,7 @@ one screen.
 | [Benefit at transitions](benefit-at-transitions/index.qmd) | **H6** | The risk protection **concentrates at transitions** and the turbulence they open — 142% of it in 38% of days ($p = 0.006$), nothing in the calm middle. |
 | [Hard risk limits](hard-risk-limits/index.qmd) | **H8** | Leverage caps and **volatility/CVaR budgets** make an untradeable strategy viable (−63% → −26% drawdown); reactive **drawdown kill-switches backfire**. |
 | [Calendar anomalies](calendar-anomalies/index.qmd) | discipline | Of 29 seasonal effects, **none survive** an honest multiple-testing correction; the largest $|t|$ is exactly $\sqrt{2\ln N}$. |
-| [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | **RQ1** | Against a volatility-only benchmark, **8 of 8** estimators make direction forecasts worse and **4 of 24** comparisons are significant *harms*; **1 of 24** gains survives deflation — from the *least stable* method. |
+| [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | **RQ1** | Against a volatility-only benchmark, **8 of 8** estimators make direction forecasts worse (none significantly); **1 of 24** calibration gains survives deflation — from the *least stable* method. |
 
 : Each experiment, the proposal hypothesis or site finding it tests, and its one-line result. {.striped .hover}
 
