@@ -1,21 +1,20 @@
 ---
 title: "Is a Market-State Estimate Worth Anything?"
-subtitle: "Eight state estimators against the only benchmark that makes the question meaningful — a volatility-only model seeing the same information"
+subtitle: "Eight state estimators, seven assets, one honest benchmark — a volatility-only model seeing the same information"
 description: >
   RQ1 asks which methods most reliably identify market state. This experiment asks the
-  harder question underneath it: does any of them add decision value beyond a continuous
-  volatility signal? Eight estimators, three forecast targets, twenty-four comparisons on
-  real Nasdaq data, with Diebold-Mariano tests and a deflated significance bar. Every
-  method still makes direction forecasts worse; exactly one calibration gain survives
-  correction, from the least stable estimator in the panel; and the state overlay adds
-  nothing risk-adjusted. A first version of this experiment scored each method on its own
-  usable span and reported four significant harms — aligning every method to a common
-  window removed all four.
+  harder question underneath: does any of them add decision value beyond a continuous
+  volatility signal? 168 comparisons across seven assets, Diebold-Mariano tests, and a
+  deflated bar of |t| > 3.20. State makes direction forecasts worse in 53 of 56 cases and
+  adds no risk-adjusted value. The one apparent survivor — a simple trend rule on the
+  volatility target — points the right way on 7 of 7 assets but clears the bar on only 2,
+  and not on the asset it was discovered on. Meanwhile 18 comparisons are significant
+  *harms* against 0.23 expected by chance.
 order: 0
 author: "David Maguire"
-categories: [decision value, calibration, honest nulls]
+categories: [decision value, calibration, honest nulls, replication]
 image: fig-state-decision-value.png
-image-alt: "Two panels: Diebold-Mariano t-statistics for eight state estimators against a volatility-only benchmark with a deflated significance bar, and the same volatility-target overlays measured on raw drawdown versus drawdown per unit of volatility."
+image-alt: "Two panels: the EWMA-slope volatility result by asset against a deflated significance bar, and all 168 Diebold-Mariano t-statistics by target showing eighteen significant harms and two helps."
 toc: true
 ---
 
@@ -52,186 +51,170 @@ informative either way.
 
 ## Data & method
 
-Daily Nasdaq-100. Eight state estimators — three transparent baselines (moving-average
-crossover, trailing-return sign, EWMA slope), a Kalman local-linear-trend filter, a Gaussian
-HMM, a Markov-switching regression, and CUSUM and BOCPD change-point detectors — each
-producing a **filtered** probability vector over {down, range, up}. Every estimate is causal:
-the value at time *t* uses only data up to *t*, enforced by an automated look-ahead test
-rather than by inspection. The harness's ninth estimator, a do-nothing constant, is excluded:
-a state that never changes carries no information to test, and scoring it would only pad the
-comparison count and loosen the deflated bar.
+Daily data for seven pre-declared assets — NAS100, US500, US30, AAPL, MSFT, JPM, XOM —
+from 2010 to August 2026. The single-name list is fixed and never edited to match today's
+index membership, which is what keeps the panel free of survivorship bias.
+
+Eight state estimators: three transparent baselines (moving-average crossover,
+trailing-return sign, EWMA slope), a Kalman local-linear-trend filter, a Gaussian HMM, a
+Markov-switching regression, and CUSUM and BOCPD change-point detectors. Each emits a
+**filtered** probability vector over {down, range, up}; the value at time *t* uses only data
+up to *t*, enforced by an automated look-ahead test rather than by inspection. The harness's
+ninth estimator, a do-nothing constant, is excluded: a state that never changes carries no
+information to test, and scoring it would only pad the comparison count and loosen the bar.
 
 **Every method is scored on identical dates.** Methods that fit parameters surrender a
 training window, so their usable spans are shorter than the baselines'. Scoring each against
-its own benchmark makes every *individual* comparison fair, but it makes the *ranking* partly
-a comparison of periods. So the panel is aligned to the intersection of all eight spans —
-**2018-02-06 to 2026-06-26**, 2,108 shared dates, 1,755 scored after the purged walk-forward.
-That alignment turned out to matter more than expected; see [what changed](#what-changed-when-the-window-was-aligned).
+its own benchmark makes every *individual* comparison fair while making the *ranking* partly a
+comparison of periods. The panel is therefore aligned to the intersection of all spans —
+3,401 shared dates, 2,830 scored after the purged walk-forward, identical for all 168 cells.
 
 **Calibration.** Walk-forward logistic regression, purged by the label horizon, comparing
 `[rv20, rv60]` against `[rv20, rv60, p_down, p_range, p_up]` on three five-day-ahead targets:
 *direction* (return positive), *loss* (return below minus one trailing standard deviation),
 and *volatility* (realised volatility above its trailing median). Scored by Brier; a negative
-delta means the state helped.
+delta means the state helped. The estimator's own rolling flip rate is added to **both**
+models, so the benchmark already sees how much the state has been churning.
 
 **Significance.** Diebold-Mariano tests on the per-observation loss differential with
 Newey-West standard errors, because overlapping five-day labels make the differentials
-serially correlated and an i.i.d. error would manufacture significance. With 24 comparisons
-the relevant bar is not 1.96: under the null the largest of *N* t-statistics is around
-$\sqrt{2\ln N}$, so the [deflated](../backtest-overfitting/index.qmd) threshold is
-**|t| > 2.52**. Benjamini-Hochberg FDR is reported alongside.
+serially correlated and an i.i.d. error would manufacture significance. With **168
+comparisons** the relevant bar is not 1.96: under the null the largest of *N* t-statistics is
+around $\sqrt{2\ln N}$, so the [deflated](../backtest-overfitting/index.qmd) threshold is
+**|t| > 3.20**.
 
 **Risk control.** Volatility targeting at 10% annualised, with and without a state overlay
 that multiplies exposure by $(1 - p_{\text{down}})$ — pre-committed, and purely defensive so
 that it can only ever *reduce* exposure. Net of 2bp costs on turnover.
 
-![Left: Diebold-Mariano t-statistics for every estimator and target against the volatility-only benchmark. Negative is better; the dashed lines are the deflated bar of |t| > 2.52 for 24 comparisons, and the shaded band between them is the region where nothing can be claimed. Only two bars reach the "helps" side, both on the volatility target; **none** reaches "harms". Right: the same volatility-target overlays, both measures expressed as percentage improvement on the baseline so they share an axis. Raw drawdown (grey) improves for all eight; drawdown per unit of volatility (blue) improves for only three, because an overlay that can only cut exposure will always show a shallower raw drawdown.](fig-state-decision-value.png){fig-alt="Two-panel figure: t-statistics by method and target against a deflated significance bar, and drawdown improvements measured raw versus per unit of volatility."}
+![Left: the one apparent survivor, tested for replication. `ewma_slope` on the volatility target points the helpful way on all seven assets, but only US500 and JPM clear the deflated bar — and NAS100, the asset the result was discovered on, reaches only t = −1.62. Right: all 168 comparisons. The shaded band is the region where nothing can be claimed. Eighteen points sit in HARMS against 0.23 expected by chance; two sit in HELPS, both the same estimator on the same target.](fig-state-decision-value.png){fig-alt="Two-panel figure: EWMA-slope volatility t-statistics by asset against a deflated bar, and all 168 t-statistics by target showing eighteen harms and two helps."}
 
 ## Results
 
-**Direction: a unanimous null.** All eight estimators made direction forecasts *worse* than
-the volatility-only benchmark — Brier deltas from +0.0010 to +0.0050 on a baseline of 0.2423,
-a base rate of 0.598. But none of those harms is significant: the largest is `bocpd` at
-t = +2.25, inside the bar. The honest statement is that state information adds **nothing** to
-return timing, not that it actively destroys it.
+**Direction: the null is emphatic.** State made direction forecasts worse in **53 of 56**
+asset-method pairs. Not one comparison helps at any threshold, and **eight are significant
+harms**. Whatever a market-state estimate is for, it is not timing next week's return.
 
-**Loss: also nothing.** Three of eight are mildly negative and five mildly positive, and no
-comparison approaches the bar (largest |t| = 2.21). On a base rate of 0.130 and a baseline
-Brier of 0.1134, the state is simply irrelevant to whether next week holds a bad day.
+**Loss: the same, slightly softer.** Worse in **48 of 56**, no helps, six significant harms.
 
-**Volatility regime: one survivor.** `ewma_slope` improves the Brier score by −0.0213
-(t = −3.93, FDR p = 0.0020) against a 0.2319 baseline — a **9.2% relative improvement**, and
-the only result that clears both the deflated bar and FDR. `return_sign` clears the deflated
-bar (−0.0111, t = −2.54) but **fails** FDR at p = 0.117, so it should be read as suggestive
-at best. Everything else is inside the band.
+**Volatility regime: worse in 33 of 56, and the two helps are the whole story.** Only
+`ewma_slope` clears the bar, and only on two assets:
 
-**Zero of the twenty-four comparisons is a significant harm.**
+| asset | Brier delta | t |
+|---|---:|---:|
+| US500 | −0.0256 | **−4.70** |
+| JPM | −0.0128 | **−3.57** |
+| US30 | −0.0151 | −2.62 |
+| **NAS100** | **−0.0081** | **−1.62** |
+| MSFT | −0.0028 | −1.04 |
+| AAPL | −0.0035 | −0.86 |
+| XOM | −0.0012 | −0.50 |
 
-**Risk control: the null holds, and the naive reading is a trap.** Against a single
-volatility-target baseline — Sharpe 0.830 at 11.1% volatility, −16.7% maximum drawdown,
-drawdown/vol −1.502, 6.0× annual turnover:
+The sign is negative on **7 of 7** — the effect points the same way everywhere, which is not
+nothing. But it reaches significance on two, and **NAS100 is not one of them**. That is the
+asset this result was originally found on, at t = −3.93 over a 2018–2026 window. Extend the
+sample to 2010 and it falls to t = −1.62.
 
-| measure | how many of the 8 overlays improve on the baseline |
+**Adding state can significantly hurt.** Eighteen of 168 comparisons are significant harms
+against **0.23 expected** under the null at this bar — roughly seventy-eight times chance.
+They cluster in `ma_cross` (5) and `hmm_gaussian` (5), and on the direction target (8). The
+largest are `kalman_trend` on XOM direction (t = +4.82) and `ma_cross` on XOM and NAS100
+volatility (+4.78, +4.70).
+
+**Risk control: the null holds across the panel.** Averaged over seven assets — buy-and-hold
+Sharpe 0.637, the volatility-target baseline 0.663 at 11.4% volatility, and the state overlay
+0.592 at 9.1%:
+
+| measure | overlays better than baseline, of 56 pairs |
 |---|---|
-| raw maximum drawdown | **8 of 8** |
-| Sharpe ratio | 1 of 8 |
-| drawdown per unit of volatility | 3 of 8 |
+| raw maximum drawdown | **44 of 56** |
+| drawdown per unit of volatility | 12 of 56 |
+| Sharpe ratio | 4 of 56 |
 
-Read raw drawdown alone and every single overlay "works". That is an artefact: the overlay can
-only cut exposure, so it always ends up holding less, and a rule that holds less always shows a
-shallower drawdown. Read risk-adjusted and the effect disappears. The one overlay with a higher
-Sharpe (`ms_regression`, 0.869) pays for it with 11.2× annual turnover against the baseline's
-6.0×.
-
-## What changed when the window was aligned
-
-The first version of this experiment scored each estimator on its own usable span — 2,355 days
-for the baselines and BOCPD, 1,755 for the four fitted methods — each against a benchmark run
-over the same dates. Every individual comparison was fair. The *ranking* was not, because four
-methods were being judged on a period the other four never saw: 2015 to early 2018, which
-contains the 2015–16 selloff and Volmageddon.
-
-Aligning everything to the common window changed the conclusions materially:
-
-| result | own-span version | common window |
-|---|---|---|
-| significant harms | **4 of 24** | **0 of 24** |
-| `bocpd` / volatility | −0.0074 (t −2.60), survived | −0.0021 (t −0.43), gone |
-| `ewma_slope` / volatility | −0.0171 (t −3.98) | −0.0213 (t −3.93), **stronger** |
-| `return_sign` / volatility | −0.0054 (t −1.82) | −0.0111 (t −2.54) |
-
-The four "significant harms" — `bocpd` and `return_sign` on direction and loss, at
-t = +3.20 to +4.57 — were **entirely a property of 2015–2018**. They vanish on the common
-window. I published that claim, and it was wrong: not wrong arithmetic, but a real effect
-attributed to the wrong cause.
-
-`bocpd`'s apparent calibration gain went the same way. It had already decayed on a widening
-cross-asset panel (−0.0074 → −0.0047 → −0.0020); the common window independently kills it.
-Two unrelated robustness checks agreeing is about as clear as this gets.
-
-`ewma_slope` did the opposite. Its gain **grew** when the easier early period was removed,
-which is what a real effect looks like.
+Read raw drawdown alone and the overlay looks good. That is an artefact: it can only cut
+exposure, so it always ends up holding less, and a rule that holds less always shows a
+shallower drawdown. Read risk-adjusted and it reverses — the overlay's drawdown per unit of
+volatility is **−2.110 against the baseline's −1.958**, and its Sharpe is lower, on higher
+turnover.
 
 ## The verdict — and what it means for the proposal
 
-**H-a confirmed.** State does not time returns. Unanimous across eight methods, and now
-unanimous without the overstatement: it fails to help rather than measurably hurting.
+**H-a confirmed, decisively.** 53 of 56 worse, zero helps, eight significant harms. State
+does not time returns, and on several asset-method pairs it measurably degrades the forecast.
 
-**H-b confirmed, narrowly.** Exactly one estimator shows a volatility-calibration gain that
-survives correction for multiple testing. Seven do not.
+**H-b not confirmed.** One estimator on one target points the right way on every asset but
+reaches significance on two of seven, and fails on the asset it was discovered on. The honest
+label is *suggestive and asset-specific*, not a finding.
 
-**H-c confirmed.** The state overlay adds no risk-adjusted value beyond the volatility scaler.
-The same de-risking is available for nothing by simply lowering the volatility target — no
-model, no turnover.
+**H-c confirmed, more strongly than on one asset.** The overlay improves Sharpe in 4 of 56
+pairs and risk-adjusted drawdown in 12. The same de-risking is available for nothing by
+lowering the volatility target — no model, no turnover.
 
-This tightens the proposal's central position. "Market-state information is a calibration and
-risk-control signal, not a return-timing signal" survives, with two amendments: the calibration
-benefit is **specific and rare** rather than general, and the risk-control half does **not**
-hold once exposure is properly controlled for.
+This tightens the proposal rather than flattering it. "Market-state information is a
+calibration and risk-control signal, not a return-timing signal" survives only in its first
+half, and weakly: the calibration benefit is **narrow, asset-specific and not yet
+replicated**, and the risk-control half does **not** hold once exposure is controlled for.
 
 ::: {.callout-note appearance="simple"}
-**The awkward result.** The one estimator whose benefit survives correction is `ewma_slope` —
-a simple exponentially-weighted trend rule that ranks *worst* on persistence, changing state
-every ~5 days. It is a poor state estimator by every stability measure in the harness and the
-best one by this decision-value measure. Any account of RQ1 has to explain that rather than
-average it away.
+**What the panel cost the headline.** On one asset over one window, `ewma_slope` produced a
+9% relative Brier improvement at t = −3.93 that survived every correction available at
+N = 24. Widen to seven assets and 2010–2026, and the same estimator on the same target reaches
+t = −1.62 on that asset. Nothing was done wrong in the first analysis. It was simply a single
+draw, and a single draw is what the deflated bar exists to distrust.
 :::
-
-I tested the obvious explanation — that a rapidly oscillating state is just re-encoding
-volatility through its own instability — by adding the estimator's own causal rolling flip
-rate to the **baseline**, so the benchmark already sees the churn. The gain did not collapse.
-The confound is ruled out and the mechanism remains unexplained, which is the honest place to
-leave it.
 
 ## Limitations
 
-- **Single asset.** These twenty-four comparisons are Nasdaq-100 only. On a seven-asset panel
-  the `ewma_slope` volatility gain replicated (mean −0.0138). The full-panel deflation, where
-  the bar rises to |t| > 3.24 for 189 comparisons, is the outstanding test.
-- **A shorter sample.** Aligning the window costs 600 days and removes 2015–2018 entirely. The
-  comparison is now like-for-like but rests on a single market era, and one that contains only
-  one true crisis.
+- **One market era, seven correlated assets.** Three indices and four US large caps do not
+  span the space of markets, and the equity names co-move. Effective sample size is well below
+  168 independent tests, which makes the deflated bar, if anything, too lenient.
 - **The DM test is slightly liberal.** Its empirical size measured ~0.07 against a nominal
-  0.05, so borderline results — `return_sign` especially — deserve more scepticism than their
-  p-values suggest.
+  0.05, so borderline results deserve more scepticism than their p-values suggest.
 - **One overlay rule.** $(1 - p_{\text{down}})$ is defensible and pre-committed but arbitrary;
   a different mapping from state to exposure could behave differently.
+- **Not reproducible from the committed data.** This run used freshly downloaded prices to
+  2026-08-24, so re-running later will move the numbers. The committed CSV reproduces the
+  single-asset version, not this one.
 - **Index, not total return, and no borrowing constraint** on the leveraged volatility target.
 
 ## What I learned
 
-Twice now this experiment has taught the same lesson in different clothes: **fix the comparison
-before reading the number.** First it was raw drawdown, which made every overlay look
-successful until exposure was controlled for. Then it was the scored window, where eight
-methods being individually fairly benchmarked still produced an unfair ranking, because four of
-them were judged on a harder period than the others.
+The lesson this experiment kept teaching, in three different costumes, is **fix the comparison
+before reading the number**.
 
-Neither was a coding error. Both were comparisons that looked obviously fair and were not, and
-in both cases the correct comparison reversed the finding. That is the failure mode worth
-guarding against — not arithmetic, but a benchmark that quietly answers a different question.
+First it was raw drawdown, which made every overlay look successful until exposure was
+controlled for. Then it was the scored window: eight methods each fairly benchmarked still
+produced an unfair *ranking*, because half were judged on a harder period than the others —
+and correcting it removed four "significant harms" I had already published. Then it was the
+asset. A result that survived multiple-testing correction on Nasdaq did not survive being
+asked the same question of six other assets.
 
-The second lesson is how much a fair benchmark costs a hypothesis. Against buy-and-hold, almost
+None of these was a coding error. Each was a comparison that looked obviously fair and was
+not, and in each case the correct comparison changed the answer. That is the failure mode
+worth guarding against — not arithmetic, but a benchmark that quietly answers a different
+question.
+
+The second lesson is what a fair benchmark costs a hypothesis. Against buy-and-hold, almost
 everything here would have looked like a win. Against a volatility-only model with the same
-information, twenty-three of twenty-four comparisons are indistinguishable from noise. That is
-the difference between a result and an artefact, and it is the standard the
+information, 166 of 168 comparisons are neutral or harmful. That is the difference between a
+result and an artefact, and it is the standard the
 [LLM-trading literature](../../phd/literature/li-2025-finsaber-llm-evaluation/index.qmd)
 conspicuously fails to meet.
 
 ::: {.status-note}
-NDX daily, common window 2018-02-06 – 2026-06-26 (2,108 shared dates, 1,755 scored) — every
-method on identical dates via `msl decision --common-window`. Eight estimators through the
-[market-state-lab](../../code.qmd) harness; all estimates filtered and look-ahead tested.
+Seven assets (NAS100, US500, US30, AAPL, MSFT, JPM, XOM), daily, 2010 to 2026-08-24. Common
+window 3,401 shared dates, 2,830 scored — identical for all 168 cells via
+`msl decision -c configs/trend_mixed.yaml --refresh --common-window`. Eight estimators through
+the [market-state-lab](../../code.qmd) harness; all estimates filtered and look-ahead tested.
 Calibration: purged walk-forward logistic regression, `[rv20, rv60]` vs
 `[rv20, rv60, p_down, p_range, p_up]`, plus the estimator's own 60-day flip rate in **both**
-models. Targets at h=5: direction (base rate 0.598, baseline Brier 0.2423), loss (0.130,
-0.1134), volatility (0.479, 0.2319). Significance: Diebold-Mariano with Newey-West lag 5;
-deflated bar $\sqrt{2\ln 24}$ = 2.52; Benjamini-Hochberg FDR at 10%. Survivor: `ewma_slope`
-volatility −0.0213 (t −3.93, FDR p 0.0020). Clears the deflated bar but fails FDR:
-`return_sign` volatility −0.0111 (t −2.54, FDR p 0.117). Significant harms: 0 of 24. Risk
-control: 10% annualised volatility target, exposure capped at 2×, overlay
-$(1-p_{\text{down}})$, 2bp turnover cost; baseline Sharpe 0.830, vol 11.1%, max drawdown
-−16.7%, drawdown/vol −1.502, turnover 6.0×. Buy-and-hold over the same window: Sharpe 0.728,
-vol 24.2%, max drawdown −39.1%, drawdown/vol −1.613. Reproduce with
-`msl decision -c configs/trend_indices.yaml --offline --common-window`; the committed CSV is
-frozen, so the numbers above are deterministic.
+models. Significance: Diebold-Mariano with Newey-West lag 5; deflated bar
+$\sqrt{2\ln 168}$ = 3.20. Helps: `ewma_slope`/volatility on US500 (−0.0256, t −4.70) and JPM
+(−0.0128, t −3.57); mean across seven assets −0.0099, negative on 7/7. Harms: 18 of 168
+(direction 8, loss 6, volatility 4) against 0.23 expected. Direction worse in 53/56, loss in
+48/56, volatility in 33/56. Risk control: 10% annualised volatility target, exposure capped at
+2×, overlay $(1-p_{\text{down}})$, 2bp turnover cost; buy-and-hold Sharpe 0.637 / vol 23.1% /
+max drawdown −45.6% / dd-per-vol −2.006; baseline 0.663 / 11.4% / −22.1% / −1.958 / 7.0×
+turnover; overlay 0.592 / 9.1% / −18.8% / −2.110 / 8.7×. Because this run refreshed prices,
+the numbers are as-of 2026-08-24 rather than reproducible from the committed CSV.
 :::

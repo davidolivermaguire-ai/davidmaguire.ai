@@ -86,11 +86,13 @@ makes the careful positive results worth believing. Tested, not assumed.
 
 The ninth experiment turns the same benchmark on **RQ1** itself, and is the most uncomfortable of the set.
 Eight state estimators — moving-average crossover through Kalman filter, HMM, Markov-switching regression
-and two change-point detectors — were scored against a volatility-only model seeing the same features. All
-eight made direction forecasts *worse*, though none significantly; of twenty-four comparisons exactly one
-volatility-calibration gain survived a deflated significance bar, and it came from the **least stable**
-estimator in the panel. The risk-control half of the claim dissolved once exposure was controlled for: 8 of
-8 overlays improved raw drawdown, 3 of 8 improved it per unit of volatility. Reliability, it turns out, is
-not one property but several, and they do not point the same way. The experiment also **corrected itself in
-public**: a first version scored each method on its own usable span and reported four significant harms,
-which a common-window re-run showed were a property of 2015–2018 rather than of the methods.
+and two change-point detectors — were scored against a volatility-only model seeing the same features,
+across seven assets and 168 comparisons at a deflated bar of |t| > 3.20. State made direction forecasts
+*worse* in **53 of 56** asset-method pairs, and the risk-control claim dissolved once exposure was
+controlled for: the overlay improved raw drawdown in 44 of 56 pairs but Sharpe in only 4. **Eighteen
+comparisons are significant harms** against 0.23 expected by chance — adding state where it does not
+belong is not free. The one apparent gain points the right way on 7 of 7 assets but clears the bar on 2,
+and **not on the asset it was discovered on**. Reliability, it turns out, is not one property but several,
+and they do not point the same way. The entry also **corrects itself in public**, twice: a first version
+scored each method on its own span and reported harms that were really a property of 2015–2018, and a
+single-asset result that survived every correction at N = 24 did not survive being asked of six more assets.
