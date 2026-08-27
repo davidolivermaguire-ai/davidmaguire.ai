@@ -1,6 +1,6 @@
 ---
 title: "Does Regime-Conditioning Improve Probabilistic Forecasts?"
-subtitle: "Closing RQ2 — regime adds nothing to position sizing, but it sharpens the odds of a dangerous day"
+subtitle: "Testing H2 — regime adds nothing to position sizing, but it sharpens the odds of a dangerous day"
 description: >
   The companion to the regime-sizing test. That experiment found a discrete regime adds
   nothing beyond volatility for sizing, and pointed to calibration as the place its value
@@ -17,11 +17,10 @@ toc: true
 
 ## Research question
 
-The [regime-sizing experiment](../regime-conditioning-oos/index.qmd) split the proposal's central
-question, RQ2, in two and answered the first half with a partial null: a discrete regime adds nothing
-statistically distinguishable beyond a volatility signal *for sizing a position*. But it pointed
-somewhere specific for the second half — **probabilistic calibration** — as the place regime-conditioning
-might genuinely earn its keep. This experiment tests exactly that. A [News Agent or Risk
+The [regime-sizing experiment](../regime-conditioning-oos/index.qmd) tested **H5** and returned a partial
+null: a discrete regime adds nothing statistically distinguishable beyond a volatility signal *for sizing
+a position*. But it pointed somewhere specific — **probabilistic calibration**, the proposal's **H2** —
+as the place regime-conditioning might genuinely earn its keep. This experiment tests exactly that. A [News Agent or Risk
 Agent](../../phd/index.qmd) does not size positions; it emits **probabilities** — "how likely is a large
 adverse move tomorrow?" — and those probabilities are only useful if they are *sharp* (they discriminate
 dangerous days from calm ones) and *calibrated* (a stated 40% means 40%). So: does conditioning a
@@ -86,9 +85,9 @@ within-regime calibration (0.019 vs 0.052). The persistent, filtered regime stat
 conditioning variable for a *probability* than a point-in-time volatility bucket. The downside target
 ($r<-1\%$) tells the same story (Brier 0.135 → 0.132; within-regime ECE 0.053 → 0.014).
 
-## The verdict — RQ2, closed
+## The verdict — H2 holds where H5 failed
 
-Put the two experiments together and RQ2 resolves cleanly, in a way neither half could alone.
+Put the two experiments together and they locate the regime's value precisely, in a way neither could alone.
 **Regime-conditioning does not improve position sizing** — there a discrete regime is worth no more than
 volatility, and no edge is significant. **But it does improve probabilistic forecasts** — it makes the
 odds of a dangerous day sharper and better calibrated, especially *within* the turbulent regime where a

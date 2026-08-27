@@ -2,7 +2,7 @@
 title: "Does Conditioning on Regime Actually Help?"
 subtitle: "A fair out-of-sample test of the proposal's central hypothesis — with a result that sharpens it"
 description: >
-  H4 is the heart of the PhD proposal: that conditioning decisions on estimated market
+  H5 is the heart of the PhD proposal: that conditioning decisions on estimated market
   regime improves performance. This experiment tests it as fairly as I can — a real-time,
   no-look-ahead HMM regime against a regime-blind volatility scaler and static buy-and-hold,
   out-of-sample and net of costs — and finds the honest answer: regime awareness buys risk
@@ -19,18 +19,18 @@ toc: true
 ## Research question
 
 This is the experiment the whole [PhD proposal](../../phd/index.qmd) leans on. Its central bet —
-**hypothesis H4**, and research question RQ2 — is that *conditioning forecasting and decision models on
+**hypothesis H5**, and research question RQ6 — is that *conditioning forecasting and decision models on
 estimated regime probabilities improves economic performance*. Every regime entry in the
 [library](../../ml/index.qmd) built the machinery; this experiment asks whether the machinery **pays**.
 And it asks it in the sharpest, least flattering form I could design: not "does a regime-aware strategy
 beat buy-and-hold?" (too easy — any de-risking rule cuts drawdown in a bull market) but "does a
 **discrete, real-time-estimated regime** beat a **regime-blind volatility signal** that uses the same
 information continuously?" If regime only ties a volatility scaler, then for the purpose of sizing a
-position the "regime" is just repackaged volatility, and H4's economic claim needs rethinking.
+position the "regime" is just repackaged volatility, and H5's economic claim needs rethinking.
 
 ## Hypothesis
 
-I pre-committed to a split prediction, and deliberately gave the null a real chance. **H4 (proposal):**
+I pre-committed to a split prediction, and deliberately gave the null a real chance. **H5 (proposal):**
 regime-conditioning improves risk-adjusted performance. **My honest prior:** it improves *risk control*
 (drawdown) robustly — consistent with everything this site has found — but the *discrete* regime adds
 little beyond a continuous volatility signal, and any Sharpe improvement over a decade of daily data will
@@ -68,7 +68,7 @@ Sharpe *difference*.
 **0.90** with a **−36%** drawdown. Volatility-scaling lifts that to **1.05** with a **−25%** drawdown;
 the regime-conditional version reaches **1.00** with a **−24%** drawdown; Calmar improves from 0.55 to
 ~0.75–0.78. The drawdown panel shows why — both risk strategies ride through 2018, 2022 and the smaller
-selloffs well above buy-and-hold's underwater curve. Directionally, H4 holds: conditioning on the
+selloffs well above buy-and-hold's underwater curve. Directionally, H5 holds: conditioning on the
 volatility environment improves risk-adjusted outcomes.
 
 **But none of it is statistically significant, and the discrete regime adds nothing beyond volatility.**
@@ -85,8 +85,8 @@ coarsened volatility flag.
 ## The verdict — and what it means for the proposal
 
 The honest reading is a **partial null**, and it is more useful to the proposal than a clean win would
-have been. H4's *risk* claim survives — regime and volatility awareness both cut drawdown materially and
-robustly, exactly as this site keeps finding. But H4's *economic-outperformance* claim, tested as
+have been. H5's *risk* claim survives — regime and volatility awareness both cut drawdown materially and
+robustly, exactly as this site keeps finding. But H5's *economic-outperformance* claim, tested as
 position sizing, **does not**: the edge over a naive volatility scaler is negative and insignificant, and
 the edge over static is insignificant too. **For sizing a position, a discrete regime is not worth more
 than a volatility number.**
@@ -98,7 +98,7 @@ demonstrated elsewhere on this site: **online detection of regime *changes*** (t
 [change-point detector](../../ml/change-point-detection/index.qmd) is a timing alarm, not a sizing knob),
 and **conditioning *relationships* on regime** (the
 [Markov-switching](../../ml/markov-switching-regression/index.qmd) finding that a stock's beta doubles in
-the turbulent state — something no scalar volatility target can express). The untested half of H4 —
+the turbulent state — something no scalar volatility target can express). The untested half of H5 —
 whether regime-conditioning improves *probability calibration* — is the other place its value may really
 lie, and is a natural next experiment. In short: keep the Regime Agent, but sell it on **detection and
 relationship-conditioning, not on sizing**.
@@ -107,7 +107,7 @@ relationship-conditioning, not on sizing**.
 
 - **One index, one decade, one split.** The bootstrap widths already say the sample is too short to resolve a Sharpe difference of ~0.1; a longer history or a panel of assets could tighten it (or confirm the null).
 - **A simple regime rule.** Two states, a 1.0 / 0.4 exposure map; a richer regime taxonomy or a regime-conditioned *directional* signal might do more — but each added degree of freedom is another chance to overfit, which is precisely the discipline the [backtest-overfitting experiment](../backtest-overfitting/index.qmd) warns about.
-- **Sizing only.** This tests regime for *position sizing*. It does **not** test the two uses the verdict points to (detection timing, relationship-conditioning) or the calibration half of H4 — so it refutes the narrow claim, not the broad one.
+- **Sizing only.** This tests regime for *position sizing*. It does **not** test the two uses the verdict points to (detection timing, relationship-conditioning) or the calibration half of H5 — so it refutes the narrow claim, not the broad one.
 - **Costs are stylised** (flat 2 bps/turnover); the discrete regime's switching turnover would be penalised harder under realistic, volatility-dependent costs — which only strengthens the "discrete regime isn't worth it for sizing" conclusion.
 
 ## What I learned

@@ -1,8 +1,8 @@
 ---
 title: "Do Hard Risk Limits Earn Their Cost?"
-subtitle: "Testing H6 — deterministic caps and budgets turn an untradeable strategy into a viable one, and not every limit works"
+subtitle: "Testing H8 — deterministic caps and budgets turn an untradeable strategy into a viable one, and not every limit works"
 description: >
-  H6 completes the proposal's hypothesis trilogy: hard risk constraints improve stability and
+  H8 completes the proposal's hypothesis trilogy: hard risk constraints improve stability and
   viability even where they cut gross returns. Imposing the Risk Agent's deterministic limits on an
   aggressive 2× Nasdaq strategy takes its drawdown from −63% to −26% at a return cost — but the test
   also shows which limits earn their keep (leverage caps, volatility budgets) and which backfire
@@ -19,7 +19,7 @@ toc: true
 
 The last of the proposal's three load-bearing hypotheses, and the counterpart to the
 [risk-constrained-RL entry](../../ml/risk-constrained-rl/index.qmd), where an agent that wanted 6.3×
-leverage was capped to 1.41× by a hard CVaR budget. **H6** claims that *hard, deterministic risk
+leverage was capped to 1.41× by a hard CVaR budget. **H8** claims that *hard, deterministic risk
 constraints improve stability and practical viability even where they reduce gross returns.* It is not a
 return claim — quite the opposite — so it cannot be tested by Sharpe alone. The question is whether
 imposing inviolable limits on an aggressive strategy buys enough **stability** (bounded drawdown, thinner
@@ -54,13 +54,13 @@ a time and also test the kill-switch in isolation. All computed and verified in 
 
 ## Results
 
-**H6 holds emphatically: the limits make an untradeable strategy viable.** The unconstrained 2× posts a
+**H8 holds emphatically: the limits make an untradeable strategy viable.** The unconstrained 2× posts a
 seductive **35.5% CAGR** — and a **−63% maximum drawdown** on **45% volatility**, with a 95% daily CVaR
 of **6.8%**. No one can hold that; it is a strategy that looks brilliant until it takes two-thirds of your
 capital. The full hard-limited version cuts the drawdown to **−26%**, volatility to **18%**, and CVaR to
 **2.8%** — less than half the tail — while giving up return, CAGR falling to **19%**. Crucially the
 *viability* ratios **improve**: Sharpe rises **0.90 → 1.04**, Sortino **1.15 → 1.36**, Calmar **0.56 →
-0.74**. This is H6 exactly: stability up on every axis, gross return down, and the strategy transformed
+0.74**. This is H8 exactly: stability up on every axis, gross return down, and the strategy transformed
 from a knife-edge into something a desk could actually run.
 
 **But the limits divide sharply — and only some earn their cost.** Adding them one at a time separates
@@ -87,11 +87,11 @@ a risk-adjusted loss, because a reactive stop can only sell *after* the fall and
 That is the second independent confirmation, after the [multi-agent
 test](../../ml/multi-agent-systems/index.qmd), that naive drawdown-stops destroy value.
 
-![Top-left: growth of \$1 — the unconstrained 2× compounds hardest but on a knife-edge; the hard-limited versions trail in return. Top-right: drawdown — hard limits bound the catastrophe from −63% to −26%, the headline stability gain. Bottom-left: risk-return efficiency — the leverage cap slides down the same Sharpe line (bounding risk at constant efficiency), the volatility budget lifts to a better line (improving efficiency), and the drawdown kill-switch drags below. Bottom-right: the full stability suite — drawdown, CVaR and volatility all fall sharply while CAGR falls too, with Calmar and Sharpe rising: H6's "viability even where returns fall."](fig-hard-risk-limits.png){fig-alt="Hard risk limits cut an aggressive strategy's drawdown from −63% to −26% at a return cost; a volatility budget improves efficiency while a drawdown kill-switch drags"}
+![Top-left: growth of \$1 — the unconstrained 2× compounds hardest but on a knife-edge; the hard-limited versions trail in return. Top-right: drawdown — hard limits bound the catastrophe from −63% to −26%, the headline stability gain. Bottom-left: risk-return efficiency — the leverage cap slides down the same Sharpe line (bounding risk at constant efficiency), the volatility budget lifts to a better line (improving efficiency), and the drawdown kill-switch drags below. Bottom-right: the full stability suite — drawdown, CVaR and volatility all fall sharply while CAGR falls too, with Calmar and Sharpe rising: H8's "viability even where returns fall."](fig-hard-risk-limits.png){fig-alt="Hard risk limits cut an aggressive strategy's drawdown from −63% to −26% at a return cost; a volatility budget improves efficiency while a drawdown kill-switch drags"}
 
-## The verdict — H6 confirmed, and the trilogy closes
+## The verdict — H8 confirmed, and the trilogy closes
 
-H6 is confirmed, and sharpened into a design rule. Hard, deterministic limits turn an aggressive,
+H8 is confirmed, and sharpened into a design rule. Hard, deterministic limits turn an aggressive,
 untradeable strategy into a viable one — drawdown more than halved, tail risk more than halved, Calmar and
 Sharpe up — at a real and expected cost in gross return, precisely the "stability and viability even where
 they reduce returns" the hypothesis claims. But the test refuses to bless *all* limits equally: the
@@ -101,9 +101,9 @@ concrete instruction for the proposal's Risk Agent: build it from **caps and vol
 inviolable bounds and forward-looking risk scaling — and treat reactive drawdown-stops with suspicion.
 
 This closes the hypothesis trilogy, and the four regime/risk experiments now tell one coherent, evidence-
-based story. **H4** — a discrete regime adds nothing beyond volatility for *sizing*. **RQ2-calibration** —
-but it *sharpens* risk probabilities. **H5** — and the benefit of adaptivity concentrates at the
-*transitions*. **H6** — while hard risk limits, especially volatility/CVaR budgets, are what make the whole
+based story. **H5** — a discrete regime adds nothing beyond volatility for *sizing*. **H2-calibration** —
+but it *sharpens* risk probabilities. **H6** — and the benefit of adaptivity concentrates at the
+*transitions*. **H8** — while hard risk limits, especially volatility/CVaR budgets, are what make the whole
 thing *viable*. Detection and assessment at the turning points; forward-looking hard risk control
 throughout; no faith in sizing alpha or reactive stops. The proposal is stronger for having had its
 own hypotheses tested rather than assumed — including the ones that came back as nulls.

@@ -150,7 +150,7 @@ strategy selection under deterministic risk constraints.
 | Ref. | Supporting research question | Evidence so far |
 |------|------------------------------|-----------------|
 | RQ1 | Which statistical, econometric and ML methods most reliably identify trend, volatility, liquidity and structural-change states out of sample? | [Decision value of a state estimate](../quant-lab/state-decision-value/index.qmd) |
-| RQ2 | Can overlapping market *dimensions* be estimated more reliably than a single mutually exclusive regime label? | [Regime-conditional calibration](../quant-lab/regime-conditional-calibration/index.qmd) |
+| RQ2 | Can overlapping market *dimensions* be estimated more reliably than a single mutually exclusive regime label? | — (the [calibration test](../quant-lab/regime-conditional-calibration/index.qmd) establishes *what* a regime is good for, not whether a factored state beats one label) |
 | RQ3 | How should probabilities from heterogeneous models be **calibrated, normalised and compared** across different horizons? | [Partial — heterogeneous models compared across horizons](../quant-lab/volatility-forecasting-horizon/index.qmd) |
 | RQ4 | Can structured information from announcements and financial text improve identification of market drivers beyond numerical data? | — |
 | RQ5 | Does explicit **comparison of competing hypotheses** outperform simple averaging, stacking or voting ensembles? | — |
@@ -160,7 +160,7 @@ strategy selection under deterministic risk constraints.
 | RQ9 | How stable, explainable and auditable are the outputs across assets, periods, latency assumptions and repeated trials? | [Backtest selection](../quant-lab/backtest-overfitting/index.qmd), [calendar anomalies](../quant-lab/calendar-anomalies/index.qmd) |
 | RQ10 | Which components create commercially useful decision intelligence even where direct trading performance is not consistently superior? | — |
 
-: A dash means the question is proposed but not yet tested. Five of the ten already have out-of-sample evidence in the [Quant Lab](../quant-lab/index.qmd) — and where it came back negative, the proposal was changed rather than the result. {.striped}
+: A dash means the question is proposed but not yet tested. Four of the ten already have out-of-sample evidence in the [Quant Lab](../quant-lab/index.qmd) — and where it came back negative, the proposal was changed rather than the result. **H1**, the claim that a multidimensional state beats a single label, is the largest untested one and is next. {.striped}
 
 The testable hypotheses follow directly: **H1** a multidimensional state is more temporally stable and
 useful than a single-label regime; **H2** calibrated ensemble probabilities beat uncalibrated

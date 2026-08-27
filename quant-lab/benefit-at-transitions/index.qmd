@@ -1,8 +1,8 @@
 ---
 title: "Does the Benefit Concentrate at Regime Transitions?"
-subtitle: "Testing H5 — the risk protection of adaptivity is earned at transitions and in the turbulence they open, and nowhere else"
+subtitle: "Testing H6 — the risk protection of adaptivity is earned at transitions and in the turbulence they open, and nowhere else"
 description: >
-  H5 is the other heart of the proposal: that the benefit of an adaptive, regime-aware system
+  H6 is the other heart of the proposal: that the benefit of an adaptive, regime-aware system
   concentrates at regime transitions, not in stable periods. An event study and a state
   decomposition on the Nasdaq confirm it — for the benefit that matters. Downside protection is
   overwhelmingly earned at transitions and in the turbulence they open, is a mild liability in
@@ -17,7 +17,7 @@ toc: true
 
 ## Research question
 
-With RQ2 settled, this experiment turns to the proposal's other central bet, **H5**: that *the benefit of
+With H5 and H2 settled, this experiment turns to the proposal's other central bet, **H6**: that *the benefit of
 a coordinated, regime-aware system concentrates at regime transitions rather than in stable periods*. It
 is a claim about **timing** — not "does adaptivity help?" (the earlier experiments answered that: it buys
 risk control) but *when* does it help? If the value of regime awareness is spread evenly across time, then
@@ -28,7 +28,7 @@ transitions?
 
 ## Hypothesis
 
-I expected H5 to hold, but only once the benefit is measured correctly. The previous experiments showed
+I expected H6 to hold, but only once the benefit is measured correctly. The previous experiments showed
 that regime/volatility awareness buys *risk control*, not return — so the "benefit" to test for is
 **downside protection**, not P&L. **H:** the loss-avoidance from an adaptive strategy is concentrated at
 calm→turbulent transitions and the turbulent periods they open, is near zero (or negative) in stable calm,
@@ -65,7 +65,7 @@ turbulent regimes — almost all of the decade's downside protection is earned i
 
 **The event study locates it after the transition.** Rebased to zero at each calm→turbulent switch, the
 drawdown avoided grows to **+1.6 percentage points by day 40** — the adaptive strategy pulls steadily
-ahead on drawdown once the regime has turned, exactly as H5 predicts. The benefit is not at the transition
+ahead on drawdown once the regime has turned, exactly as H6 predicts. The benefit is not at the transition
 *instant* (de-risking takes a few days to matter) but in the window the transition opens.
 
 ![Left: event study of drawdown avoided around calm→turbulent transitions (n=10, 95% band), rebased to zero at the transition — protection accrues over the following weeks, reaching +1.6pp by day 40. Right: benefit decomposition by market state — downside protection (green) is small in transitions, negative in calm, and large in turbulence, and is mirrored by the upside given up (gold), leaving net return (blue) near zero or negative wherever the protection is largest. Bottom: cumulative downside protection over time — earned in bursts during turbulent regimes (shaded), flat in calm; 142% of it falls in the 38% of days that are turbulent or transitional (p = 0.006).](fig-benefit-at-transitions.png){fig-alt="An event study showing an adaptive strategy's drawdown protection accrues after calm-to-turbulent transitions, concentrated in turbulent regimes and paid for by upside given up there"}
@@ -77,9 +77,9 @@ or slightly negative. The only place the adaptive strategy makes *more money* th
 calm**, through leverage (+1 bp/day) — precisely where it offers no protection. Adaptivity does not find
 free lunch at transitions; it **trades return for risk, and it does the trading exactly when risk spikes.**
 
-## The verdict — H5 holds, and it points at detection
+## The verdict — H6 holds, and it points at detection
 
-H5 is supported, sharpened by the measurement. The benefit of regime awareness — its **downside
+H6 is supported, sharpened by the measurement. The benefit of regime awareness — its **downside
 protection** — is not spread across time; it is concentrated at regime transitions and the turbulent
 regimes they open, is a mild liability in stable calm, and is significant (p = 0.006). The refinement is
 that the benefit lives in the *turbulent window*, not the transition *instant* — it accrues over the weeks
@@ -87,11 +87,11 @@ after the regime turns. And it is purchased with forgone upside in those same wi
 whole lab's theme that adaptivity buys risk control, not alpha.
 
 The strategic implication is the one that matters for the [proposal](../../phd/index.qmd), and it closes a
-loop with the two RQ2 experiments. If nearly all of the benefit is earned in the days after a calm→turbulent
+loop with the two regime experiments. If nearly all of the benefit is earned in the days after a calm→turbulent
 transition, then **the value of the system is dominated by how early and reliably it detects that
 transition** — which is exactly the function the [change-point detector](../../ml/change-point-detection/index.qmd)
-provides and a position-sizing rule does not. H4-sizing said regime adds nothing beyond volatility;
-RQ2-calibration said it sharpens risk probabilities; and H5 now says the payoff is concentrated at
+provides and a position-sizing rule does not. H5-sizing said regime adds nothing beyond volatility;
+H2-calibration said it sharpens risk probabilities; and H6 now says the payoff is concentrated at
 transitions. Together they point, three times over, to the same conclusion: **the Regime Agent's job is
 detection and assessment at the turning points, not sizing in the stable middle.**
 
@@ -107,10 +107,10 @@ detection and assessment at the turning points, not sizing in the stable middle.
 The lesson is that **timing a benefit is as informative as measuring it**. "Adaptivity helps" is a flat
 statement; "adaptivity helps only in the weeks after a regime turns, and costs you in the calm middle" is
 a design specification — it tells you to spend your effort on *detection* and to expect a drag in quiet
-markets. The second lesson repeats across the whole lab: measure the right benefit. Had I tested H5 on
+markets. The second lesson repeats across the whole lab: measure the right benefit. Had I tested H6 on
 returns I would have concluded the benefit sits in *calm* periods (leverage) and transitions *hurt* —
 the exact opposite conclusion — because the return and risk benefits of adaptivity live in different
-places. H5 is about risk, and on risk it holds.
+places. H6 is about risk, and on risk it holds.
 
 ## References
 

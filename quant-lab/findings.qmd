@@ -21,10 +21,10 @@ one screen.
 | [Backtest overfitting](backtest-overfitting/index.qmd) | discipline | The best of $N$ strategies looks great from noise alone; the max Sharpe grows like $\sqrt{2\ln N}$ — hence the deflated Sharpe ratio. |
 | [Volatility-managed portfolios](volatility-managed-portfolios/index.qmd) | Finding 2 | Forecastable volatility buys **risk control, not alpha** — drawdown roughly halved, but no statistically significant excess return. |
 | [Volatility-forecasting horizon](volatility-forecasting-horizon/index.qmd) | Finding 2 | That foresight is **short**: a volatility shock half-lives in ~1 month; GARCH ≈ HAR, both beating persistence more at longer horizons. |
-| [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | **H4** | For **sizing**, a discrete regime adds **nothing beyond volatility** — no significant edge over a regime-blind vol scaler. |
-| [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | **RQ2** | But for **forecasting**, regime-conditioning **sharpens and better-calibrates** risk probabilities (Brier 0.167 → 0.153, within-regime ECE 5× better). |
-| [Benefit at transitions](benefit-at-transitions/index.qmd) | **H5** | The risk protection **concentrates at transitions** and the turbulence they open — 142% of it in 38% of days ($p = 0.006$), nothing in the calm middle. |
-| [Hard risk limits](hard-risk-limits/index.qmd) | **H6** | Leverage caps and **volatility/CVaR budgets** make an untradeable strategy viable (−63% → −26% drawdown); reactive **drawdown kill-switches backfire**. |
+| [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | **H5** | For **sizing**, a discrete regime adds **nothing beyond volatility** — no significant edge over a regime-blind vol scaler. |
+| [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | **H2** | But for **forecasting**, regime-conditioning **sharpens and better-calibrates** risk probabilities (Brier 0.167 → 0.153, within-regime ECE 5× better). |
+| [Benefit at transitions](benefit-at-transitions/index.qmd) | **H6** | The risk protection **concentrates at transitions** and the turbulence they open — 142% of it in 38% of days ($p = 0.006$), nothing in the calm middle. |
+| [Hard risk limits](hard-risk-limits/index.qmd) | **H8** | Leverage caps and **volatility/CVaR budgets** make an untradeable strategy viable (−63% → −26% drawdown); reactive **drawdown kill-switches backfire**. |
 | [Calendar anomalies](calendar-anomalies/index.qmd) | discipline | Of 29 seasonal effects, **none survive** an honest multiple-testing correction; the largest $|t|$ is exactly $\sqrt{2\ln N}$. |
 | [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | **RQ1** | Against a volatility-only benchmark, **8 of 8** estimators make direction forecasts worse and **4 of 24** comparisons are significant *harms*; **1 of 24** gains survives deflation — from the *least stable* method. |
 
@@ -54,7 +54,7 @@ choosing one and defending it.
 
 ## What it means for the proposal
 
-The five hypothesis tests (H4, RQ1, RQ2, H5, H6) point repeatedly at the same redesign, and it is a
+The five tests that bear on the proposal directly (H2, H5, H6, H8 and RQ1) point repeatedly at the same redesign, and it is a
 sharper proposal for it. The **Regime Agent's** job is **detection and assessment at the turning points —
 not sizing in the stable middle**: a discrete regime earns its place by flagging *when* the market changes
 ([change-point detection](../ml/change-point-detection/index.qmd)), by supplying better-calibrated risk
