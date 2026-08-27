@@ -41,7 +41,7 @@ walk-forward validation to reduce look-ahead bias.*
 ## Experiments
 
 ::: {.status-note}
-The original eight-experiment agenda is complete, and a ninth now extends it to RQ1. Each is computed
+The original eight-experiment agenda is complete, and two further experiments extend it to RQ1 and RQ2. Each is computed
 and verified against the same real Nasdaq-100 data, reporting nulls as readily as positives.
 :::
 
@@ -65,8 +65,9 @@ and out of sample, whether they actually do.
 | [Hard risk limits, net of their cost](hard-risk-limits/index.qmd) | Do deterministic risk caps help *after* the return they sacrifice? | H8 | ✅ Done |
 | [Calendar anomalies after multiple-testing](calendar-anomalies/index.qmd) | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | ✅ Done |
 | [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | Do any of eight state estimators add decision value beyond a volatility-only model? | RQ1 | ✅ Done |
+| [Is a factored market state better than one label?](factored-vs-flat-state/index.qmd) | At matched cardinality, does a 3×3 factored state beat a flat 9-state label? | RQ2 / H1 | ✅ Done |
 
-: Each experiment maps to a proposal research question (RQ1) or hypothesis (H2, H5, H6, H8), or to a [capstone finding](../capstone.qmd), and reports honestly whether it holds. {.striped .hover}
+: Each experiment maps to a proposal research question (RQ1) or hypothesis (H1, H2, H5, H6, H8), or to a [capstone finding](../capstone.qmd), and reports honestly whether it holds. {.striped .hover}
 
 The verdicts so far sharpen the proposal rather than flatter it: forecastable volatility buys **risk
 control, not alpha**; that foresight is **short — a roughly one-month half-life**; and, most pointedly,
@@ -96,3 +97,11 @@ and **not on the asset it was discovered on**. Reliability, it turns out, is not
 and they do not point the same way. The entry also **corrects itself in public**, twice: a first version
 scored each method on its own span and reported harms that were really a property of 2015–2018, and a
 single-asset result that survived every correction at N = 24 did not survive being asked of six more assets.
+
+The tenth turns to **RQ2 and H1** — can overlapping *dimensions* be estimated more reliably than one
+mutually exclusive label? Tested at **matched cardinality**, so a 3×3 factored state and a flat 9-state
+label describe the same nine cells and differ only in price (24 parameters against 108), factoring wins
+5 of 9 head-to-head comparisons and loses none. But it is more temporally stable on only one of three
+assets, and in **18 of 18** comparisons both descriptions are worse than using no state at all. RQ2's
+answer is *yes, and it barely matters*: factoring is the better way to build a state representation, and
+still not a good enough reason to condition on one.
