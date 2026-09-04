@@ -155,6 +155,16 @@ calibration and risk-control signal, not a return-timing signal" survives only i
 half, and weakly: the calibration benefit is **narrow, asset-specific and not yet
 replicated**, and the risk-control half does **not** hold once exposure is controlled for.
 
+::: {.callout-important appearance="simple"}
+**Why this null happened — settled later.** This entry reports that state estimates add nothing
+beyond volatility, but not *why*. A [later experiment](../specialist-redundancy/index.qmd)
+answers it: the estimator panel scored here does not span multiple dimensions of market state.
+Its members' consensus clears a deflated bar 3 of 9 times and their individual deviations 0 of
+63, so the panel is one dimension measured seven times — and the one thing it collectively
+knows is that falling markets are volatile, which the volatility benchmark already knew. The
+null is a fact about *this panel*, not about state information in general.
+:::
+
 ::: {.callout-note appearance="simple"}
 **What the panel cost the headline.** On one asset over one window, `ewma_slope` produced a
 9% relative Brier improvement at t = −3.93 that survived every correction available at

@@ -1,7 +1,7 @@
 ---
-title: "Quant Lab — What Twelve Experiments Found"
+title: "Quant Lab — What Thirteen Experiments Found"
 subtitle: "The synthesis: forecastable volatility, regimes that assess rather than size, and the discipline that tells the two from noise"
-description: "A short synthesis of the Quant Lab's twelve experiments — what each tested, what it found, and how together they resolve the proposal's central hypotheses and reshape its design."
+description: "A short synthesis of the Quant Lab's thirteen experiments — what each tested, what it found, and how together they resolve the proposal's central hypotheses and reshape its design."
 date: 2026-07-31
 author: "David Maguire"
 categories: [synthesis]
@@ -9,12 +9,12 @@ toc: true
 ---
 
 The [Quant Lab](index.qmd) set out to do one thing the libraries could not: **test the proposal's bets on
-real data, honestly, with a real chance of a null.** Ten experiments later, the answers cohere into a
+real data, honestly, with a real chance of a null.** Thirteen experiments later, the answers cohere into a
 single argument — and, because several came back as nulls, one that has already changed the
 [proposal's](../phd/index.qmd) framing rather than merely decorated it. This page is the whole of it, on
 one screen.
 
-## The twelve verdicts
+## The thirteen verdicts
 
 | Experiment | Tests | Verdict |
 |---|:--:|---|
@@ -30,6 +30,7 @@ one screen.
 | [Calendar anomalies](calendar-anomalies/index.qmd) | discipline | Of 29 seasonal effects, **none survive** an honest multiple-testing correction; the largest $|t|$ is exactly $\sqrt{2\ln N}$. |
 | [Is a factored market state better than one label?](factored-vs-flat-state/index.qmd) | **RQ2 / H1** | At matched cardinality a 3×3 factored state beats a flat 9-state label **5 of 9** head-to-head and loses none — but is more stable on only 1 of 3 assets, and **18 of 18** comparisons say both lose to no state at all. |
 | [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | **RQ1** | Across 7 assets and 168 comparisons, state makes direction forecasts worse in **53 of 56** pairs and adds no risk-adjusted value; **18** comparisons are significant *harms* against 0.23 expected, and the one apparent gain clears the bar on **2 of 7** assets. |
+| [Seven specialists, one dimension](specialist-redundancy/index.qmd) | **RQ5 / RQ1** | Effective-n says 3.8 of 7 and looks healthy — but noise produces that too. The estimators' **consensus** clears the bar **3 of 9** (all volatility); their **deviations 0 of 63**, and adding them back degrades the consensus on every asset. |
 
 : Each experiment, the proposal hypothesis or site finding it tests, and its one-line result. {.striped .hover}
 
@@ -64,6 +65,17 @@ label describe the same nine cells for 24 parameters against 108, factoring wins
 loses none. It is *not* reliably more stable, and both descriptions lose to no state at all in 18 of 18
 comparisons. The proposal's preference for a multidimensional state is vindicated as a **modelling
 choice** and undercut as a **source of edge** — which is the same shape as every other finding here.
+
+The thirteenth stops testing outputs and tests an **input**, and in doing so explains the ninth. A council
+of specialists needs its members to cover different dimensions; the effective number of independent signals
+says 3.8 of 7, which looks healthy — and is not evidence, because seven noisy measurements of *one*
+quantity decorrelate exactly like seven genuine dimensions. Split the panel into what the estimators agree
+on and where each departs from it, and the answer is unambiguous: the **consensus** clears the deflated bar
+3 of 9 times and all three are the volatility target; the **deviations** clear it 0 of 63; and adding the
+deviations back degrades the consensus on every asset. The seven estimators are one dimension measured
+seven times, and the one thing they collectively know is that falling markets are volatile — which the
+volatility benchmark already knew. RQ1's null was never a fact about state; it was a fact about a panel
+that never spanned more than one.
 
 ## What it means for the proposal
 

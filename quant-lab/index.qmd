@@ -69,6 +69,7 @@ and out of sample, whether they actually do.
 | [Calendar anomalies after multiple-testing](calendar-anomalies/index.qmd) | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | ✅ Done |
 | [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | Do any of eight state estimators add decision value beyond a volatility-only model? | RQ1 | ✅ Done |
 | [Is a factored market state better than one label?](factored-vs-flat-state/index.qmd) | At matched cardinality, does a 3×3 factored state beat a flat 9-state label? | RQ2 / H1 | ✅ Done |
+| [Seven specialists, one dimension](specialist-redundancy/index.qmd) | Does the estimator panel span multiple dimensions, or measure one thing badly? | RQ5 / RQ1 | ✅ Done |
 
 : Each experiment maps to a proposal research question (RQ1) or hypothesis (H1, H2, H5, H6, H8), or to a [capstone finding](../capstone.qmd), and reports honestly whether it holds. {.striped .hover}
 
@@ -123,3 +124,14 @@ constant cap is constant leverage), the drawdown kill-switch is consistently wor
 budget is consistently better on all three indices without clearing significance in any of nine
 comparisons. That leaves **H6** as the only hypothesis never put through the protocol, and every one that
 has been through it returning a null or a near-null.
+
+The thirteenth stops testing results and tests an *input*, which is why it explains more than it measures.
+The council architecture needs its specialists to cover different dimensions; the standard check — the
+effective number of independent signals — returns **3.8 of 7** and looks healthy. It is not evidence.
+Seven noisy measurements of a *single* quantity decorrelate exactly like seven genuine dimensions, and a
+noise-to-signal ratio of 1.29 reproduces 3.8 precisely. Splitting the panel into what the estimators agree
+on and where each departs from it settles it: the consensus clears the deflated bar **3 of 9** times and
+all three are the volatility target, the deviations **0 of 63**, and adding the deviations back *degrades*
+the consensus on every asset. The seven estimators are one dimension measured seven times — and the one
+thing they collectively know is that falling markets are volatile, which the volatility benchmark already
+knew. That is [RQ1's null](state-decision-value/index.qmd) explained rather than merely reported.
