@@ -15,6 +15,17 @@ image-alt: "Hard risk limits cut an aggressive strategy's drawdown from −63% t
 toc: true
 ---
 
+::: {.callout-important appearance="simple"}
+**Superseded.** The comparison on this page is a leveraged strategy *with* limits against the
+same strategy *without* them — but every limit also cuts exposure, so drawdown falls for free
+and Calmar rises from reduced volatility drag alone. Re-tested against a constant leverage
+carrying the **same realised volatility**, the leverage cap does *exactly nothing*, the
+kill-switch is consistently worse, and the volatility budget is consistently better without
+reaching significance in any of nine comparisons:
+[**0 of 9 significant**](../h8-risk-limits-retest/index.qmd). Kept as written, because deleting
+it would hide how the mistake was made.
+:::
+
 ## Research question
 
 The last of the proposal's three load-bearing hypotheses, and the counterpart to the

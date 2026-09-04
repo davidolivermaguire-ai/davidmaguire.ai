@@ -92,9 +92,12 @@ the very failure the risk-sensitive and constrained-RL literature (CVaR objectiv
 exists to address, and which the proposal's [risk-constrained RL](../../ml/risk-constrained-rl/index.qmd)
 component adopts. Second, most assume **stationarity**, learning a policy for a market that then changes
 underneath it. The proposal's answer is to pair constrained RL with regime-conditioning and a
-**deterministic risk layer** that can override the learner outright — and its [Quant Lab H6
-test](../../quant-lab/hard-risk-limits/index.qmd) confirms empirically what the constrained-RL theory
-argues: hard, deterministic limits are what turn a fallible learner into a viable strategy.
+**deterministic risk layer** that can override the learner outright. An early [Quant Lab
+test](../../quant-lab/hard-risk-limits/index.qmd) appeared to confirm empirically what the constrained-RL
+theory argues — that hard limits turn a fallible learner into a viable strategy — but a
+[re-test against a benchmark carrying the same risk](../../quant-lab/h8-risk-limits-retest/index.qmd)
+found no significant improvement in nine comparisons. The case for a deterministic risk layer is therefore
+governance and provability, not demonstrated performance.
 
 ## 5. NLP and large language models in finance
 

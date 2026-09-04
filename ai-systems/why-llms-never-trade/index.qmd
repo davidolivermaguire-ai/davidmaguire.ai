@@ -84,9 +84,12 @@ function riskGate(p, limits, book) {
 }
 ```
 
-This is the qualitative form of a result the quant half of the site *proved*: the
-[H6 experiment](../../quant-lab/hard-risk-limits/index.qmd) showed that hard, deterministic risk limits are
-what turn an aggressive, fallible strategy into a viable one, and the
+This is the qualitative form of a claim the quant half of the site tested and could **not** confirm: an
+[early experiment](../../quant-lab/hard-risk-limits/index.qmd) appeared to show hard limits turning an
+aggressive strategy into a viable one, but a
+[re-test against a benchmark carrying the same risk](../../quant-lab/h8-risk-limits-retest/index.qmd)
+found no significant improvement in nine comparisons. The case for a deterministic gate here is that it is
+**provable and auditable**, not that it was shown to pay — and the
 [risk-constrained-RL entry](../../ml/risk-constrained-rl/index.qmd) formalised why a *hard constraint is a
 guarantee where a soft preference is only a hope*. The same logic is why the LLM sits outside the gate: you
 do not make an untrustworthy actor safe by asking it nicely to behave; you make it safe by ensuring it
@@ -123,9 +126,11 @@ should analyse from text that's an instruction, so if the model could trade, any
 my system reads could move my book. I can't stop reading the news and I want to keep the capable model, so
 the only thing left to remove is the power to act. Structurally, the LLM emits bounded features, the RL
 agent emits proposals, and a deterministic risk gate — hard limits, auditable, that I *can* prove things
-about — is the only thing that authorises an order, and it can always say no. That's the qualitative version
-of what my H6 experiment showed quantitatively: hard deterministic limits are what make a fallible system
-viable. And it doesn't weaken the AI — the model still does its real job at full strength; it just never
+about — is the only thing that authorises an order, and it can always say no. Note that this is a
+*governance* argument, not a performance one: my [H8 re-test](../../quant-lab/h8-risk-limits-retest/index.qmd)
+found that against a benchmark carrying the same risk, hard limits do **not** demonstrably improve
+returns or drawdown-adjusted performance. They earn their place here because they are provable and
+auditable, not because they were shown to pay. And it doesn't weaken the AI — the model still does its real job at full strength; it just never
 holds the keys. A system that informs every decision and makes none is the only LLM-in-the-loop design I'd
 put in front of capital."
 

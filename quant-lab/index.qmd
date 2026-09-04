@@ -41,8 +41,9 @@ walk-forward validation to reduce look-ahead bias.*
 ## Experiments
 
 ::: {.status-note}
-The original eight-experiment agenda is complete, and two further experiments extend it to RQ1 and RQ2. Each is computed
-and verified against the same real Nasdaq-100 data, reporting nulls as readily as positives.
+The original eight-experiment agenda is complete. Four further experiments extend it to RQ1 and RQ2 and
+re-test two earlier results under a stricter protocol — both of which they overturn. Nulls and retractions
+are reported as readily as positives.
 :::
 
 ## The research agenda
@@ -63,7 +64,8 @@ and out of sample, whether they actually do.
 | [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | Does regime-conditioning improve probabilistic forecasts, where it failed at sizing? | H2 | ⚠️ Superseded |
 | [Does regime-conditioning really sharpen tail probabilities?](h2-calibration-retest/index.qmd) | Does the H2 result survive a fair benchmark and a significance test? | H2 | ✅ Done |
 | [Benefit concentration at transitions](benefit-at-transitions/index.qmd) | Do the gains cluster around regime changes rather than in calm periods? | H6 | ✅ Done |
-| [Hard risk limits, net of their cost](hard-risk-limits/index.qmd) | Do deterministic risk caps help *after* the return they sacrifice? | H8 | ✅ Done |
+| [Hard risk limits, net of their cost](hard-risk-limits/index.qmd) | Do deterministic risk caps help *after* the return they sacrifice? | H8 | ⚠️ Superseded |
+| [Do hard risk limits earn their keep, or just hold less?](h8-risk-limits-retest/index.qmd) | Do the limits beat a benchmark carrying the same risk? | H8 | ✅ Done |
 | [Calendar anomalies after multiple-testing](calendar-anomalies/index.qmd) | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | ✅ Done |
 | [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | Do any of eight state estimators add decision value beyond a volatility-only model? | RQ1 | ✅ Done |
 | [Is a factored market state better than one label?](factored-vs-flat-state/index.qmd) | At matched cardinality, does a 3×3 factored state beat a flat 9-state label? | RQ2 / H1 | ✅ Done |
@@ -79,9 +81,9 @@ tested, and it has since been [retracted](h2-calibration-retest/index.qmd). **H5
 And a test of **H6** confirms it from a third angle — the risk protection of adaptivity is concentrated at
 regime transitions and the turbulence they open (142% of it in 38% of days, p = 0.006), earning nothing in
 the calm middle — so the payoff is dominated by how early the turning points are *detected*. Finally
-**H8** closes the trilogy: hard risk limits turn an untradeable 2× strategy (−63% drawdown) into a viable
-one (−26%, higher Calmar) even as they cut returns — but only the right ones (leverage caps, volatility/CVaR
-budgets); a reactive drawdown kill-switch backfires, twice confirmed. And a **discipline check** completes
+**H8** appeared to close the trilogy — hard risk limits turning an untradeable 2× strategy into a viable
+one — but that comparison pitted limits against an unconstrained base they also *de-levered*, and it has
+since been [retracted](h8-risk-limits-retest/index.qmd). And a **discipline check** completes
 the agenda: of 29 calendar anomalies, none survive an honest multiple-testing correction — the control that
 makes the careful positive results worth believing. Tested, not assumed.
 
@@ -113,3 +115,11 @@ terciles it originally beat, **none of six comparisons is significant**, and on 
 made on the sign reverses. The published edge was 0.002 Brier with no significance test. H2 does not
 survive, which leaves only H6 and H8 untested and the proposal's positive case thinner than this page
 claimed a day ago.
+
+The twelfth completes the audit, and closes it on the same note. **H8** — deterministic risk limits improve
+viability — was tested against an unconstrained 2× that the limits themselves de-levered. Re-run against a
+constant leverage carrying the *same realised volatility*, the leverage cap does **exactly nothing** (a
+constant cap is constant leverage), the drawdown kill-switch is consistently worse, and the volatility
+budget is consistently better on all three indices without clearing significance in any of nine
+comparisons. That leaves **H6** as the only hypothesis never put through the protocol, and every one that
+has been through it returning a null or a near-null.
