@@ -1,9 +1,7 @@
 ---
 title: "PhD Research Proposal"
 subtitle: "Evidence-Grounded Multi-Agent LLM Decision-Making in Financial Markets"
-description: "Research proposal to Queen's University Belfast (November 2026): does structured debate between distinct large language models, grounded in shared market evidence, improve investment decisions beyond established quantitative methods?"
-author: "David Maguire"
-date: 2026-11-13
+description: "Does structured debate between distinct large language models, grounded in shared market evidence, improve investment decisions beyond established quantitative methods?"
 toc: true
 toc-depth: 2
 resources:
@@ -11,18 +9,13 @@ resources:
   - architecture-overview.jpg
 ---
 
-::: {.status-note}
-**Current proposal, November 2026.** Proposed doctoral research at Queen's University Belfast. The
-direction and scope remain open to supervisory guidance and to the findings of the initial experiments.
-:::
-
 Machine learning and deep learning can find predictive patterns in market data, but a forecast on its own
 does not decide whether a position should be opened, sized, kept or closed. This research asks whether
 several different large language models, given the same calibrated market evidence and made to challenge
 one another's conclusions, make better investment decisions than the same models working independently or
 strong quantitative methods alone, and whether any improvement is worth its cost. It also tests whether the
 same models can manage open positions better than fixed review rules. A finding of no improvement would be
-equally informative.
+equally informative. The [research questions](../research/index.qmd) set out how each part will be tested.
 
 ## System architecture
 
@@ -34,14 +27,6 @@ and what it contributes.
 [Open the interactive architecture](architecture.html){.btn .btn-primary}
 
 [![System architecture by lifecycle phase. Select the image to open the interactive version.](architecture-overview.jpg){fig-alt="Architecture diagram: eleven components grouped into five phases (data provision, model build, model implementation, model monitoring and model recalibration), with an evidence and evaluation column alongside."}](architecture.html)
-
-## How the proposal evolved
-
-An earlier version of this proposal centred on inferring market regimes. My
-[pilot experiments](../quant-lab/index.qmd) found that volatility is forecastable over short horizons but
-direction is not, and that regime labels added little beyond volatility. The research therefore moved to
-the decision layer: whether language models reasoning over calibrated evidence improve decisions. The
-earlier version is [archived](archive.qmd) for reference.
 
 ## Core reading
 
@@ -63,11 +48,3 @@ Selected articles behind the main design choices, from journals rated in the ABS
 | Gârleanu and Pedersen (2013), [Dynamic Trading with Predictable Returns and Transaction Costs](https://doi.org/10.1111/jofi.12080), *Journal of Finance* | Trading costs and turnover | 4* |
 
 : {.striped}
-
-## Next steps
-
-- A systematic review of AJG-ranked literature for each design choice, including the recent multi-agent
-  LLM work, before the originality claim is finalised.
-- A pilot study of data coverage, effective sample size, model stability and LLM inference costs, as set
-  out in the proposal.
-- Strengthening financial econometrics and forecast evaluation alongside the reading above.

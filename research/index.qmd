@@ -1,0 +1,92 @@
+---
+title: "Research"
+subtitle: "The research questions and how each will be tested"
+description: "The primary and supporting research questions of the PhD proposal: what each asks, why it matters, how it will be tested and what will be measured."
+toc: true
+toc-depth: 2
+---
+
+The research has one primary question and four supporting questions. Each is tested on US equities using
+daily market data, with all comparisons made on data the models have not seen: chronological training,
+validation and test periods, a sealed final holdout, and prospective paper trading where feasible. Numbers
+in brackets refer to components of the [system architecture](../phd/architecture.html).
+
+## Primary question
+
+::: {.callout-note appearance="simple"}
+**Does bounded debate between distinct LLMs, grounded in identical calibrated market evidence, improve
+decision reliability and net risk-adjusted performance compared with independent multi-LLM aggregation and
+adaptive numerical ensembles?**
+:::
+
+**Why it matters.** Multi-agent LLM trading systems are being built, but whether a structured exchange
+between models actually improves decisions, rather than adding complexity and cost, remains an open
+question under controlled conditions.
+
+**How it will be tested.** The same panel of LLMs, from different providers, receives the same evidence. Each
+model first gives an independent recommendation. These are combined by a fixed rule, and compared with the
+same models' decisions after one round of evidence-based challenge and revision. Both are compared with
+fixed and adaptive ensembles of the machine-learning and deep-learning forecasts. Information, risk limits,
+execution assumptions and computing budgets are matched across all versions (02, 03, 04, 05, 06).
+
+**What will be measured.** The paired difference in Brier score between independent aggregation and debate
+is the primary statistical test. Net Sharpe ratio and drawdown after trading and inference costs are the
+headline economic result. Calibration, turnover and cost per decision are also reported (10).
+
+## Supporting questions
+
+### 1. How do different LLMs interpret the same forecasts and uncertainty?
+
+**Why it matters.** Two models can accept the same probability but recommend different actions, for example
+because they read volatility differently. Disagreement can expose weak assumptions, or simply reflect
+differences in training and numerical reasoning.
+
+**How it will be tested.** Each model's independent assessments on identical evidence are compared,
+separating disagreement about the forecast from disagreement about the action (04).
+
+**What will be measured.** Calibration of each model, how often and where models disagree, and how often
+each one's claims are supported by the evidence.
+
+### 2. Does a common semantic evidence structure improve consistency and reduce unsupported claims?
+
+**Why it matters.** If models receive differently formatted inputs, differences in their judgement cannot be
+separated from differences in what they were given.
+
+**How it will be tested.** The same numerical information is supplied as structured evidence records with
+explicit definitions, units, horizons, provenance and uncertainty, and as equivalent prose (03).
+
+**What will be measured.** Unsupported claims, assessed on a blinded, double-coded sample of model
+explanations; format errors; and whether the same evidence leads to the same decision across repeated runs.
+
+### 3. Do outcomes change when numerical forecasts disagree or market regimes shift?
+
+**Why it matters.** Any benefit from debate may be concentrated in difficult conditions, or may disappear
+when it is most needed.
+
+**How it will be tested.** Results from the primary comparison are broken down by periods when the
+machine-learning and deep-learning forecasts agree or disagree, and by market regime estimated from
+information available at the time (02, 08).
+
+**What will be measured.** Brier score, calibration and net returns within each condition, with uncertainty
+intervals that allow for dependence across dates.
+
+### 4. Does condition-triggered reassessment of open positions improve outcomes?
+
+**Why it matters.** Entering a position is only half of a decision. Whether reassessing a position as
+conditions change improves outcomes, once the extra trading and inference costs are counted, is a separate
+question.
+
+**How it will be tested.** Open positions are checked daily. A breach of a pre-stated exit condition closes the
+position automatically, while softer changes, such as a forecast reversal or a jump in volatility, return it
+to the same LLM panel for reassessment. This is compared with a weekly review and fixed exits, holding entry
+decisions, evidence, risk limits and execution constant (05, 06, 07).
+
+**What will be measured.** Returns, drawdown, turnover, exit timing and the cost of each reassessment.
+
+## Throughout
+
+- **Strong benchmarks.** Every LLM-based decision is compared with fixed and adaptive numerical ensembles
+  and simple rules, not only with other LLM variants.
+- **Every trial counted.** All model and prompt variants are recorded, so results can be corrected for the
+  number of comparisons made (09).
+- **A negative result is a result.** If debate does not help, the design is built to show where and why.

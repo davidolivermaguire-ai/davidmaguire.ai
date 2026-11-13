@@ -10,12 +10,11 @@ toc: false
 # David Maguire
 
 ::: {.lead}
-I work in data and analytics in banking and am preparing a PhD in quantitative finance at
-Queen's University Belfast. My proposed research asks whether several large language models,
-given the same calibrated market evidence and made to challenge one another, make better
-investment decisions than they do independently or than strong quantitative methods alone,
-and whether any gain is worth its cost. This site holds the proposal, the pilot experiments
-that shaped it, and short notes on the methods it relies on.
+I work in data and analytics in banking and am preparing a PhD in quantitative finance. My proposed
+research asks whether several large language models, given the same calibrated market evidence and made
+to challenge one another, make better investment decisions than they do independently or than strong
+quantitative methods alone, and whether any gain is worth its cost. This site sets out the proposal,
+its research questions, and the methods it relies on.
 :::
 :::
 
@@ -48,25 +47,24 @@ that shaped it, and short notes on the methods it relies on.
 
 ::: {.g-col-12 .g-col-md-6 .section-card}
 #### <i class="bi bi-mortarboard card-ic" aria-hidden="true"></i> [PhD proposal](phd/index.qmd)
-Evidence-grounded multi-agent LLM decision-making in financial markets: the research question, the
-interactive system architecture and the core reading behind each design choice.
+Evidence-grounded multi-agent LLM decision-making in financial markets: the interactive system
+architecture and the core reading behind each design choice.
 :::
 
 ::: {.g-col-12 .g-col-md-6 .section-card}
-#### <i class="bi bi-bar-chart-line card-ic" aria-hidden="true"></i> [Research](quant-lab/index.qmd)
-Eight pilot experiments on real market data, with stated hypotheses, same-information benchmarks and
-honestly reported nulls, including two of my own results that fairer re-tests overturned.
+#### <i class="bi bi-question-circle card-ic" aria-hidden="true"></i> [Research](research/index.qmd)
+The research questions, why each matters, and how each will be tested and measured.
 :::
 
 ::: {.g-col-12 .g-col-md-6 .section-card}
-#### <i class="bi bi-diagram-3 card-ic" aria-hidden="true"></i> [Methods](ml/index.qmd)
-Short notes on the forecasting models, evaluation methods and LLM controls the proposal uses, each
-tested on real data.
+#### <i class="bi bi-diagram-3 card-ic" aria-hidden="true"></i> [Methods](methods/index.qmd)
+The market indicators, models and evaluation methods the research uses: the equations, what each is
+for, and how it would be implemented.
 :::
 
 ::: {.g-col-12 .g-col-md-6 .section-card}
 #### <i class="bi bi-person card-ic" aria-hidden="true"></i> [About](about.qmd)
-Background in banking analytics, qualifications, and how I use AI tools in this work.
+Experience in banking analytics and model data, qualifications, and how I use AI tools in this work.
 :::
 
 :::

@@ -65,3 +65,9 @@ table { font-size: .95em; }
 .card-ic { color:$primary; margin-right:.5rem; font-size:1.05em; line-height:1; }
 .card-ic.sigma { font-weight:700; font-size:1.2em; }
 .section-card:hover { box-shadow:0 2px 12px rgba(44,95,138,.08); }
+
+/* Floating link back to the Methods index on method pages */
+.back-to-methods{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:max(20px,env(safe-area-inset-bottom,0px));z-index:1030;
+  background:$primary;color:#fff !important;text-decoration:none;font-size:.9rem;font-weight:600;padding:.55rem .95rem;border-radius:999px;
+  box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.back-to-methods:hover,.back-to-methods:focus{filter:brightness(1.1);color:#fff !important}

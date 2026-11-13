@@ -1,0 +1,161 @@
+---
+title: "Market Indicators"
+subtitle: "The evidence every model and LLM reads"
+description: "Returns, moving-average distance, RSI, realised volatility, volume change, VIX and the variance risk premium: the equations, what each measures, and how each is used."
+toc: true
+toc-depth: 2
+---
+
+Every forecast and every LLM judgement in the research starts from a small, fixed set of indicators built
+from daily US equity data and the VIX. The set is deliberately short: searching across many indicators makes
+it easy to find one that looks predictive by chance, so the list is fixed before any testing.
+
+Throughout, $P_t$ is a stock's closing price on day $t$, $V_t$ its trading volume, and $r_t$ its daily
+return. Every indicator for day $t$ uses only data available at that day's close, and any trade it informs
+is executed at the next session's price.
+
+## Returns
+
+$$
+r_t = \frac{P_t}{P_{t-1}} - 1, \qquad R_t^{(k)} = \frac{P_t}{P_{t-k}} - 1, \quad k \in \{1, 5, 20\}
+$$
+
+**What it measures.** The percentage change in price over the last day, week and month
+(`Return_1D`, `Return_5D`, `Return_20D`).
+
+**How it is used.** Recent returns capture short-term momentum or reversal. The same calculation, looking
+forward, defines the forecasting target: whether the next five sessions' return exceeds a trading-cost
+threshold $c$,
+
+$$
+y_t = \mathbb{1}\!\left[\frac{P_{t+5}}{P_t} - 1 > c\right].
+$$
+
+The target uses future prices, so it is only ever a label for training and evaluation, never an input.
+
+## Distance from moving average
+
+$$
+\text{MA}_t^{(n)} = \frac{1}{n}\sum_{i=0}^{n-1} P_{t-i}, \qquad D_t^{(n)} = \frac{P_t}{\text{MA}_t^{(n)}} - 1, \quad n \in \{20, 50\}
+$$
+
+**What it measures.** How far the price sits above or below its 20-day and 50-day average
+(`Distance_MA20`, `Distance_MA50`). Expressing it as a percentage makes it comparable across stocks with
+different price levels.
+
+**How it is used.** A simple measure of trend: a stock well above both averages is in an established
+uptrend. The two horizons together show whether short- and medium-term trends agree.
+
+## Relative Strength Index (RSI)
+
+With daily price changes split into gains $G_t = \max(P_t - P_{t-1}, 0)$ and losses
+$L_t = \max(P_{t-1} - P_t, 0)$, Wilder's smoothing over 14 days gives
+
+$$
+\bar G_t = \frac{13\,\bar G_{t-1} + G_t}{14}, \qquad \bar L_t = \frac{13\,\bar L_{t-1} + L_t}{14}, \qquad
+\text{RSI}_t = 100 - \frac{100}{1 + \bar G_t / \bar L_t}.
+$$
+
+**What it measures.** The balance of recent up-moves and down-moves on a 0 to 100 scale (`RSI_14`).
+Readings above 70 are conventionally described as overbought and below 30 as oversold.
+
+**How it is used.** As a momentum input. The conventional thresholds are descriptive, not trading rules,
+and the semantic layer records them as such so the LLMs do not treat them as signals in their own right.
+
+## Realised volatility
+
+$$
+\sigma_t^{(20)} = \sqrt{252}\;\sqrt{\frac{1}{19}\sum_{i=0}^{19}\left(r_{t-i} - \bar r_t\right)^2}
+$$
+
+**What it measures.** How much the stock's price has moved over the last 20 sessions, scaled to an annual
+figure using roughly 252 trading days a year (`Volatility_20`).
+
+**How it is used.** As a measure of risk. Volatility tends to cluster, so recent volatility is informative
+about near-term volatility in a way that recent returns are not about near-term direction. It also feeds
+position sizing and the monitoring triggers.
+
+## Volume change
+
+$$
+\Delta V_t = \frac{V_t}{\frac{1}{20}\sum_{i=1}^{20} V_{t-i}} - 1
+$$
+
+**What it measures.** Today's volume relative to its average over the previous 20 sessions
+(`Volume_Change`).
+
+**How it is used.** Unusually high volume can confirm a price move or signal new information arriving.
+Comparing against the previous 20 days, rather than including today, keeps the comparison clean.
+
+## VIX level and change
+
+$$
+\text{VIX}_t, \qquad \Delta\text{VIX}_t^{(5)} = \frac{\text{VIX}_t}{\text{VIX}_{t-5}} - 1
+$$
+
+**What it measures.** The VIX is the market's expectation of S&P 500 volatility over the next 30 days,
+derived from option prices and quoted in annualised percentage points (`VIX_Level`). Its five-day change
+shows whether that expectation is rising or falling (`VIX_Change_5D`).
+
+**How it is used.** As market-wide risk context for every stock. The VIX measures expected volatility, not
+expected direction (Whaley, 2009), so it informs how much risk to take and when to reassess a position,
+rather than whether to buy.
+
+## Variance risk premium
+
+$$
+\text{VRP}_t = \left(\frac{\text{VIX}_t}{100}\right)^2 - \frac{252}{21}\sum_{i=0}^{20} r_{t-i}^2
+$$
+
+**What it measures.** The gap between the variance the options market implies and the variance the market
+has recently delivered, both expressed as annual figures.
+
+**How it is used.** Bollerslev, Tauchen and Zhou (2009) find that this gap helps predict stock returns.
+Their measure uses high-frequency data for realised variance; with daily data, the sum of squared daily
+returns is a simpler approximation, and that limitation is recorded with the indicator.
+
+## What the Python code looks like
+
+A sketch for a single stock, given a daily table with `close`, `volume` and `vix` columns:
+
+```python
+import numpy as np
+import pandas as pd
+
+def build_indicators(df: pd.DataFrame) -> pd.DataFrame:
+    """Point-in-time indicators for one stock. Each row uses data up to that day's close only."""
+    close, volume, vix = df["close"], df["volume"], df["vix"]
+    r = close.pct_change()
+    out = pd.DataFrame(index=df.index)
+
+    for k in (1, 5, 20):
+        out[f"Return_{k}D"] = close.pct_change(k)
+    for n in (20, 50):
+        out[f"Distance_MA{n}"] = close / close.rolling(n).mean() - 1
+
+    change = close.diff()
+    avg_gain = change.clip(lower=0).ewm(alpha=1/14, adjust=False).mean()   # Wilder smoothing
+    avg_loss = (-change.clip(upper=0)).ewm(alpha=1/14, adjust=False).mean()
+    out["RSI_14"] = 100 - 100 / (1 + avg_gain / avg_loss)
+
+    out["Volatility_20"] = r.rolling(20).std() * np.sqrt(252)
+    out["Volume_Change"] = volume / volume.rolling(20).mean().shift(1) - 1
+    out["VIX_Level"] = vix
+    out["VIX_Change_5D"] = vix.pct_change(5)
+    out["VRP"] = (vix / 100) ** 2 - (r ** 2).rolling(21).sum() * 252 / 21
+    return out
+
+def build_target(close: pd.Series, cost: float = 0.002) -> pd.Series:
+    """Label only: 1 if the next five sessions' return beats the cost threshold. Never used as an input."""
+    return (close.shift(-5) / close - 1 > cost).astype(float).where(close.shift(-5).notna())
+```
+
+## How the indicators are explained
+
+Each indicator enters the semantic layer with its definition, formula, units, look-back window, the time
+it became available, and a note on what it does and does not mean. That is what lets an LLM, or a
+supervisor, trace any statement back to a specific, reproducible number.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

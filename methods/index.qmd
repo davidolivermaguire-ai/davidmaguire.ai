@@ -1,0 +1,35 @@
+---
+title: "Methods"
+subtitle: "The indicators, models and evaluation methods the research uses"
+description: "Market indicators, forecasting models and evaluation methods for the PhD proposal: the equations, what each is for, and how it would be implemented on US equities."
+toc: false
+---
+
+These notes cover the methods the [proposal](../phd/index.qmd) relies on: the market indicators that form
+the evidence, the models that turn it into probability forecasts, and the methods used to judge them. Each
+is written from the standpoint of a hypothetical US equities study, with the equation, what it is used for,
+and how it would be implemented.
+
+::: {.callout-note appearance="simple"}
+**This is a starting point, not a fixed list.** Methods may be added, replaced or dropped as the research
+develops and as the pilot study and supervisory discussion shape the final design.
+:::
+
+| Area | Method | Used for |
+|---|---|---|
+| Evidence | [Market indicators](market-indicators/index.qmd): returns, moving-average distance, RSI, realised volatility, volume change, VIX and the variance risk premium | The inputs every model and LLM reads (01, 03) |
+| Models | [Regularised logistic regression](logistic-regression/index.qmd) | Interpretable baseline probability forecast (02) |
+| | Gradient-boosted trees | Nonlinear benchmark forecast (02) |
+| | Long short-term memory network (LSTM) | Compact deep-learning forecast from sequences (02) |
+| | Hidden Markov model | Optional regime probabilities (02, 08) |
+| | Fixed and adaptive ensembles | The numerical benchmark LLM decisions must beat (02, 10) |
+| Evaluation | Brier score and calibration | The primary measure of probability forecasts (10) |
+| | Diebold–Mariano test | Whether one forecast is significantly better than another (10) |
+| | Walk-forward testing with purging | Testing only on unseen data, without leakage (10) |
+| | Sharpe ratio, drawdown and trading costs | The economic result, net of costs (06, 10) |
+
+: Numbers in the last column refer to components of the [system architecture](../phd/architecture.html). Notes for the remaining methods are being added. {.striped}
+
+Each model and evaluation note answers the same questions: what problem it solves, what it assumes, what
+data it needs, how it learns, its strengths and weaknesses, how it applies to markets, what the Python
+code looks like, and how its outputs are explained.

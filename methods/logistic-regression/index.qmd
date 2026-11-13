@@ -1,0 +1,124 @@
+---
+title: "Regularised Logistic Regression"
+subtitle: "The interpretable baseline forecast"
+description: "Logistic regression estimates the probability of a binary market event from a weighted sum of indicators. What it assumes, how it learns, and how its forecasts are explained."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+It estimates the probability of a yes-or-no event. In this research the event is whether a stock's return
+over the next five sessions will exceed a trading-cost threshold, given today's
+[market indicators](../market-indicators/index.qmd). The output is a probability, such as 0.58, rather than
+a bare prediction, which is what the semantic layer and the LLMs need.
+
+## 2. What assumptions does it make?
+
+- The **log-odds** of the event are a linear combination of the inputs. Curved or interacting effects are
+  missed unless they are built into the features.
+- Observations are **independent**. Daily market data breaks this: five-day targets overlap and returns
+  cluster, so training and test periods are separated by a gap and uncertainty is estimated with methods
+  that allow for dependence.
+- The relationship is **stable** over the training window, which markets do not guarantee. That is why the
+  model is retrained and recalibrated on a schedule.
+
+## 3. What data does it need?
+
+A table with one row per stock per day: the indicator values $\mathbf{x}_t$ known at the close, and the label
+$y_t$ for whether the following five-session return beat the cost threshold. Indicators are standardised
+using the mean and standard deviation of the training window only, never the test period.
+
+## 4. How does it learn?
+
+The probability is a weighted sum of the indicators passed through the logistic function:
+
+$$
+p_t = P(y_t = 1 \mid \mathbf{x}_t) = \frac{1}{1 + e^{-(\beta_0 + \boldsymbol\beta^\top \mathbf{x}_t)}},
+\qquad \log\frac{p_t}{1 - p_t} = \beta_0 + \boldsymbol\beta^\top \mathbf{x}_t .
+$$
+
+The weights are chosen to minimise the average log loss plus a penalty that shrinks them towards zero:
+
+$$
+\mathcal{L}(\boldsymbol\beta) = -\frac{1}{N}\sum_{t=1}^{N}\Big[y_t \log p_t + (1 - y_t)\log(1 - p_t)\Big]
++ \lambda \lVert \boldsymbol\beta \rVert_2^2 .
+$$
+
+The penalty strength $\lambda$ is chosen on a later validation window. The problem has a single best
+solution, so training is fast and gives the same answer every time.
+
+## 5. What are its strengths?
+
+- **Interpretable.** Each weight shows how an indicator moves the forecast.
+- **Probabilities.** It is trained on log loss, so its outputs are often reasonably well calibrated.
+- **Stable on noisy data.** With few parameters and regularisation, it is hard to overfit, which matters
+  when the signal in daily returns is weak.
+- **A demanding baseline.** More complex models have to beat it to justify their complexity.
+
+## 6. What are its weaknesses?
+
+- It cannot find nonlinear patterns or interactions on its own, such as momentum mattering only when
+  volatility is low.
+- Closely related inputs, such as the two moving-average distances, share weight between them, which makes
+  individual coefficients less reliable to interpret.
+- Calibration can drift when market conditions change.
+
+## 7. How could it apply to markets?
+
+It is the baseline forecaster in the [architecture](../../phd/architecture.html) (02). For each stock and
+day it produces the probability that the next five sessions beat costs. That probability, with its model
+version and calibration record, goes into the evidence the LLMs read. The gradient-boosted trees and the
+LSTM must beat it on Brier score to earn their place.
+
+## 8. What does the Python code look like?
+
+A walk-forward sketch: train on past data, predict the next unseen block, then step forward.
+
+```python
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import brier_score_loss
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+FEATURES = ["Return_1D", "Return_5D", "Return_20D", "Distance_MA20", "Distance_MA50",
+            "RSI_14", "Volatility_20", "Volume_Change", "VIX_Level", "VIX_Change_5D"]
+
+def walk_forward(data, train_days=756, test_days=63, gap=5, C=0.1):
+    """data: rows sorted by date with FEATURES and a 'target' column. Returns out-of-sample forecasts."""
+    dates = data.index.unique().sort_values()
+    forecasts = []
+    for start in range(train_days, len(dates) - gap, test_days):
+        train = data.loc[dates[start - train_days]:dates[start - gap - 1]]    # gap stops overlapping labels leaking
+        test = data.loc[dates[start]:dates[min(start + test_days, len(dates)) - 1]]
+        model = make_pipeline(StandardScaler(), LogisticRegression(C=C))   # C = 1 / regularisation strength
+        model.fit(train[FEATURES], train["target"])
+        forecasts.append(test.assign(p=model.predict_proba(test[FEATURES])[:, 1]))
+    return pd.concat(forecasts)
+
+# out = walk_forward(panel)
+# print(brier_score_loss(out["target"], out["p"]))
+```
+
+## 9. How are its outputs explained?
+
+Because the model is linear in the log-odds, any single forecast can be broken down exactly into the
+contribution of each indicator, $\beta_j x_{t,j}$. A hypothetical example for one stock on one day:
+
+| Indicator (standardised) | Value | Weight | Contribution to log-odds |
+|---|:--:|:--:|:--:|
+| Return_20D | +1.2 | +0.06 | +0.07 |
+| RSI_14 | +1.8 | −0.04 | −0.07 |
+| VIX_Change_5D | +2.0 | −0.05 | −0.10 |
+
+: Illustrative values only. {.striped}
+
+Across a model, $e^{\beta_j}$ gives the change in the odds for a one-standard-deviation move in an
+indicator. These contributions, the training window, the model version and its recent calibration are
+recorded with every forecast. That lets a reviewer, or an LLM in the debate, see exactly why the model said
+what it said, and how much to trust it.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```
