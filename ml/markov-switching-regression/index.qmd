@@ -10,8 +10,12 @@ image-alt: "A known switching-beta regression recovered from data, beside a defe
 toc: true
 ---
 
-The [change-point detector](../change-point-detection/index.qmd) answers *when* a regime changed and the
-[HMM](../regime-aware-modelling/index.qmd) answers *which* regime we are in — but neither says what the
+::: {.callout-note}
+**Note.** Written while developing an earlier version of my proposal ([archived](../../phd/archive.qmd)); references to "the proposal" refer to that version. The method itself is part of the [current proposal](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
+The change-point detector answers *when* a regime changed and the
+HMM answers *which* regime we are in — but neither says what the
 market's **relationships** become once the regime turns. That is the gap this entry closes, and it is the
 bridge I promised the previous one: from *"a regime changed"* to *"so the return dynamics are now these."*
 A **Markov-switching regression** (Hamilton 1989) is an ordinary regression whose **coefficients switch**
@@ -20,7 +24,7 @@ error variance can each take different values in each regime, and the regime is 
 Fit to the beta of a defensive stock on the Nasdaq, it recovers a fact every risk manager fears and few
 models encode: **that beta is not a constant but roughly doubles in the turbulent regime** — the
 "diversification fails exactly when you need it" effect, turned from a warning into an estimated
-parameter the [proposal's](../../phd/index.qmd) Regime Agent can hand downstream.
+parameter the [proposal's](../../phd/archive.qmd) Regime Agent can hand downstream.
 
 ## 1. What problem does it solve?
 
@@ -41,7 +45,7 @@ $$y_t \;=\; \alpha_{s_t} \;+\; \beta_{s_t}\, x_t \;+\; \varepsilon_t, \qquad \va
 
 and the state evolves as a Markov chain, $\Pr(s_t = j \mid s_{t-1} = i) = p_{ij}$. Everything that can
 carry a regime subscript — intercept $\alpha$, slope $\beta$, variance $\sigma^2$ — is allowed to switch.
-The crucial contrast is with the [hidden Markov model](../regime-aware-modelling/index.qmd) already in
+The crucial contrast is with the hidden Markov model already in
 this library: an HMM switches the **marginal** distribution of returns (their mean and volatility per
 regime), whereas a switching regression switches a **conditional relationship** — how $y$ responds to
 $x$. In fact the HMM is the special case of this model with **no regressor** ($\beta \equiv 0$, only the
@@ -52,8 +56,8 @@ Regime Agent needs — not just "how volatile is it?" but "what is the beta righ
 ## 3. How is it fit?
 
 The regime is latent, so the likelihood must integrate over every possible regime path — done
-efficiently by the **Hamilton filter**, the direct analogue of the [forward
-algorithm](../rnns/index.qmd): carry a probability over the current regime, predict it one step through
+efficiently by the **Hamilton filter**, the direct analogue of the forward
+algorithm: carry a probability over the current regime, predict it one step through
 the transition matrix, reweight it by how well each regime's regression explains today's $(x_t, y_t)$,
 and accumulate the log-likelihood. Maximising that likelihood (by EM or direct optimisation) yields the
 regime-specific coefficients and the transition matrix; a backward **smoothing** pass then gives
@@ -95,7 +99,7 @@ is an asset-specific, estimable number, not a slogan.
 
 ## 6. What are its weaknesses?
 
-- **Smoothed probabilities use the future.** The clean regime path in the figure is *two-sided* (it conditions on all data); a live system must use the **filtered** (one-sided) probability, which is noisier and lagged — precisely why online [change-point detection](../change-point-detection/index.qmd) complements it.
+- **Smoothed probabilities use the future.** The clean regime path in the figure is *two-sided* (it conditions on all data); a live system must use the **filtered** (one-sided) probability, which is noisier and lagged — precisely why online change-point detection complements it.
 - **The number of regimes is a choice.** Two is an assumption; too few blurs distinct states, too many overfits and invites label instability.
 - **Linear-Gaussian within a regime.** Each state is an ordinary regression; genuinely non-linear or fat-tailed within-regime behaviour is only approximated.
 - **Latent-state estimation is sample-hungry and can be fragile.** Rare regimes (the turbulent one is ~15% of days here) are estimated from little data, so their coefficients are the least certain — visible in the turbulent beta's wider sampling error.
@@ -103,10 +107,10 @@ is an asset-specific, estimable number, not a slogan.
 
 ## 7. How could it apply to markets?
 
-This is the [proposal's](../../phd/index.qmd) **Regime Agent upgraded from a labeller to a dynamics
+This is the [proposal's](../../phd/archive.qmd) **Regime Agent upgraded from a labeller to a dynamics
 model**. The HMM says which regime; change-point detection says a regime just changed; a Markov-switching
 regression says *what the relationships have become* — the regime-conditional betas, hedge ratios and
-factor loadings the RL Trading Agent and the [Risk Agent](../risk-constrained-rl/index.qmd) should
+factor loadings the RL Trading Agent and the Risk Agent should
 actually use. The PEP result is the argument in miniature: a single **unconditional** beta — dominated by
 the 85% of days that are calm — sits near 0.26 and so **systematically understates the exposure in the
 exact regime where losses cluster**, when the true beta is 0.51. A hedge or a risk limit built on that

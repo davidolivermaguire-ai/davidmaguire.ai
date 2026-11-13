@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Principal Component Analysis"
 subtitle: "Compressing many correlated features into a few uncorrelated directions of maximum variance"
 description: "PCA rotates correlated features onto orthogonal axes ordered by variance, keeping the few that matter. The eigen-decomposition, the scree plot, and a Nasdaq test where PC1 turns out to be the market factor and PC2 a staples-vs-tech contrast."
@@ -9,6 +10,10 @@ image: fig-pca.png
 image-alt: "A scree plot with PC1 dominating beside PCA loadings showing PC1 as an all-positive market factor and PC2 as a PEP-versus-NVDA contrast"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The second unsupervised model, and a different job from clustering. Where [K-means](../k-means/)
 groups the *rows* (which days are alike?), PCA reorganises the *columns* (which features move

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "The AR Model (Autoregression)"
 subtitle: "Regressing a series on its own past — the one coefficient that separates mean reversion from a random walk"
 description: "The autoregressive model: y_t = c + φ y_{t-1} + ε. How the AR coefficient φ controls memory, why φ = 1 is the unit-root boundary, the link to the ACF and the ADF test, and an honest Nasdaq fit."
@@ -9,6 +10,10 @@ image: fig-ar1.png
 image-alt: "Three AR(1) paths from the same shocks: white noise, mean-reverting, and a random walk"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Autocorrelation](../autocorrelation/) measured how a series relates to its own past.
 The autoregressive model turns that measurement into a forecast: it *regresses* the

@@ -1,9 +1,14 @@
 ---
+search: false
 title: "The AMI Console"
 subtitle: "From proposal to interface — a design note on turning the Adaptive Market Intelligence architecture into a glass-box decision cockpit that a human governs."
 description: "How I would operationalise the AMI proposal as a working interface: what it shows, how it is built, and the boundaries that keep it honest — the system proposes and a human approves, the models run server-side, and nothing auto-executes."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../phd/index.qmd).
+:::
 
 The [Adaptive Market Intelligence proposal](../phd/index.qmd) describes a system for inferring
 market state and governing decisions under it. This note takes the obvious next question — *what

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Simple, Log & Cumulative Returns"
 subtitle: "Turning prices into returns — the two conventions, and how to chain them over time"
 description: "The three ways to express a return: simple (percentage change), log (continuously compounded), and cumulative (total over a period). Why log returns add across time and simple returns average across assets, and the classic compounding trap."
@@ -9,6 +10,10 @@ image: fig-simple-vs-log.png
 image-alt: "Simple return versus log return curve, agreeing near zero and diverging in the tails"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Everything else in this library is built on returns, so it is worth being precise
 about what a "return" even is. Three of them come up constantly: the **simple**

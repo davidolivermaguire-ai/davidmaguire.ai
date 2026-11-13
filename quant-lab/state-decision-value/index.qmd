@@ -18,9 +18,13 @@ image-alt: "Two panels: the EWMA-slope volatility result by asset against a defl
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd).
+:::
+
 ## Research question
 
-The [PhD proposal's RQ1](../../phd/index.qmd) asks *which statistical, econometric and ML
+The [PhD proposal's RQ1](../../phd/archive.qmd) asks *which statistical, econometric and ML
 methods most reliably identify market states out of sample*. Reliability, though, is not
 self-defining. A method can produce a stable, plausible, well-recovered state estimate that
 makes no difference to any decision. So this experiment tests the question underneath:
@@ -157,7 +161,7 @@ replicated**, and the risk-control half does **not** hold once exposure is contr
 
 ::: {.callout-important appearance="simple"}
 **Why this null happened — settled later.** This entry reports that state estimates add nothing
-beyond volatility, but not *why*. A [later experiment](../specialist-redundancy/index.qmd)
+beyond volatility, but not *why*. A later experiment
 answers it: the estimator panel scored here does not span multiple dimensions of market state.
 Its members' consensus clears a deflated bar 3 of 9 times and their individual deviations 0 of
 63, so the panel is one dimension measured seven times — and the one thing it collectively

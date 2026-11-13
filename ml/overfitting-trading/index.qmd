@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Overfitting in Trading Systems"
 subtitle: "Try enough strategies and one looks brilliant by luck — backtest overfitting and how to deflate it"
 description: "Even with clean data, no leakage, and honest validation, searching over many strategies inflates the best in-sample performance. The maximum-of-N mechanism, why in-sample rank says nothing about out-of-sample, the deflated Sharpe ratio, and the probability of backtest overfitting."
@@ -9,6 +10,10 @@ image: fig-overfitting-trading.png
 image-alt: "The best in-sample Sharpe of N random strategies rising with N while out-of-sample stays near zero, beside an in-sample-versus-out-of-sample scatter with no relationship"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [leakage](../data-leakage/) page fixed bugs inside a single backtest. This is a deeper failure that
 survives all of that. Suppose every individual backtest is methodologically perfect — clean data, no

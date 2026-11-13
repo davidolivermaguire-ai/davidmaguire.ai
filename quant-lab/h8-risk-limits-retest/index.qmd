@@ -17,9 +17,13 @@ image-alt: "Two panels: maximum drawdown for three risk limits against an uncons
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd).
+:::
+
 ## Why re-test this one
 
-By the time [RQ1](../state-decision-value/index.qmd), [RQ2/H1](../factored-vs-flat-state/index.qmd)
+By the time [RQ1](../state-decision-value/index.qmd), RQ2/H1
 and [H2](../h2-calibration-retest/index.qmd) had been through the full protocol, only two of
 the proposal's hypotheses had never faced it. **H8** was the one I expected to survive: it is a
 claim about *constraints* rather than *forecasts*, and constraints are closer to arithmetic

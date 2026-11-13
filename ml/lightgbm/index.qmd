@@ -1,4 +1,5 @@
 ---
+search: false
 title: "LightGBM"
 subtitle: "Gradient boosting, made fast — leaf-wise growth and histogram binning"
 description: "LightGBM is gradient boosting like XGBoost, but with leaf-wise tree growth and histogram-based splits that make it 25–50× faster at the same accuracy. What's different, why it's faster, and when leaf-wise growth overfits."
@@ -9,6 +10,10 @@ image: fig-lightgbm.png
 image-alt: "Level-wise vs leaf-wise tree growth beside a bar chart showing LightGBM 25–51× faster at equal accuracy"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 LightGBM is the same algorithm as [XGBoost](../xgboost/) — gradient-boosted decision trees — with a
 different engine under the hood. Two engineering choices, **leaf-wise tree growth** and

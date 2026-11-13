@@ -1,4 +1,5 @@
 ---
+search: false
 title: "AI Risk Controls"
 subtitle: "Defence in depth for an untrustworthy component — the full control stack, the fail-safe default, and why safety is a property of the system, not the model"
 description: >
@@ -11,6 +12,10 @@ author: "David Maguire"
 categories: [safety]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The preceding entries each closed one gap; this one steps back and assembles them into a **system**. The
 governing idea is the one this section keeps returning to: **you do not make a language model

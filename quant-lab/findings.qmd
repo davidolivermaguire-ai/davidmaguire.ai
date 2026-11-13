@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Quant Lab — What Thirteen Experiments Found"
 subtitle: "The synthesis: forecastable volatility, regimes that assess rather than size, and the discipline that tells the two from noise"
 description: "A short synthesis of the Quant Lab's thirteen experiments — what each tested, what it found, and how together they resolve the proposal's central hypotheses and reshape its design."
@@ -7,6 +8,10 @@ author: "David Maguire"
 categories: [synthesis]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../phd/index.qmd).
+:::
 
 The [Quant Lab](index.qmd) set out to do one thing the libraries could not: **test the proposal's bets on
 real data, honestly, with a real chance of a null.** Thirteen experiments later, the answers cohere into a

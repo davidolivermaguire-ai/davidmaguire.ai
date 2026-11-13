@@ -10,6 +10,10 @@ image-alt: "A boosting learning curve where validation loss bottoms then rises, 
 toc: true
 ---
 
+::: {.callout-note}
+**Note.** Written as part of earlier, broader working that is now archived, so references to the equation or machine-learning library and the capstone point to that work. The method itself is part of the [current proposal](../../phd/index.qmd).
+:::
+
 The [random forest](../random-forests/) built its trees *independently* and averaged them, cutting
 variance. Gradient boosting does the opposite: it builds trees **one at a time**, each new tree
 trained to fix the errors the current ensemble still makes. Where bagging is a committee voting in

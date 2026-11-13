@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Sortino Ratio"
 subtitle: "Sharpe, but only the downside counts — reward per unit of harmful risk"
 description: "The Sortino ratio: excess return over downside deviation instead of total volatility. Why it stops penalising upside, the divide-by-n convention, and a Nasdaq-100 basket where it reranks Sharpe."
@@ -9,6 +10,10 @@ image: fig-sharpe-vs-sortino.png
 image-alt: "Grouped bar chart comparing Sharpe and Sortino across a Nasdaq basket"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [Sharpe ratio](../sharpe-ratio/) has one awkward feature: it treats a big
 up-day as "risk," penalising the volatility you actually want. The Sortino ratio

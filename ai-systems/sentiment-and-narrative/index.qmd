@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Sentiment & Narrative Interpretation"
 subtitle: "Past the sentiment score — novelty, narrative, and the honest verdict that text is a risk-and-context signal, not a return oracle"
 description: >
@@ -11,6 +12,10 @@ author: "David Maguire"
 categories: [news agent]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The seductive pitch for language models in trading is a sentiment score: read the headline, output a
 number from −1 to +1, buy the positives. It is the first thing everyone builds and the first thing that

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "The Softmax Function"
 subtitle: "A vector of scores into a probability distribution — sigmoid for many classes"
 description: "Softmax: exp-then-normalise a vector of scores into probabilities that sum to 1. Why it reduces to the sigmoid, shift-invariance and numerical stability, temperature, and a 3-class Nasdaq regime example."
@@ -9,6 +10,10 @@ image: fig-softmax.png
 image-alt: "Softmax bars at three temperatures beside three Nasdaq regime-probability curves fanning from the 1/3 base rate"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Sigmoid](../sigmoid/) turned one score into one probability, for a yes/no question. Softmax
 does the same job when there are many answers: it takes a vector of scores — one per class —

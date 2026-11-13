@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Value at Risk & Expected Shortfall"
 subtitle: "The loss you won't exceed most days — and the average of the days you do"
 description: "VaR and Expected Shortfall (CVaR): the two standard tail-risk numbers. Historical vs Gaussian VaR, why ES is the coherent measure, and a Nasdaq-100 example where the normal model understates the tail."
@@ -9,6 +10,10 @@ image: fig-var-es.png
 image-alt: "NDX return histogram with the 95% VaR cutoff and Expected Shortfall marked on the left tail"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Maximum drawdown](../maximum-drawdown/) measures the worst loss that already
 happened; **Value at Risk** asks a forward question — how bad could an ordinary bad

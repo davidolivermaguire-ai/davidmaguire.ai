@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Multi-Agent Coordination"
 subtitle: "Combining specialised agents into one decision — through a structured shared state and a deterministic hierarchy, not a swarm of models negotiating"
 description: >
@@ -12,6 +13,10 @@ author: "David Maguire"
 categories: [agents, safety]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The section opened by [defining an agent](../what-is-an-agent/index.qmd) and closes by wiring several
 together. The [proposal](../../phd/index.qmd) is, after all, *six* of them — Regime, News, Trading, Risk,

@@ -1,6 +1,6 @@
 ---
 title: "Code Repository"
-description: "GitHub repositories and reproducible notebooks behind every experiment on this site."
+description: "The code behind the pilot experiments and the site."
 toc: true
 ---
 
@@ -13,7 +13,7 @@ The full source for davidmaguire.ai is public and built with Quarto:
 [github.com/davidolivermaguire-ai/davidmaguire.ai](https://github.com/davidolivermaguire-ai/davidmaguire.ai)
 
 ## Research code
-Each [Quant Research Lab](quant-lab/index.qmd) experiment links to its own
+Each [pilot experiment](quant-lab/index.qmd) links to its own
 reproducible script or notebook. For example, the Monte-Carlo behind
 [How Backtest Selection Inflates the Sharpe Ratio](quant-lab/backtest-overfitting/index.qmd)
 lives in `code/backtest_overfitting.py` in the repository above.
@@ -21,9 +21,8 @@ lives in `code/backtest_overfitting.py` in the repository above.
 ## market-state-lab
 [github.com/davidolivermaguire-ai/market-state-lab](https://github.com/davidolivermaguire-ai/market-state-lab)
 
-A purpose-built benchmark harness for the proposal's
-[RQ1](phd/index.qmd) — *which methods most reliably identify market state out of sample?*
-Because that is a **comparative** question, the deliverable is a protocol rather than a model:
+A benchmark harness built for an earlier version of the proposal, which asked *which methods most
+reliably identify market state out of sample?* Because that is a **comparative** question, the deliverable is a protocol rather than a model:
 one point-in-time data layer, one shared feature set, a pluggable estimator interface, one
 walk-forward engine, and one metrics suite, so that nine methods compete on identical terms.
 
@@ -40,6 +39,10 @@ committed Nasdaq CSV is frozen at a fixed date, so
 with no network access. Its README is a working research log rather than a sales pitch: it
 records the estimators that failed on real data and why, a claim generalised from one asset that
 the panel later refuted, and a confound hypothesis that was tested and rejected.
+
+Its point-in-time design and automated look-ahead tests carry straight over to the current proposal's
+[data layer](phd/architecture.html).
+
 
 ## Principles
 - **Reproducibility first** — code is published alongside the result it produces.

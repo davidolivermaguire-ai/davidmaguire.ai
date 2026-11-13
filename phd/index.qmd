@@ -4,7 +4,8 @@ subtitle: "Evidence-Grounded Multi-Agent LLM Decision-Making in Financial Market
 description: "Research proposal to Queen's University Belfast (November 2026): does structured debate between distinct large language models, grounded in shared market evidence, improve investment decisions beyond established quantitative methods?"
 author: "David Maguire"
 date: 2026-11-13
-toc: false
+toc: true
+toc-depth: 2
 resources:
   - architecture.html
   - architecture-overview.jpg
@@ -33,3 +34,40 @@ and what it contributes.
 [Open the interactive architecture](architecture.html){.btn .btn-primary}
 
 [![System architecture by lifecycle phase. Select the image to open the interactive version.](architecture-overview.jpg){fig-alt="Architecture diagram: eleven components grouped into five phases (data provision, model build, model implementation, model monitoring and model recalibration), with an evidence and evaluation column alongside."}](architecture.html)
+
+## How the proposal evolved
+
+An earlier version of this proposal centred on inferring market regimes. My
+[pilot experiments](../quant-lab/index.qmd) found that volatility is forecastable over short horizons but
+direction is not, and that regime labels added little beyond volatility. The research therefore moved to
+the decision layer: whether language models reasoning over calibrated evidence improve decisions. The
+earlier version is [archived](archive.qmd) for reference.
+
+## Core reading
+
+Selected articles behind the main design choices, from journals rated in the ABS Academic Journal Guide
+(AJG 2024). Each is linked from the relevant component in the interactive architecture.
+
+| Reference | Design choice it supports | AJG |
+|---|---|:--:|
+| Whaley (2009), [Understanding the VIX](https://doi.org/10.3905/JPM.2009.35.3.098), *Journal of Portfolio Management* | VIX as a risk measure, not a directional signal | 3 |
+| Bollerslev, Tauchen and Zhou (2009), [Expected Stock Returns and Variance Risk Premia](https://doi.org/10.1093/rfs/hhp008), *Review of Financial Studies* | Implied and realised volatility as inputs | 4* |
+| Lo, Mamaysky and Wang (2000), [Foundations of Technical Analysis](https://doi.org/10.1111/0022-1082.00265), *Journal of Finance* | Trend and momentum indicators | 4* |
+| Sullivan, Timmermann and White (1999), [Data-Snooping, Technical Trading Rule Performance, and the Bootstrap](https://doi.org/10.1111/0022-1082.00163), *Journal of Finance* | A small fixed indicator set; counting every trial | 4* |
+| Gu, Kelly and Xiu (2020), [Empirical Asset Pricing via Machine Learning](https://doi.org/10.1093/rfs/hhaa009), *Review of Financial Studies* | Nonlinear machine-learning benchmarks | 4* |
+| Fischer and Krauss (2018), [Deep Learning with LSTM Networks for Financial Market Predictions](https://doi.org/10.1016/j.ejor.2017.11.054), *European Journal of Operational Research* | A compact LSTM | 4 |
+| Hamilton (1989), [A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle](https://doi.org/10.2307/1912559), *Econometrica* | Regime models | 4* |
+| Ang and Bekaert (2002), [International Asset Allocation With Regime Shifts](https://business.columbia.edu/faculty/research/international-asset-allocation-regime-shifts), *Review of Financial Studies* | Why regime shifts matter; adaptive monitoring | 4* |
+| Gneiting and Raftery (2007), [Strictly Proper Scoring Rules, Prediction, and Estimation](https://doi.org/10.1198/016214506000001437), *Journal of the American Statistical Association* | Brier score as the primary measure | 4 |
+| Diebold and Mariano (1995), [Comparing Predictive Accuracy](https://doi.org/10.1080/07350015.1995.10524599), *Journal of Business & Economic Statistics* | Testing whether one forecast beats another | 4 |
+| Gârleanu and Pedersen (2013), [Dynamic Trading with Predictable Returns and Transaction Costs](https://doi.org/10.1111/jofi.12080), *Journal of Finance* | Trading costs and turnover | 4* |
+
+: {.striped}
+
+## Next steps
+
+- A systematic review of AJG-ranked literature for each design choice, including the recent multi-agent
+  LLM work, before the originality claim is finalised.
+- A pilot study of data coverage, effective sample size, model stability and LLM inference costs, as set
+  out in the proposal.
+- Strengthening financial econometrics and forecast evaluation alongside the reading above.

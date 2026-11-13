@@ -1,82 +1,26 @@
 ---
-title: "Machine Learning Library"
-description: "Models explained from first principles — assumptions, learning, weaknesses, and market relevance."
-listing:
-  id: published-models
-  contents: "*/index.qmd"
-  type: default
-  sort: "order"
-  fields: [title, description, categories, reading-time]
-  categories: true
-  sort-ui: false
-  filter-ui: false
-toc: true
+title: "Methods"
+subtitle: "Notes on the methods the proposal relies on"
+description: "Short notes on the forecasting models, evaluation methods and LLM controls used in the PhD proposal, each tested on real market data."
+toc: false
 ---
 
-Machine-learning models explained from first principles. The point of this
-section is to show that I understand *model logic*, not just how to call a library
-function — and, as in the [Equation Library](../equations/), to test each model
-honestly against real Nasdaq-100 data rather than take its reputation on trust.
+Short notes on the methods the [proposal](../phd/index.qmd) uses, each explained, implemented and tested
+on real market data. The list is deliberately short: it covers what the research needs rather than
+everything that could be covered.
 
-**Every model page answers the same nine questions:**
+| Area | Note | Why it is here |
+|---|---|---|
+| Forecasting models | [Logistic regression](logistic-regression/index.qmd) | Interpretable baseline forecaster (02) |
+| | [Gradient boosting (XGBoost)](xgboost/index.qmd) | Nonlinear benchmark model (02) |
+| | [Long short-term memory (LSTM)](lstms/index.qmd) | Compact deep-learning forecaster (02) |
+| | [Ensemble methods and model combination](ensemble-methods/index.qmd) | Fixed and adaptive numerical ensembles, the benchmark LLM decisions must beat (02, 10) |
+| Regimes | [Markov-switching regression](markov-switching-regression/index.qmd) | Optional regime probabilities (02, 08) |
+| Evaluation | [Probability calibration and conformal prediction](probability-calibration/index.qmd) | Calibrated probabilities and Brier scores (02, 10) |
+| | [Walk-forward validation](walk-forward-validation/index.qmd) | Testing only on unseen data (10) |
+| | [Avoiding data leakage](data-leakage/index.qmd) | Point-in-time data and purged boundaries (01, 10) |
+| LLMs in decisions | [LLMs versus conventional ML](../ai-systems/llms-vs-conventional-ml/index.qmd) | What language models add, and where numerical models are better (04) |
+| | [Hallucination risk when LLMs meet financial data](../ai-systems/hallucination-risk/index.qmd) | Why the semantic layer and claim checks exist (03) |
+| | [Why an LLM must never directly place trades](../ai-systems/why-llms-never-trade/index.qmd) | Why deterministic controls have the final say (05) |
 
-1. What problem does this model solve?
-2. What assumptions does it make?
-3. What data does it need?
-4. How does it learn?
-5. What are its strengths?
-6. What are its weaknesses?
-7. How could it apply to markets?
-8. What does the Python code look like?
-9. How would I explain it to a supervisor?
-
-## Published models
-
-::: {.status-note}
-Added one at a time, to the standard above. The roadmap below is the plan.
-:::
-
-::: {#published-models}
-:::
-
-## The roadmap
-
-::: {.roadmap}
-
-### Foundation models
-[Linear regression](linear-regression/) · [logistic regression](logistic-regression/) · [decision trees](decision-trees/) · [random forests](random-forests/) ·
-[XGBoost](xgboost/) · [LightGBM](lightgbm/) · [support vector machines](support-vector-machines/) · [K-means clustering](k-means/) ·
-[Principal Component Analysis](principal-component-analysis/) · [Gaussian Mixture Models](gaussian-mixture-models/).
-
-### Deep learning
-[Neural networks](neural-networks/) · [activation functions](activation-functions/) · [backpropagation](backpropagation/) · [CNNs](cnns/) · [RNNs](rnns/) · [LSTMs](lstms/) ·
-[transformers](transformers/) · [attention](attention/) · [embeddings](embeddings/).
-
-### Quant-specific machine learning
-[Feature engineering for returns](feature-engineering/) · [walk-forward validation](walk-forward-validation/) · [time-series
-cross-validation](time-series-cross-validation/) · [avoiding data leakage](data-leakage/) · [overfitting in trading systems](overfitting-trading/) ·
-[model explainability](model-explainability/) · [SHAP values](shap-values/) · [regime-aware modelling](regime-aware-modelling/).
-
-### Decision systems & reinforcement learning — *the PhD tier*
-[Markov decision processes & Bellman equations](markov-decision-processes/) · [Q-learning & deep Q-networks](q-learning/) ·
-[policy gradients & actor-critic](policy-gradients/) · [proximal policy optimisation (PPO)](ppo/) · [risk-sensitive
-& constrained RL](risk-constrained-rl/) · [Bayesian change-point detection](change-point-detection/) · [Markov-switching regression](markov-switching-regression/) ·
-[probability calibration & conformal prediction](probability-calibration/) · [multi-agent systems & credit
-assignment](multi-agent-systems/) · [market microstructure & execution modelling](market-microstructure/).
-
-*This tier builds the methodological foundations of my
-[PhD research proposal](../phd/index.qmd) — now complete, every entry to the same
-verified standard as everything above.*
-
-### Market-state specialist methods — *the proposal build tier*
-The updated [Adaptive Market Intelligence proposal](../phd/index.qmd) adds an econometrics-heavier
-specialist and combination layer, built out here one entry at a time to the same verified standard:
-[ensemble methods & model combination](ensemble-methods/), [online expert weighting](online-expert-weighting/),
-[state-space & Kalman filtering](kalman-state-space/), [EGARCH, GJR & HAR-RV](egarch-har/),
-[cross-asset dependence (DCC)](cross-asset-dependence/), [CUSUM & concept-drift detection](cusum-drift/),
-[Bayesian hypothesis reconciliation](hypothesis-reconciliation/), [liquidity-stress anomaly detection](liquidity-anomaly/),
-[supervised liquidity-stress modelling](supervised-stress/), [contextual bandits](contextual-bandits/) and [the strategy-suitability council](strategy-council/) —
-***the specialist tier is now complete***: every specialist, combination and consensus method the proposal
-names is built, verified and honestly evaluated on this site.
-
-:::
+: Numbers refer to components of the [system architecture](../phd/architecture.html). {.striped}

@@ -10,6 +10,10 @@ image-alt: "A reliability diagram showing an over-confident model pulled onto th
 toc: true
 ---
 
+::: {.callout-note}
+**Note.** Written while developing an earlier version of my proposal ([archived](../../phd/archive.qmd)); references to "the proposal" refer to that version. The method itself is part of the [current proposal](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 Every model in this library outputs a number that *looks* like a probability or a forecast — but a system
 that sizes positions by confidence needs those numbers to be **true**, not just plausible. This entry is
 about that truth, and it splits cleanly in two. **Calibration** asks whether a model's stated
@@ -20,13 +24,13 @@ site's central finding is that next-day **direction is unpredictable** (AUC ≈ 
 no-skill model is not the problem; a **dishonest** one is. A model that shrugs and says "50/50" is safe;
 a model that confidently says "84% up" when it is really a coin toss is how an automated system blows up.
 Calibration and conformal prediction are the tools that enforce honesty on top of whatever skill — or
-lack of it — a model actually has. They are the [proposal's](../../phd/index.qmd) trustworthiness layer.
+lack of it — a model actually has. They are the [proposal's](../../phd/archive.qmd) trustworthiness layer.
 
 ## 1. What problem does it solve?
 
 **Making uncertainty trustworthy.** A raw model score is often not a real probability: gradient-boosted
 trees and neural nets are frequently **over-confident** (pushing scores toward 0 and 1),
-[over-fit](../overfitting-trading/index.qmd) models especially so. If a downstream system multiplies
+over-fit models especially so. If a downstream system multiplies
 "probability of up" by a position size, or treats a forecast interval as a risk limit, then
 miscalibrated confidence translates directly into mis-sized risk. Calibration fixes the *probabilities*;
 conformal prediction attaches a *guarantee* to the intervals. Together they let every probabilistic
@@ -79,7 +83,7 @@ panels test this on next-day Nasdaq returns at a **90% target**: the marginal co
 (fixed) — the guarantee holds. But *marginal* coverage is not *conditional* coverage, and this is where
 markets bite. A **constant-width** interval over-covers calm days (**96.7%** — needlessly wide) and
 under-covers turbulent ones (**89.2%** — too narrow exactly when a tail is dangerous), because returns
-are [heteroskedastic](../../equations/garch/index.qmd): volatility clusters, so one width cannot serve
+are heteroskedastic: volatility clusters, so one width cannot serve
 both regimes. **Normalizing** the nonconformity score by a predicted volatility, $s_i = |y_i -
 \hat\mu_i| / \hat\sigma_i$, makes the interval **breathe** — half-width $\hat q\,\hat\sigma_t$, narrow in
 calm (±1.5%) and wide in turbulence (beyond ±7%, bottom panel). It holds **90.3%** marginal coverage and
@@ -100,23 +104,23 @@ rather than piled up in the crises. The guarantee was always distribution-free; 
 ## 6. What are its weaknesses?
 
 - **Recalibration can hurt.** On an already-calibrated model or a small calibration set it adds variance — the random-forest counter-result — so it must be checked, not assumed.
-- **Markets are not exchangeable.** Conformal's guarantee assumes exchangeability; [non-stationary](../change-point-detection/index.qmd), vol-clustered returns violate it, so coverage is approximate (0.929, not exactly 0.90) and needs adaptive or normalized variants.
+- **Markets are not exchangeable.** Conformal's guarantee assumes exchangeability; non-stationary, vol-clustered returns violate it, so coverage is approximate (0.929, not exactly 0.90) and needs adaptive or normalized variants.
 - **Marginal ≠ conditional.** The headline guarantee is *average* coverage; without normalization the interval can be systematically wrong in the regime that matters, as shown.
 - **Calibration is only to the calibration distribution.** A regime shift after calibration breaks it — the same distribution-shift Achilles' heel as everything in this library.
 - **Isotonic over-fits; Platt can under-fit.** The recalibrator is itself a model with bias–variance trade-offs and needs enough held-out data.
 
 ## 7. How could it apply to markets?
 
-This is the [proposal's](../../phd/index.qmd) **trustworthiness layer**, and it serves two agents
+This is the [proposal's](../../phd/archive.qmd) **trustworthiness layer**, and it serves two agents
 directly. The **News & Narrative Agent** emits probabilities — event likelihoods, sentiment confidences,
 direction odds — and if those are miscalibrated, every downstream decision that multiplies by them is
 mis-scaled; calibration is what lets the rest of the system take them at face value. The **Risk Agent**
-lives on intervals: a [VaR or expected-shortfall](../../equations/value-at-risk/index.qmd) limit *is* a
+lives on intervals: a VaR or expected-shortfall limit *is* a
 coverage statement, and conformal prediction gives it a distribution-free backing rather than a fragile
 Gaussian assumption. The demonstration's lesson is the design's: a fixed interval is conditionally
 dishonest, so the Risk Agent's intervals must be **vol-** and **regime-normalized** — which is exactly why
-this layer sits downstream of the [regime](../regime-aware-modelling/index.qmd),
-[change-point](../change-point-detection/index.qmd) and volatility models rather than beside them. And the
+this layer sits downstream of the regime,
+change-point and volatility models rather than beside them. And the
 sharpest point is the one that runs through the whole site: because direction is unpredictable, the most
 valuable thing a model can do is **know that it doesn't know** — a calibrated 0.50 and an interval that
 widens honestly in turbulence are worth more than any confident forecast the market will not honour. As

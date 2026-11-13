@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Gradient Descent"
 subtitle: "Rolling downhill to the minimum — the algorithm that trains almost everything"
 description: "Gradient descent: θ ← θ − η∇J(θ). Step against the gradient to minimise a cost. The learning rate, convergence and divergence, batch vs stochastic, and why it scales where formulas can't."
@@ -9,6 +10,10 @@ image: fig-gradient-descent.png
 image-alt: "A gradient-descent path down a cost bowl beside cost-vs-iteration curves for three learning rates"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [cost function](../cost-function/) drew the landscape; gradient descent is how you get to
 the bottom of it. When the cost has no closed-form minimum — which is almost always, once a

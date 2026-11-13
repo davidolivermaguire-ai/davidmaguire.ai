@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Backpropagation as an Algorithm"
 subtitle: "Reverse-mode automatic differentiation — the whole gradient in one backward pass, exact and cheap"
 description: "Backpropagation is the algorithm that trains every neural network: reverse-mode autodiff that computes the gradient of the loss w.r.t. all parameters in one backward pass, exact to machine precision and at a cost independent of the parameter count. Gradient checking and the efficiency that makes deep learning possible."
@@ -9,6 +10,10 @@ image: fig-backpropagation.png
 image-alt: "A gradient-check scatter with every weight on the y=x line beside a log-log plot where backprop cost stays flat while finite-difference cost grows with parameter count"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [neural network](../neural-networks/) learns by [gradient descent](../../equations/gradient-descent/),
 which needs the gradient of the loss with respect to every weight — and in a network with thousands

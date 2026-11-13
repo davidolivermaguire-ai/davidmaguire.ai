@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Information Gain"
 subtitle: "How much a split cuts uncertainty — the rule a decision tree uses to choose its questions"
 description: "Information gain = parent entropy − weighted child entropy: the uncertainty a split removes. Why decision trees maximise it, its identity with mutual information, the high-cardinality bias, and a near-zero Nasdaq split."
@@ -9,6 +10,10 @@ image: fig-information-gain.png
 image-alt: "A decision-tree split diagram beside a scan of information gain vs threshold on Nasdaq returns, never clearing a milli-bit"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Entropy](../entropy/) measured how uncertain a distribution is; information gain measures how
 much a *question* reduces that uncertainty. Ask "was today an up day?" and split your data into

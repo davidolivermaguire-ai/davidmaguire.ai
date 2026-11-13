@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Neural Networks"
 subtitle: "The multilayer perceptron — stacked nonlinear units that can approximate any function"
 description: "A neural network stacks layers of weighted sums and nonlinear activations, trained by backpropagation and gradient descent. The forward pass, why the nonlinearity matters, universal approximation — and an honest Nasdaq test where its power mostly lets it overfit."
@@ -9,6 +10,10 @@ image: fig-neural-networks.png
 image-alt: "An MLP bending a curved boundary around two interleaving moons beside a training curve where train accuracy climbs while test accuracy stays a coin flip"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 This is where the library turns to **deep learning**. Every model so far had a fixed form — a line,
 a tree, a mixture of Gaussians. A neural network has almost no fixed form at all: it is a stack of

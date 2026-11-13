@@ -12,7 +12,7 @@ categories: [safety]
 toc: true
 ---
 
-Every entry in the [News Agent tier](../schema-constrained-extraction/index.qmd) deferred to this one, and
+Every entry in the News Agent tier deferred to this one, and
 for good reason: **hallucination** is the risk that makes all the others necessary. A large language model
 does not retrieve facts; it **generates plausible text**, one token at a time, optimised for how likely a
 continuation is — not for whether it is true. Usually plausible and true coincide. Occasionally, and with
@@ -61,10 +61,10 @@ the eye test that catches an obviously invented number.
 
 Each mitigation this section has built helps, and none is sufficient alone — the honest accounting:
 
-- **Grounding** ([RAG](../rag/index.qmd)) cuts fabrication by forcing the model to answer from retrieved sources — but the model can still *misread* what it retrieved, or the retrieval can miss the relevant passage.
-- **Schema constraints** ([bounded extraction](../schema-constrained-extraction/index.qmd)) close structural nonsense and trade-instructions — but bound the *shape*, not the *facts*: a schema-valid record can still hold a hallucinated figure.
+- **Grounding** (RAG) cuts fabrication by forcing the model to answer from retrieved sources — but the model can still *misread* what it retrieved, or the retrieval can miss the relevant passage.
+- **Schema constraints** (bounded extraction) close structural nonsense and trade-instructions — but bound the *shape*, not the *facts*: a schema-valid record can still hold a hallucinated figure.
 - **Bigger models** lower the base rate — but never to zero, and the survivors are the most plausible.
-- **Corroboration** across [sources](../sentiment-and-narrative/index.qmd) raises reliability — but a widely-repeated error stays wrong.
+- **Corroboration** across sources raises reliability — but a widely-repeated error stays wrong.
 
 There is no silver bullet. Hallucination is **managed by layers**, not solved by one, and any design that
 leans on a single control is one plausible falsehood away from acting on it.
@@ -147,8 +147,8 @@ it's earned, and it means a hallucination, when one gets through, produces a wro
 catch, not a trade."
 
 ::: {.status-note}
-The controls compose the [News Agent pipeline](../schema-constrained-extraction/index.qmd):
-[RAG grounding](../rag/index.qmd), schema bounding, numeric verification against a data feed, a
+The controls compose the News Agent pipeline:
+RAG grounding, schema bounding, numeric verification against a data feed, a
 [calibrated](../../ml/probability-calibration/index.qmd) confidence gate, cross-source corroboration, and
 containment (the LLM is never an execution authority — the subject of the next entry). The "text from the
 model, numbers from a feed" split is the single highest-leverage rule. MarketLens AI grounding reflects its

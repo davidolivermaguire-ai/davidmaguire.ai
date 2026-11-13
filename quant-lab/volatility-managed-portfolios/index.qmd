@@ -14,9 +14,13 @@ image-alt: "Volatility-managed Nasdaq versus buy-and-hold: better drawdowns and 
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 ## Research question
 
-The [Machine Learning Library](../../ml/index.qmd) and the [capstone](../../capstone.qmd) established this
+The [Machine Learning Library](../../ml/index.qmd) and the capstone established this
 site's central empirical result: at every level of model sophistication, next-day **direction** is
 unpredictable, while **volatility** is persistent and forecastable. That asymmetry invites the obvious
 follow-up, and a skeptic's challenge: *if volatility is genuinely forecastable, can you turn that into a
@@ -103,14 +107,14 @@ argue: it depends on capping leverage, it is stronger for the gentler scaling, a
 statistical significance. The honest one-line answer to "can you monetise forecastable volatility?" is:
 **you can monetise it as risk control, not as alpha.** That is not a disappointment — it is the same
 conclusion the entire site keeps reaching from different directions, and it is precisely the positioning
-of the [PhD proposal](../../phd/index.qmd): volatility and regime awareness are for **robustness and risk
+of the [PhD proposal](../../phd/archive.qmd): volatility and regime awareness are for **robustness and risk
 governance**, not for manufacturing return. An experiment that set out to test whether the site's central
 finding could be traded came back agreeing with it.
 
 ## Limitations
 
 - **One market, one decade.** A single index over a historically strong bull market; the drawdown benefit would likely be larger, and the raw-return cost smaller, in a sideways or bear regime. Cross-asset and cross-period replication is the obvious next step.
-- **Volatility model is deliberately simple.** A 21-day trailing estimate; a [GARCH](../../equations/garch/index.qmd) or HAR forecast would be a fairer test of the *best* achievable timing, and is the natural follow-up experiment.
+- **Volatility model is deliberately simple.** A 21-day trailing estimate; a GARCH or HAR forecast would be a fairer test of the *best* achievable timing, and is the natural follow-up experiment.
 - **Costs are stylised.** A flat per-turnover bps charge ignores the fact that the strategy trades *most* precisely when volatility spikes and liquidity thins — when real costs are highest. The true net figure is likely a little worse than shown.
 - **Leverage is assumed available and free.** The capped version needs up to 2× exposure; financing cost and margin constraints are not modelled.
 - **Eight specifications is already multiple testing.** I report every one and deflate my read of the significance accordingly — but the honest effective number of trials behind a "best" result is always larger than it looks, [as demonstrated here](../backtest-overfitting/index.qmd).

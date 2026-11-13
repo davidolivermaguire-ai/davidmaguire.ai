@@ -10,7 +10,11 @@ image-alt: "Three panels: Brier scores showing combiners barely beating the best
 toc: true
 ---
 
-Every model in this library outputs a probability, and the [proposal's](../../phd/index.qmd)
+::: {.callout-note}
+**Note.** Written while developing an earlier version of my proposal ([archived](../../phd/archive.qmd)); references to "the proposal" refer to that version. The method itself is part of the [current proposal](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
+Every model in this library outputs a probability, and the [proposal's](../../phd/archive.qmd)
 architecture ends in a layer that must **combine** the probabilities of many specialist models into one
 market-state estimate. Before any clever *hypothesis-reconciliation* mechanism can earn its place, it has
 to beat the boring, battle-tested ways of combining models: **equal weighting, majority vote, Bayesian
@@ -27,7 +31,7 @@ over-confident, a volatility-persistence rule is robust but crude. Combining the
 smooth over individual failure modes, and improve calibration. But "can" is load-bearing. The central
 question this entry answers is not *how* to combine models — that part is easy — but *when combining is
 worth anything*, and the honest answer turns on how **correlated** the models' errors are. For the
-[proposal](../../phd/index.qmd), these four combiners are the yardstick (**RQ5**): a bounded consensus
+[proposal](../../phd/archive.qmd), these four combiners are the yardstick (**RQ5**): a bounded consensus
 layer that reconciles competing hypotheses only justifies its complexity if it beats plain averaging.
 
 ## 2. The four combiners
@@ -54,7 +58,7 @@ is measured on a **test** window none of them ever saw.
 Combining models is pointless on a target with no signal, so I deliberately avoided next-day *direction*
 (which this site shows again and again is a coin toss, AUC ≈ 0.50) and chose one that is **genuinely
 forecastable**: next-day **turbulence** — whether tomorrow's absolute Nasdaq return exceeds the train-set
-70th percentile (a 1.0% move). Because [volatility clusters](../../equations/garch/index.qmd), this is
+70th percentile (a 1.0% move). Because volatility clusters, this is
 predictable, and the four base models confirm it, all scoring **AUC ≈ 0.67** — far above chance. That
 contrast is the whole thesis of the site in one line: *direction is noise, turbulence is structure.*
 
@@ -102,7 +106,7 @@ their consensus is barely better than any one of them.
 - **Variance reduction for free — when models are diverse.** Averaging decorrelated, comparably-accurate models is the closest thing to a free lunch in forecasting; the identity above quantifies exactly how much.
 - **Equal weighting is a ferociously strong baseline.** With no parameters it cannot over-fit, and it here matched the best single model and *improved* its calibration — the "1/N" lesson that humbles more elaborate schemes.
 - **BMA degrades gracefully.** When one model dominates, BMA concentrates on it (behaving like selection); when several are comparable, it spreads weight — a principled, self-adjusting compromise.
-- **Model-agnostic and cheap.** All four sit on top of any set of probabilistic models, so every specialist in the [architecture](../../phd/index.qmd) can feed a consensus layer without being rebuilt.
+- **Model-agnostic and cheap.** All four sit on top of any set of probabilistic models, so every specialist in the [architecture](../../phd/archive.qmd) can feed a consensus layer without being rebuilt.
 - **Calibration often improves.** Even a marginal accuracy gain from averaging tends to pull probabilities toward honesty (ECE 0.052 → 0.046 here), which is what a risk-sizing system actually consumes.
 
 ## 6. What are its weaknesses?
@@ -110,24 +114,24 @@ their consensus is barely better than any one of them.
 - **Correlated bases give almost nothing.** The headline failure mode, shown directly: ρ = 0.97 → a 2% variance cut. Stacking more copies of the same view is wasted effort.
 - **Stacking over-fits.** A meta-model has parameters, and on a modest validation window it learned noise and lost to plain averaging — the classic bias–variance trap of the most flexible combiner.
 - **Hard voting destroys information.** Majority vote discards probabilities; for any downstream system that multiplies by confidence, it is strictly worse than averaging the probabilities themselves.
-- **Weights assume the future looks like validation.** BMA and stacking weights are fit on one period; a [regime shift](../change-point-detection/index.qmd) can make yesterday's best model today's worst, so static weights are fragile — the motivation for *adaptive* weighting (the next entry) and for conditioning weights on regime.
+- **Weights assume the future looks like validation.** BMA and stacking weights are fit on one period; a regime shift can make yesterday's best model today's worst, so static weights are fragile — the motivation for *adaptive* weighting (the next entry) and for conditioning weights on regime.
 - **Garbage in, garbage out.** Averaging cannot manufacture skill that no base model has; on a no-signal target (direction), every combiner would sit at the no-skill line.
 
 ## 7. How could it apply to markets?
 
-This is the [proposal's](../../phd/index.qmd) **consensus layer in baseline form**, and the demonstration
+This is the [proposal's](../../phd/archive.qmd) **consensus layer in baseline form**, and the demonstration
 draws its blueprint. First, it sets the **bar for RQ5**: the bounded hypothesis-reconciliation mechanism
 must beat *these* combiners, not a strawman — and beating a well-built BMA or equal-weight is a genuinely
 high bar. Second, and more consequentially, it explains a core **architectural choice**. The reason to
-assign specialists to *different evidence domains* — [trend](../regime-aware-modelling/index.qmd),
-[volatility](../../equations/garch/index.qmd), liquidity, [macro narrative](../multi-agent-systems/index.qmd),
+assign specialists to *different evidence domains* — trend,
+volatility, liquidity, macro narrative,
 cross-asset — rather than stacking many models on the same features, is precisely to **manufacture the
 decorrelation** that the variance identity says an ensemble needs. Diversity is not a nicety of the
 design; it is the entire source of the consensus layer's value. Third, it previews **H7**: adaptive expert
 weighting should beat equal weighting, *but not necessarily by much*, because transparent baselines are
 strong — here BMA's edge over 1/N was two Brier ten-thousandths. A proposal that already knows its fancy
 layer must fight for every basis point against a parameter-free baseline is one built on evidence. The
-next step is the [adaptive](../change-point-detection/index.qmd) version — weights that update online and
+next step is the adaptive version — weights that update online and
 condition on the current regime — which is where combining models can finally earn more than a rounding
 error.
 

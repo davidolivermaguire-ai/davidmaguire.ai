@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Linear Regression"
 subtitle: "The best straight line — the baseline every other model has to beat"
 description: "Linear regression fits a line by minimising squared error; its slope is cov/var and its coefficients are interpretable effect sizes. Assumptions, how it learns, and an honest Nasdaq test — strong for beta, useless for prediction."
@@ -9,6 +10,10 @@ image: fig-linear-regression.png
 image-alt: "Apple-vs-Nasdaq returns with a strong regression line beside a near-flat next-day prediction line"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Linear regression is the oldest and simplest supervised model, and the one every other model in
 this library is measured against. It fits a straight line (or hyperplane) through the data by

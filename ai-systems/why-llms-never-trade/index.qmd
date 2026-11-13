@@ -12,6 +12,10 @@ categories: [safety]
 toc: true
 ---
 
+::: {.callout-note}
+**Note.** Written while developing an earlier version of my proposal ([archived](../../phd/archive.qmd)); references to "the proposal" refer to that version. The method itself is part of the [current proposal](../../phd/index.qmd).
+:::
+
 Every entry in this section has been building toward one sentence, and it is the firmest commitment in the
 whole proposal: **no language model is ever an execution authority.** An LLM may read, interpret, extract
 and inform; it may shape the state a decision is made from; it may never, on its own output, cause a trade.
@@ -24,12 +28,12 @@ actually reading.
 ## 1. The rule, stated plainly
 
 **Information and authority are separated.** AI components — the LLM News Agent, and even the
-[RL Trading Agent](../../ml/policy-gradients/index.qmd) — are *information processors and proposers*. The
-power to *act* lives elsewhere: in a deterministic [Risk Agent](../../ml/risk-constrained-rl/index.qmd)
+RL Trading Agent — are *information processors and proposers*. The
+power to *act* lives elsewhere: in a deterministic Risk Agent
 with hard, pre-defined limits, and behind it human oversight and kill-switches for the highest-consequence
 actions. The model's most emphatic output is a *proposal*; the gate's quietest output is a *veto*, and the
-veto always wins. Every earlier control in this section — the [schema](../schema-constrained-extraction/index.qmd),
-the [grounding](../rag/index.qmd), the [verification](../hallucination-risk/index.qmd) — exists to make the
+veto always wins. Every earlier control in this section — the schema,
+the grounding, the [verification](../hallucination-risk/index.qmd) — exists to make the
 model's *information* better; this rule is what makes the model's *lack of authority* absolute.
 
 ## 2. The ordinary case: it cannot be trusted with the keys
@@ -90,7 +94,7 @@ aggressive strategy into a viable one, but a
 [re-test against a benchmark carrying the same risk](../../quant-lab/h8-risk-limits-retest/index.qmd)
 found no significant improvement in nine comparisons. The case for a deterministic gate here is that it is
 **provable and auditable**, not that it was shown to pay — and the
-[risk-constrained-RL entry](../../ml/risk-constrained-rl/index.qmd) formalised why a *hard constraint is a
+risk-constrained-RL entry formalised why a *hard constraint is a
 guarantee where a soft preference is only a hope*. The same logic is why the LLM sits outside the gate: you
 do not make an untrustworthy actor safe by asking it nicely to behave; you make it safe by ensuring it
 cannot act without a deterministic check it does not control.
@@ -101,7 +105,7 @@ The natural objection is that this cripples the AI. It does the opposite: it **c
 at full power on the one thing it is uniquely good at — turning the world's messy text into structured
 features — and is barred only from the one thing it is bad at and cannot be trusted with, which is
 authority. Nothing about its *usefulness* is diminished; only its *reach* is bounded. This is the same
-principle as the [autonomy–control dial](../what-is-an-agent/index.qmd) from the start of the section:
+principle as the autonomy–control dial from the start of the section:
 spend as little authority as you can, keep as much capability as you can, and never confuse the two. A
 model that informs every decision and makes none is not a weakened system — it is the *only* version of an
 LLM-in-the-loop that a person responsible for real capital could sign off on.
@@ -136,8 +140,8 @@ put in front of capital."
 
 ::: {.status-note}
 The rule — LLM as information processor, never execution authority — is enforced structurally: bounded
-[schema](../schema-constrained-extraction/index.qmd) output, proposals not orders, and a deterministic
-[risk gate](../../ml/risk-constrained-rl/index.qmd) with hard limits as the sole path to execution, the
+schema output, proposals not orders, and a deterministic
+risk gate with hard limits as the sole path to execution, the
 qualitative form of the [H6 result](../../quant-lab/hard-risk-limits/index.qmd). Prompt injection is
 presented as an open problem with no complete defence, which is *why* containment (removing the power to
 act) rather than prevention is the answer. MarketLens AI has no execution path today; keeping it that way,

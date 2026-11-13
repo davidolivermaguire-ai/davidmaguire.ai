@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Bayesian Hypothesis Reconciliation — the Consensus Engine"
 subtitle: "Comparing competing market-state explanations instead of averaging incompatible model scores — the layer that turns a pile of specialists into a system"
 description: "The capstone of the specialist tier. Instead of averaging model outputs, it treats each specialist as evidence with a learned, state-dependent reliability and computes a posterior over competing market-state hypotheses. On a known three-state process it beats averaging and voting on both accuracy (0.78 vs 0.73 vs 0.70) and calibration (log-loss 0.55 vs 0.64 vs 0.83), because each specialist is reliable in a different state; its posterior entropy runs 31% higher at transitions — it knows when it doesn't know; and it holds on real Nasdaq vol-states (0.74 vs 0.68)."
@@ -9,6 +10,10 @@ image: fig-hypothesis-reconciliation.png
 image-alt: "Three panels: specialists each most accurate in a different market state; Bayesian reconciliation beating averaging and voting on state accuracy; and the reconciled posterior's entropy running higher at transitions than in stable periods."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every entry in the specialist tier built one piece of evidence — [volatility](../egarch-har/index.qmd),
 [cross-asset correlation](../cross-asset-dependence/index.qmd), [structural breaks](../cusum-drift/index.qmd),

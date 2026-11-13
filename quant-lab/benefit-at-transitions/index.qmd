@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Does the Benefit Concentrate at Regime Transitions?"
 subtitle: "Testing H6 — the risk protection of adaptivity is earned at transitions and in the turbulence they open, and nowhere else"
 description: >
@@ -14,6 +15,10 @@ image: fig-benefit-at-transitions.png
 image-alt: "An event study showing an adaptive strategy's drawdown protection accrues after calm-to-turbulent transitions, concentrated in turbulent regimes and paid for by upside given up there"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 ## Research question
 

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Seven Specialists, One Dimension"
 subtitle: "The effective number of independent signals says the estimator panel is healthy. It says the same thing when seven estimators measure one quantity badly — so the count was never evidence"
 description: >
@@ -16,6 +17,10 @@ image: fig-specialist-redundancy.png
 image-alt: "Two panels: effective-n rising with measurement noise on a single shared signal, with the observed value marked; and Diebold-Mariano t-statistics for the specialists' consensus against their individual deviations."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 ## The claim this tests
 

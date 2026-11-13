@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Cross-Asset Dependence — DCC, Factor Structure & Networks"
 subtitle: "Correlations are not constant — they concentrate in crises, which is when a risk-on/risk-off signal matters most"
 description: "The machinery of the Cross-Asset Confirmation specialist. A from-scratch dynamic conditional correlation model (DCC, a+b=0.99) shows average pairwise correlation roughly tripling from calm to crisis (0.23 in 2017 to 0.76 in the COVID crash), and the defensive staple that diversifies in normal times (PEP–tech correlation 0.31) re-couples when it counts (0.70 in 2020). Diversification fails exactly when you need it — and a real-time dependence estimate is the signal that says so."
@@ -9,6 +10,10 @@ image: fig-cross-asset-dependence.png
 image-alt: "Three panels: a dynamic conditional correlation series spiking in 2020 and 2022; calm-versus-crisis correlation heatmaps showing the whole matrix densifying; and the defensive staple's correlation to tech re-coupling in crashes."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every model so far has looked at one series at a time. But the [proposal's](../../phd/index.qmd) most
 information-poor specialist is the one that looks *across* assets: does a move in equities have rates, FX,

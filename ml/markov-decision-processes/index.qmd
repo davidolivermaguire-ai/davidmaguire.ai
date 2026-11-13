@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Markov Decision Processes & Bellman Equations"
 subtitle: "The formal language of sequential decisions — solved exactly on a real market regime model"
 description: "An MDP formalises decision-making over time: states, actions, transitions, rewards, and a discount factor, tied together by the Bellman equation. Value iteration solves a regime-based position-sizing MDP built from this site's fitted HMM — exactly, with a policy that quantifies what foresight is worth."
@@ -9,6 +10,10 @@ image: fig-markov-decision-processes.png
 image-alt: "A two-regime market MDP with HMM transition probabilities beside the optimal de-risking policy as a function of switching cost, with a value-iteration convergence inset"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 This entry opens a new tier of the library — the **decision systems and reinforcement learning**
 foundations of my [PhD proposal](../../phd/index.qmd) — and it marks a genuine shift in question.

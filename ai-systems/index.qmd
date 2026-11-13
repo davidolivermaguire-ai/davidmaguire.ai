@@ -1,4 +1,5 @@
 ---
+search: false
 title: "AI Trading Systems"
 description: "How LLMs and AI agents could support market decision-making — built from first principles, grounded in real code, and honest about the risks that make control non-negotiable."
 listing:
@@ -12,6 +13,10 @@ listing:
   filter-ui: false
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../phd/index.qmd).
+:::
 
 This section develops the **LLM and agent half** of my proposed PhD: how large language models and AI
 agents might support market decision-making, and — just as important — the controls that make that

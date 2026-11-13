@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Feature Engineering for Returns"
 subtitle: "Turning raw prices into stationary, informative, leak-free predictors — where most of the edge lives"
 description: "In applied quant ML the features matter more than the model. Making prices stationary, building lag/volatility/momentum features point-in-time, the stationarity–memory trade-off, and an honest test of which features predict direction versus volatility on the Nasdaq."
@@ -9,6 +10,10 @@ image: fig-feature-engineering.png
 image-alt: "A non-stationary price series turned into stationary returns beside a chart showing engineered features predict volatility but not direction"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 This begins the final section, and a deliberate change of question. The model pages asked *which
 algorithm*; this group asks *how do you build a system that works — and doesn't fool you?* Feature

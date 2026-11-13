@@ -1,4 +1,5 @@
 ---
+search: false
 title: "SHAP Values"
 subtitle: "Game-theoretic attribution — the unique fair split of a prediction across its features"
 description: "SHAP assigns each feature its Shapley value: the fair share of a prediction under axioms from cooperative game theory, with contributions that sum exactly to the prediction minus the baseline. Exact Shapley computation, a per-day waterfall on the Nasdaq volatility model, and the beeswarm view."
@@ -9,6 +10,10 @@ image: fig-shap-values.png
 image-alt: "A waterfall attributing one day's high-risk prediction to its features beside a beeswarm of per-day SHAP values dominated by momentum"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [explainability](../model-explainability/) page ended on its gap: importance and dependence are
 *global*, but the question you actually face on a given morning is *local* — **why did the model flag

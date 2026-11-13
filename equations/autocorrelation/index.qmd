@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Autocorrelation"
 subtitle: "How a series relates to its own past — and why returns forget but volatility remembers"
 description: "Autocorrelation: the correlation of a time series with a lagged version of itself. The ACF, the significance band, and the two great stylised facts — returns are barely predictable, but volatility clusters."
@@ -9,6 +10,10 @@ image: fig-acf.png
 image-alt: "Correlogram of Nasdaq returns (small) and squared returns (large and persistent)"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Correlation](../covariance-correlation/) measured how two *different* series move
 together. Autocorrelation asks a stranger question: how does a series move with its

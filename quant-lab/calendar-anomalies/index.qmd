@@ -15,6 +15,10 @@ image-alt: "Of 29 calendar effects tested on the Nasdaq, only one crosses p=0.05
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 ## Research question
 
 Calendar anomalies — the Monday effect, the turn-of-month effect, "sell in May," the January effect, the
@@ -24,7 +28,7 @@ always look significant. So this experiment is less about the calendar than abou
 seasonal effects honestly — testing a whole battery, correcting for the number of tests, and demanding
 out-of-sample replication — how many are left? It is the applied companion to the
 [backtest-overfitting demonstration](../backtest-overfitting/index.qmd), run on real anomalies instead of
-simulated ones, and a direct test of the [capstone's third finding](../../capstone.qmd): that most
+simulated ones, and a direct test of the capstone's third finding: that most
 apparent edges are methodology lying to you.
 
 ## Hypothesis
@@ -81,7 +85,7 @@ under both Bonferroni and FDR correction, and (4) is not significant out of samp
 to find something — it is a clean, positive demonstration that the *method* works: the same battery run
 without correction would have handed me "the options-expiration Friday effect, significant at the 1% level"
 as a finding, and it would have been an artifact. That is precisely the trap the
-[capstone](../../capstone.qmd) names as the third way a backtest lies, here caught in the act on the most
+capstone names as the third way a backtest lies, here caught in the act on the most
 classic of anomaly-hunting grounds.
 
 It is also the right bookend for the [Quant Lab](../index.qmd). The other five experiments asked whether
@@ -94,7 +98,7 @@ a false anomaly cannot be trusted when it accepts a true one.
 
 - **The 29 effects are correlated**, so the effective number of independent tests is smaller than 29 — Bonferroni is conservative here. But the conclusion (nothing survives) is on the safe side of that error, and the raw count already undershoots chance.
 - **Daily data, one index, one decade.** A longer history or intraday seasonality could reveal genuine microstructure effects (the options-Friday sign *is* persistent, if tiny); the claim is "not tradeable and not correction-surviving here," not "no calendar structure exists anywhere."
-- **Welch t-tests assume weak dependence.** Returns are close to serially uncorrelated (established [across the site](../../capstone.qmd)), so this is mild, but a block bootstrap would be the fully rigorous version.
+- **Welch t-tests assume weak dependence.** Returns are close to serially uncorrelated (established across the site), so this is mild, but a block bootstrap would be the fully rigorous version.
 - **I chose the 29 effects**, which is itself a researcher degree of freedom — though a larger battery would only *raise* the expected max-|t| bar, making survival harder, not easier.
 
 ## What I learned

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Annualisation"
 subtitle: "Scaling returns and volatility to a common horizon — and why they scale differently"
 description: "Turning per-period figures into annual ones: returns scale with time (×N), volatility with the square root of time (×√N), because variance adds. The √252 rule, why the Sharpe ratio scales with √time, and where the assumption breaks."
@@ -9,6 +10,10 @@ image: fig-sqrt-time.png
 image-alt: "Expected return growing linearly with horizon and volatility growing with its square root"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Returns and risk are measured at whatever frequency the data arrives — daily,
 usually — but they are quoted *per year*, so everything must be scaled to a common

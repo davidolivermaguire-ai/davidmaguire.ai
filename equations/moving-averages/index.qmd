@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Moving Averages (SMA & EMA)"
 subtitle: "Smoothing price into trend — equal weights vs recent-weighted, and the lag you pay for it"
 description: "Simple and exponential moving averages: averaging the last k prices to reveal trend. The smoothing factor α = 2/(k+1), the lag-versus-responsiveness trade-off, crossovers, and an honest Nasdaq backtest."
@@ -9,6 +10,10 @@ image: fig-sma-ema.png
 image-alt: "NDX price with 50-day SMA and 50-day EMA, the EMA turning faster at reversals"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Price is noisy; trend is what you actually want to see. A moving average is the
 simplest way to extract it — average the last few prices and the day-to-day jitter

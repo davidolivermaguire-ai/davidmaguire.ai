@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Covariance & Correlation"
 subtitle: "Do two return series move together — and the normalised number that makes it comparable"
 description: "Covariance and correlation: whether two return series move together, correlation as normalised covariance in [−1,1], the diversification link, and a Nasdaq-100 basket example where the correlations aren't what you'd guess."
@@ -9,6 +10,10 @@ image: fig-correlation-matrix.png
 image-alt: "Return correlation matrix heatmap across NDX, AAPL, MSFT, NVDA, PEP"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Variance](../variance-standard-deviation/) describes one asset. Covariance and
 correlation describe how *two* assets move together — the statistic diversification

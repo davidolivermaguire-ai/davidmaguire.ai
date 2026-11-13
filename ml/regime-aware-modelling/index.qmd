@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Regime-Aware Modelling"
 subtitle: "Markets switch states — detecting regimes with a hidden Markov model, and modelling accordingly"
 description: "Markets are not one stationary process but alternate between persistent regimes. A hidden Markov model — a GMM with dynamics — detects calm and turbulent states on the Nasdaq, and a point-in-time regime-scaled strategy shows what regime awareness buys: real risk control, honestly framed. The final entry of the ML Library."
@@ -9,6 +10,10 @@ image: fig-regime-aware-modelling.png
 image-alt: "The Nasdaq price with hidden-Markov turbulent regimes shaded, aligning with 2018, 2020, 2022 and 2025 selloffs, beside test equity curves where regime-scaled exposure cuts drawdown"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The final entry of this library, and a synthesis of threads running through the whole of it. Again and
 again the same structure surfaced: [K-means](../k-means/) discovered calm and turbulent day-clusters

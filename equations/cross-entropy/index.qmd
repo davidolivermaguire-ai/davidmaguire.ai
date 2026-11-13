@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Cross-Entropy Loss"
 subtitle: "Scoring probabilities by their surprise — the loss that pairs with sigmoid and softmax"
 description: "Cross-entropy: −Σ y·log p, the classification loss. Why it punishes confident-wrong predictions, equals maximum likelihood, has a clean (p−y) gradient with sigmoid/softmax, and an honest Nasdaq log-loss scorecard."
@@ -9,6 +10,10 @@ image: fig-cross-entropy.png
 image-alt: "Cross-entropy penalty curves exploding for confident-wrong beside a Nasdaq log-loss scorecard of near-equal bars"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [sigmoid](../sigmoid/) and [softmax](../softmax/) entries produced probabilities;
 cross-entropy is how you grade them. It is the classification counterpart of

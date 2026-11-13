@@ -1,4 +1,5 @@
 ---
+search: false
 title: "ARIMA"
 subtitle: "The Box-Jenkins synthesis — autoregression, differencing and moving average in one model"
 description: "ARIMA(p,d,q): difference d times to reach stationarity, then fit p AR and q MA terms. The Box-Jenkins workflow, the special cases, and an honest Nasdaq forecast that collapses to a random walk with drift."
@@ -9,6 +10,10 @@ image: fig-arima-forecast.png
 image-alt: "ARIMA forecast of the Nasdaq: a gentle drift line inside a confidence cone that widens with the horizon"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 ARIMA is where this section's threads tie together. It stacks the three ideas you've just
 met — [autoregression](../ar-model/) on past values, a [moving average](../ma-model/) of

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Win Rate, Profit Factor & Expectancy"
 subtitle: "The trading-system report card — and why a high win rate can still lose money"
 description: "The three numbers that judge a trading system: win rate, profit factor, and expectancy. Why win rate alone misleads, the break-even win rate, and a real Nasdaq mean-reversion example."
@@ -9,6 +10,10 @@ image: fig-breakeven.png
 image-alt: "Win rate versus reward-risk ratio with the break-even curve and example systems"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 A trading system produces a stream of trades, and three numbers summarise whether it
 is any good. The seductive one is the **win rate** — the fraction of trades that make

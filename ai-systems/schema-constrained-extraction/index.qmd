@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Schema-Constrained News Extraction"
 subtitle: "The News Agent's core — turning financial text into bounded, typed, timestamp-safe features, where the schema itself is the safety mechanism"
 description: >
@@ -11,6 +12,10 @@ author: "David Maguire"
 categories: [news agent, safety]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The **News & Narrative Agent** is the proposal's most distinctive component and its most dangerous if
 built carelessly: it points a language model — a fluent, non-deterministic, [hallucination-prone

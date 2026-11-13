@@ -1,137 +1,35 @@
 ---
-title: "Quant Research Lab"
-description: "Reproducible strategy experiments — explicit hypotheses, sound methods, and honestly reported results."
-listing:
-  contents: "*/index.qmd"
-  type: default
-  sort: "order"
-  fields: [title, description, categories, reading-time]
-  categories: true
-toc: true
+title: "Research"
+subtitle: "Pilot experiments that shaped the proposal"
+description: "Eight pilot experiments on real market data: stated hypotheses, same-information benchmarks, and honestly reported nulls and corrections."
+toc: false
 ---
 
-Self-contained research experiments on market data. The purpose is not to publish
-profitable strategies — it is to ask well-posed questions and answer them
-rigorously. A negative result, analysed carefully, is as valuable here as a
-positive one.
+Before settling on the current [proposal](../phd/index.qmd), I tested the assumptions of an earlier
+version on real market data. These eight experiments are kept because their results shaped the current
+design. Each states its hypothesis before testing, compares against a benchmark with the same information,
+and reports the result whether or not it supports the idea. Two of them are re-tests that overturned my own
+earlier findings; those corrections are part of the record.
 
-::: {.callout-note appearance="simple"}
-**In a hurry?** [**Read the synthesis →**](findings.qmd) — what the experiments found, on one
-screen, and how they resolve the proposal's central hypotheses.
-:::
+| Experiment | Question | Finding | Informs |
+|---|---|---|---|
+| [How backtest selection inflates the Sharpe ratio](backtest-overfitting/index.qmd) | How much does picking the best of many backtests flatter it? | The best of *N* strategies looks good from noise alone; the maximum Sharpe grows like $\sqrt{2\ln N}$. | Counting every trial (09, 10) |
+| [Do calendar anomalies survive honest scrutiny?](calendar-anomalies/index.qmd) | Do seasonal effects survive a multiple-testing correction? | None of 29 survive. | A small, fixed indicator set (01) |
+| [How far ahead is volatility forecastable?](volatility-forecasting-horizon/index.qmd) | Over what horizon is volatility predictable? | A volatility shock has a half-life of about a month; GARCH and HAR perform similarly. | Volatility and VIX as inputs (01, 02) |
+| [Can you monetise forecastable volatility?](volatility-managed-portfolios/index.qmd) | Does forecastable volatility earn excess return? | It buys risk control, not alpha: drawdown roughly halved, no significant excess return. | Risk controls (05) |
+| [Does regime-conditioning really sharpen tail probabilities?](h2-calibration-retest/index.qmd) | Re-test of an earlier calibration claim | With a same-information benchmark and Diebold–Mariano tests, 0 of 6 comparisons are significant. My earlier claim did not hold. | Brier scores and forecast tests (02, 10) |
+| [Does conditioning on regime actually help?](regime-conditioning-oos/index.qmd) | Does a regime label improve position sizing beyond volatility? | No significant edge over a regime-blind volatility scaler. | Regimes made optional (02) |
+| [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | Across 7 assets, does a state estimate add decision value? | It made direction forecasts worse in 53 of 56 pairs and added no risk-adjusted value. | Regimes made optional (02, 08) |
+| [Do hard risk limits earn their keep?](h8-risk-limits-retest/index.qmd) | Re-test of an earlier risk-limits claim at equal risk | The cap did nothing, the kill-switch was worse, and a volatility budget was better but not significantly (0 of 9). My earlier claim did not hold. | Deterministic controls (05) |
 
-**Every experiment follows the same structure:**
+: Numbers in the last column refer to components of the [system architecture](../phd/architecture.html). {.striped}
 
-1. Research question
-2. Hypothesis
-3. Dataset
-4. Methodology
-5. Code
-6. Results
-7. Limitations
-8. What I learned
-9. Next experiment
+## What these results changed
 
-The tone is deliberately that of a researcher, not a signal seller. Not "this
-model predicts Tesla with 80% accuracy," but: *this experiment tests whether
-lagged return, volatility, and volume features contain statistically useful
-information for short-horizon directional classification, evaluated with
-walk-forward validation to reduce look-ahead bias.*
+Volatility is forecastable over short horizons, but direction is not, and regime labels added little
+beyond volatility itself. That moved the research away from building a better market-state estimator and
+towards the decision layer: whether language models reasoning over well-calibrated evidence make better
+decisions. The discipline carries over unchanged: same-information benchmarks, proper scoring rules,
+Diebold–Mariano tests and a record of every trial.
 
-## Experiments
-
-::: {.status-note}
-The original eight-experiment agenda is complete. Four further experiments extend it to RQ1 and RQ2 and
-re-test two earlier results under a stricter protocol — both of which they overturn. Nulls and retractions
-are reported as readily as positives.
-:::
-
-## The research agenda
-
-These experiments are not a scattershot search for edges. Each one **stress-tests a load-bearing claim
-of the [PhD proposal](../phd/index.qmd)** on real data, and each is designed so that a *null* result is
-as publishable as a positive one. Together they are the empirical bridge between the
-[libraries](../ml/index.qmd) — which establish the methods — and the proposal, which bets on them:
-before proposing that regime and volatility awareness improve decisions, it is worth testing, honestly
-and out of sample, whether they actually do.
-
-| Experiment | The question it settles | Tests | Status |
-|---|---|:--:|:--:|
-| [How backtest selection inflates the Sharpe ratio](backtest-overfitting/index.qmd) | How easily does searching over strategies manufacture a fake edge? | discipline | ✅ Done |
-| [Volatility-managed portfolios](volatility-managed-portfolios/index.qmd) | If volatility is forecastable, can you trade it? | Finding 2 | ✅ Done |
-| [Volatility-forecasting horizon (HAR vs GARCH vs random walk)](volatility-forecasting-horizon/index.qmd) | How many days ahead is volatility actually predictable? | Finding 2 | ✅ Done |
-| [Regime-conditioning, out-of-sample](regime-conditioning-oos/index.qmd) | Does conditioning on regime beat a regime-blind strategy, net of costs? | H5 | ✅ Done |
-| [Regime-conditional calibration](regime-conditional-calibration/index.qmd) | Does regime-conditioning improve probabilistic forecasts, where it failed at sizing? | H2 | ⚠️ Superseded |
-| [Does regime-conditioning really sharpen tail probabilities?](h2-calibration-retest/index.qmd) | Does the H2 result survive a fair benchmark and a significance test? | H2 | ✅ Done |
-| [Benefit concentration at transitions](benefit-at-transitions/index.qmd) | Do the gains cluster around regime changes rather than in calm periods? | H6 | ✅ Done |
-| [Hard risk limits, net of their cost](hard-risk-limits/index.qmd) | Do deterministic risk caps help *after* the return they sacrifice? | H8 | ⚠️ Superseded |
-| [Do hard risk limits earn their keep, or just hold less?](h8-risk-limits-retest/index.qmd) | Do the limits beat a benchmark carrying the same risk? | H8 | ✅ Done |
-| [Calendar anomalies after multiple-testing](calendar-anomalies/index.qmd) | Do day-of-week / turn-of-month effects survive an honest correction? | discipline | ✅ Done |
-| [Is a market-state estimate worth anything?](state-decision-value/index.qmd) | Do any of eight state estimators add decision value beyond a volatility-only model? | RQ1 | ✅ Done |
-| [Is a factored market state better than one label?](factored-vs-flat-state/index.qmd) | At matched cardinality, does a 3×3 factored state beat a flat 9-state label? | RQ2 / H1 | ✅ Done |
-| [Seven specialists, one dimension](specialist-redundancy/index.qmd) | Does the estimator panel span multiple dimensions, or measure one thing badly? | RQ5 / RQ1 | ✅ Done |
-
-: Each experiment maps to a proposal research question (RQ1) or hypothesis (H1, H2, H5, H6, H8), or to a [capstone finding](../capstone.qmd), and reports honestly whether it holds. {.striped .hover}
-
-The verdicts so far sharpen the proposal rather than flatter it: forecastable volatility buys **risk
-control, not alpha**; that foresight is **short — a roughly one-month half-life**; and, most pointedly,
-conditioning on a discrete **regime adds nothing beyond a volatility signal** for position sizing, and no
-edge is statistically significant. A companion test appeared to show the same regime **sharpening the
-probability of a dangerous day** — but that result was measured against a weaker benchmark and never
-tested, and it has since been [retracted](h2-calibration-retest/index.qmd). **H5** and **H2** both fail.
-And a test of **H6** confirms it from a third angle — the risk protection of adaptivity is concentrated at
-regime transitions and the turbulence they open (142% of it in 38% of days, p = 0.006), earning nothing in
-the calm middle — so the payoff is dominated by how early the turning points are *detected*. Finally
-**H8** appeared to close the trilogy — hard risk limits turning an untradeable 2× strategy into a viable
-one — but that comparison pitted limits against an unconstrained base they also *de-levered*, and it has
-since been [retracted](h8-risk-limits-retest/index.qmd). And a **discipline check** completes
-the agenda: of 29 calendar anomalies, none survive an honest multiple-testing correction — the control that
-makes the careful positive results worth believing. Tested, not assumed.
-
-The ninth experiment turns the same benchmark on **RQ1** itself, and is the most uncomfortable of the set.
-Eight state estimators — moving-average crossover through Kalman filter, HMM, Markov-switching regression
-and two change-point detectors — were scored against a volatility-only model seeing the same features,
-across seven assets and 168 comparisons at a deflated bar of |t| > 3.20. State made direction forecasts
-*worse* in **53 of 56** asset-method pairs, and the risk-control claim dissolved once exposure was
-controlled for: the overlay improved raw drawdown in 44 of 56 pairs but Sharpe in only 4. **Eighteen
-comparisons are significant harms** against 0.23 expected by chance — adding state where it does not
-belong is not free. The one apparent gain points the right way on 7 of 7 assets but clears the bar on 2,
-and **not on the asset it was discovered on**. Reliability, it turns out, is not one property but several,
-and they do not point the same way. The entry also **corrects itself in public**, twice: a first version
-scored each method on its own span and reported harms that were really a property of 2015–2018, and a
-single-asset result that survived every correction at N = 24 did not survive being asked of six more assets.
-
-The tenth turns to **RQ2 and H1** — can overlapping *dimensions* be estimated more reliably than one
-mutually exclusive label? Tested at **matched cardinality**, so a 3×3 factored state and a flat 9-state
-label describe the same nine cells and differ only in price (24 parameters against 108), factoring wins
-5 of 9 head-to-head comparisons and loses none. But it is more temporally stable on only one of three
-assets, and in **18 of 18** comparisons both descriptions are worse than using no state at all. RQ2's
-answer is *yes, and it barely matters*: factoring is the better way to build a state representation, and
-still not a good enough reason to condition on one.
-
-The eleventh is the one I least wanted to run. Every claim that had faced the full protocol had weakened
-or died, and every claim still standing had never faced it — including **H2**, this lab's own surviving
-positive. Re-tested across three indices against a *same-information* benchmark rather than the volatility
-terciles it originally beat, **none of six comparisons is significant**, and on the asset the claim was
-made on the sign reverses. The published edge was 0.002 Brier with no significance test. H2 does not
-survive, which leaves only H6 and H8 untested and the proposal's positive case thinner than this page
-claimed a day ago.
-
-The twelfth completes the audit, and closes it on the same note. **H8** — deterministic risk limits improve
-viability — was tested against an unconstrained 2× that the limits themselves de-levered. Re-run against a
-constant leverage carrying the *same realised volatility*, the leverage cap does **exactly nothing** (a
-constant cap is constant leverage), the drawdown kill-switch is consistently worse, and the volatility
-budget is consistently better on all three indices without clearing significance in any of nine
-comparisons. That leaves **H6** as the only hypothesis never put through the protocol, and every one that
-has been through it returning a null or a near-null.
-
-The thirteenth stops testing results and tests an *input*, which is why it explains more than it measures.
-The council architecture needs its specialists to cover different dimensions; the standard check — the
-effective number of independent signals — returns **3.8 of 7** and looks healthy. It is not evidence.
-Seven noisy measurements of a *single* quantity decorrelate exactly like seven genuine dimensions, and a
-noise-to-signal ratio of 1.29 reproduces 3.8 precisely. Splitting the panel into what the estimators agree
-on and where each departs from it settles it: the consensus clears the deflated bar **3 of 9** times and
-all three are the volatility target, the deviations **0 of 63**, and adding the deviations back *degrades*
-the consensus on every asset. The seven estimators are one dimension measured seven times — and the one
-thing they collectively know is that falling markets are volatile, which the volatility benchmark already
-knew. That is [RQ1's null](state-decision-value/index.qmd) explained rather than merely reported.
+Code for these experiments is described on the [Code](../code.qmd) page.

@@ -16,9 +16,13 @@ image-alt: "A real-time regime-conditional strategy versus a volatility scaler a
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 ## Research question
 
-This is the experiment the whole [PhD proposal](../../phd/index.qmd) leans on. Its central bet —
+This is the experiment the whole [PhD proposal](../../phd/archive.qmd) leans on. Its central bet —
 **hypothesis H5**, and research question RQ6 — is that *conditioning forecasting and decision models on
 estimated regime probabilities improves economic performance*. Every regime entry in the
 [library](../../ml/index.qmd) built the machinery; this experiment asks whether the machinery **pays**.
@@ -44,7 +48,7 @@ Daily Nasdaq-100 returns, 2015–2026 (`multi_daily.csv`), evaluated out-of-samp
 
 **The regime is estimated in real time, with no look-ahead** — the part that makes this fair. A two-state
 Gaussian **hidden Markov model** (my own Baum–Welch implementation, since the discrete regime is exactly
-the [library's HMM](../../ml/regime-aware-modelling/index.qmd)) is **re-fit quarterly on an expanding
+the library's HMM) is **re-fit quarterly on an expanding
 window**, and the regime at each day is the **filtered** (forward-only) probability of the high-volatility
 state — never the smoothed probability, which would peek at the future. The fitted states are a calm
 regime at 13.8% annualised volatility and a turbulent one at 34.4%; the signal flags COVID (P = 0.86) and
@@ -95,7 +99,7 @@ That is a genuine steer, not a defeat, and I would change the proposal's framing
 Agent should **not** be justified by regime-conditioned *sizing alpha* — this experiment says there isn't
 any. It should be justified by the two things a volatility scaler provably *cannot* do, both already
 demonstrated elsewhere on this site: **online detection of regime *changes*** (the
-[change-point detector](../../ml/change-point-detection/index.qmd) is a timing alarm, not a sizing knob),
+change-point detector is a timing alarm, not a sizing knob),
 and **conditioning *relationships* on regime** (the
 [Markov-switching](../../ml/markov-switching-regression/index.qmd) finding that a stock's beta doubles in
 the turbulent state — something no scalar volatility target can express). The untested half of H5 —

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "L1 & L2 Penalties (Lasso & Ridge)"
 subtitle: "Two ways to penalise weights — sparse feature selection vs smooth shrinkage"
 description: "L2 (Ridge, Σθ²) shrinks all weights smoothly; L1 (Lasso, Σ|θ|) drives weak weights to exactly zero for feature selection. The diamond-vs-circle geometry, soft-thresholding, Elastic Net, and a sparse Nasdaq fit."
@@ -9,6 +10,10 @@ image: fig-l1-l2.png
 image-alt: "The L1 diamond vs L2 circle constraint geometry beside a Nasdaq plot of Lasso zeroing features while Ridge keeps all 20"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Regularisation](../regularisation/) adds a penalty on complexity; L1 and L2 are the two
 penalties that do it, and they differ in a way that matters. Both charge for large weights, but

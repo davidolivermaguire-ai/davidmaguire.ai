@@ -12,6 +12,10 @@ categories: [foundations]
 toc: true
 ---
 
+::: {.callout-note}
+**Note.** Written while developing an earlier version of my proposal ([archived](../../phd/archive.qmd)); references to "the proposal" refer to that version. The method itself is part of the [current proposal](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 The instinct is to frame this as a duel — large language models versus "traditional" machine learning —
 and pick a winner. That framing was always a little lazy, and by 2026 it is simply wrong: there are now
 **three** distinct families of model a market system might use, not two, and the interesting question is
@@ -31,7 +35,7 @@ and then answers that one question, fast. Its virtues are exactly the ones a dep
 about: it is **cheap and low-latency** (microseconds, effectively free per prediction), **deterministic**
 (same input, same output), it can be **calibrated** so its probabilities [mean what they
 say](../../ml/probability-calibration/index.qmd), it is **auditable** via
-[SHAP](../../ml/shap-values/index.qmd) or its own coefficients, and it **cannot hallucinate** — it only
+SHAP or its own coefficients, and it **cannot hallucinate** — it only
 knows the features you gave it. For a specific prediction on structured numeric data, with training data to
 hand, this is the default, and it is a very good one.
 
@@ -73,7 +77,7 @@ offers.
 | Determinism | deterministic | mostly | **stochastic** |
 | Calibration | can be [calibrated](../../ml/probability-calibration/index.qmd) | reasonable | **poor out-of-box** |
 | Hallucination | none | none | **yes** |
-| Interpretability | [SHAP](../../ml/shap-values/index.qmd) / coefficients | limited | hard |
+| Interpretability | SHAP / coefficients | limited | hard |
 | Shines at | a specific task, with data | few-shot / scarce data | **unstructured text → structure** |
 
 : There is no universally best family — only a best family *for a given job*. {.striped}
@@ -82,7 +86,7 @@ offers.
 
 Before allocating families to jobs, one result from the rest of this site overrides everything: in a
 near-efficient market, **next-day direction is unpredictable at every level of sophistication** — the
-[capstone](../../capstone.qmd) shows a transformer tying a logistic regression at a coin-flip AUC of 0.50.
+capstone shows a transformer tying a logistic regression at a coin-flip AUC of 0.50.
 That ceiling applies to *all three families equally*. A tabular foundation model does not conjure an edge
 a gradient-boosted tree could not find; a general LLM asked to predict tomorrow's return is not secretly an
 oracle. Foundation models buy **sample efficiency and convenience, not alpha**, and no amount of pretraining
@@ -93,11 +97,11 @@ the most useful thing this comparison offers.
 
 ## Which belongs where in the proposal
 
-The [architecture](../../phd/index.qmd) allocates each family to what it is actually good at:
+The [architecture](../../phd/archive.qmd) allocates each family to what it is actually good at:
 
 - The **News & Narrative Agent** needs a **general LLM** — text → structure is its irreplaceable job, and no other family can do it. This is the *only* place a general LLM belongs in the system.
-- **Regime, volatility and sizing** are numeric prediction, so they use **task-trained models** by default (calibrated, cheap, auditable — the [ML library](../../ml/index.qmd) and [RL tier](../../ml/markov-decision-processes/index.qmd)), with **domain foundation models** a reasonable option where data is scarce.
-- The mistake to avoid, explicitly: **do not reach for a general chat LLM to predict a number.** It is expensive, uncalibrated, non-deterministic theatre, with no edge to show for it — and using one big LLM for everything is precisely the single-opaque-model anti-pattern the multi-agent design [exists to reject](../what-is-an-agent/index.qmd).
+- **Regime, volatility and sizing** are numeric prediction, so they use **task-trained models** by default (calibrated, cheap, auditable — the [ML library](../../ml/index.qmd) and RL tier), with **domain foundation models** a reasonable option where data is scarce.
+- The mistake to avoid, explicitly: **do not reach for a general chat LLM to predict a number.** It is expensive, uncalibrated, non-deterministic theatre, with no edge to show for it — and using one big LLM for everything is precisely the single-opaque-model anti-pattern the multi-agent design exists to reject.
 
 ## Grounding in MarketLens AI
 
@@ -128,7 +132,7 @@ system needs."
 The 2026 frontier is represented honestly: tabular foundation models (TabPFN / TabICL / TabFM) and
 time-series foundation models (Chronos, TimesFM, TimeGPT) now rival or exceed tuned gradient-boosted trees
 on public benchmarks — but they are *domain* foundation models, distinct from general chat LLMs, and the
-near-efficiency of returns (established in the [capstone](../../capstone.qmd)) caps the predictive edge of
+near-efficiency of returns (established in the capstone) caps the predictive edge of
 all three families. Claims about MarketLens AI reflect its current design (an LLM used for text tasks).
 Model-family capabilities move quickly; the engineering trade-offs — cost, calibration, determinism,
 auditability — are the stable part.

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "The Kalman Filter & State-Space Models"
 subtitle: "Optimal real-time estimation of a hidden, drifting state — the linear-Gaussian filter behind trend extraction, time-varying beta, and the belief state a POMDP needs"
 description: "The workhorse for estimating a latent state that evolves over time, in real time, with honest uncertainty. Implemented from scratch and verified against statsmodels to 2.8e-10, it recovers a known drifting β on synthetic data (95.9% coverage of its 2σ band) and tracks AAPL's genuinely time-varying β to the Nasdaq (median 1.04, drifting 0.67–1.27). It is the linear-Gaussian cousin of the HMM forward filter — and it makes the site's filtered-vs-smoothed look-ahead point exactly: the smoothed estimate 'peeks', revising the real-time one by 0.08 using the future."
@@ -9,6 +10,10 @@ image: fig-kalman-state-space.png
 image-alt: "Three panels: a Kalman filter recovering a known drifting beta on synthetic data; the real-time time-varying beta of AAPL to the Nasdaq with an uncertainty band; and a zoom showing the filtered (real-time) estimate lagging while the smoothed (hindsight) estimate turns earlier."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [regime](../regime-aware-modelling/index.qmd) and [Markov-switching](../markov-switching-regression/index.qmd)
 entries estimated a *discrete* hidden state. This one estimates a **continuous** hidden state that drifts

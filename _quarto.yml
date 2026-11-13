@@ -6,7 +6,7 @@ project:
 
 website:
   title: "David Maguire"
-  description: "A public research notebook in quantitative finance, machine learning, and AI."
+  description: "PhD preparation in quantitative finance: the proposal, the pilot experiments behind it, and notes on the methods it uses."
   site-url: "https://davidmaguire.ai"
   favicon: assets/favicon.svg
   search: true
@@ -15,20 +15,12 @@ website:
     left:
       - text: "About"
         href: about.qmd
-      - text: "Equations"
-        href: equations/index.qmd
-      - text: "Machine Learning"
-        href: ml/index.qmd
-      - text: "Capstone"
-        href: capstone.qmd
-      - text: "Quant Lab"
-        href: quant-lab/index.qmd
-      - text: "AI Systems"
-        href: ai-systems/index.qmd
       - text: "PhD"
         href: phd/index.qmd
-      - text: "Console"
-        href: ui/index.qmd
+      - text: "Research"
+        href: quant-lab/index.qmd
+      - text: "Methods"
+        href: ml/index.qmd
       - text: "Code"
         href: code.qmd
     right:

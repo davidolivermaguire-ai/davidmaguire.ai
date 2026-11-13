@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Bayesian Change-Point Detection"
 subtitle: "Detecting a regime shift the day it happens — the run-length posterior, and a real-time alarm for the market's turning points"
 description: "The HMM labels regimes in hindsight; a live system needs to know a regime has changed as it happens, from data up to today only. Bayesian Online Change-Point Detection maintains a posterior over the time since the last change and signals when it collapses. Validated on synthetic ground truth (latency 1/8/3 steps), then run online on the Nasdaq — flagging the COVID crash and the 2022 bear onset with no look-ahead."
@@ -9,6 +10,10 @@ image: fig-change-point-detection.png
 image-alt: "A BOCPD run-length posterior heatmap on synthetic data whose ridge collapses at each true change-point, beside the same detector run online on the Nasdaq where the run length resets at every major regime shift including the COVID crash"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [regime-aware modelling entry](../regime-aware-modelling/index.qmd) fit a hidden Markov model to
 split the Nasdaq's history into calm and turbulent states, and the whole [decision-systems

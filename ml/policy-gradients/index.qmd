@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Policy Gradients & Actor-Critic"
 subtitle: "Learning the policy directly — continuous actions, the score-function trick, and why baselines matter"
 description: "Policy-gradient methods optimise the policy itself by gradient ascent on expected reward, handling continuous actions natively. A Gaussian-policy actor-critic learns the analytically optimal exposure on the regime environment, and the baseline's variance reduction is measured: 3,176×."
@@ -9,6 +10,10 @@ image: fig-policy-gradients.png
 image-alt: "Learned mean exposure per regime converging to the analytic optima beside variance bars showing a baseline cutting policy-gradient variance by thousands of times"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Q-learning](../q-learning/index.qmd) ended on its structural limit: the $\arg\max_a$ needs a finite
 action set, but a real position is a *continuous* number. Policy-gradient methods remove the detour

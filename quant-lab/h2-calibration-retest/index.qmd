@@ -17,10 +17,14 @@ image-alt: "Two panels: six Diebold-Mariano t-statistics all inside the non-sign
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd).
+:::
+
 ## Why re-test my own result
 
 By the end of the [RQ1](../state-decision-value/index.qmd) and
-[RQ2](../factored-vs-flat-state/index.qmd) work, a pattern had become impossible to ignore.
+RQ2 work, a pattern had become impossible to ignore.
 Every claim that had been put through the full protocol — Diebold-Mariano tests with HAC
 errors, a deflated significance bar, cross-asset replication, a common scoring window — had
 weakened or died. And every claim still standing had never been through it.

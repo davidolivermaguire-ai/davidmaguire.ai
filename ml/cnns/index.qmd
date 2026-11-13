@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Convolutional Neural Networks"
 subtitle: "Weight sharing and local filters — the architecture that put a prior into the network"
 description: "A CNN slides small shared filters across grid-structured data to detect local, translation-invariant patterns at a fraction of a dense net's parameters. Convolution, pooling, the inductive bias, and an honest 1D-CNN test on Nasdaq sequences."
@@ -9,6 +10,10 @@ image: fig-cnns.png
 image-alt: "A width-3 filter detecting the same burst motif at two positions in a sequence beside a bar chart where a 1D CNN matches a dense net on volatility with far fewer parameters"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [multilayer perceptron](../neural-networks/) connected every input to every neuron — it assumed
 nothing about how the inputs relate to each other. A convolutional neural network is the first

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Supervised Liquidity-Stress Modelling"
 subtitle: "Forecasting stress ahead from labelled outcomes — and finding that a single transparent volatility feature beats the classifier: the supervised counterpart to the liquidity tripwire"
 description: "The supervised half of the liquidity specialist: a gradient-boosted classifier that forecasts whether the coming week will be a stress week, evaluated with purged walk-forward. It beats chance handsomely (average precision 0.46 against a 15% base rate, ROC-AUC 0.80) and is well calibrated (Brier 0.106) — but ranking days by a single transparent feature, today's 20-day realised volatility, beats it (AP 0.49, ROC-AUC 0.83). Forward-stress predictability is volatility persistence; the supervised label buys a calibrated probability, not incremental timing."
@@ -9,6 +10,10 @@ image: fig-supervised-stress.png
 image-alt: "Three panels: an out-of-sample calibration curve near the diagonal (Brier 0.106); precision-recall curves in which a one-feature volatility-persistence baseline matches or beats the supervised classifier; and predicted stress probability over 2017-2026 spiking around realized stress weeks."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [liquidity-stress anomaly detector](../liquidity-anomaly/index.qmd) answers one question —
 *is today abnormal?* — without labels, by learning the shape of normal conditions. This entry is its

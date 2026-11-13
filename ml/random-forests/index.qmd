@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Random Forests"
 subtitle: "Averaging many decorrelated trees — variance cancelled, overfitting tamed"
 description: "A random forest bootstraps rows and randomises features to grow many decorrelated trees, then averages them so their variance cancels. The bagging maths, OOB validation, and a Nasdaq test where it finds volatility signal a single tree misses."
@@ -9,6 +10,10 @@ image: fig-random-forests.png
 image-alt: "A random forest ROC bowing above the diagonal on volatility beside AUC bars showing it finds volatility not direction"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [decision tree](../decision-trees/) had one fatal flaw: high variance. Grow it deep and it
 memorises the training data; nudge the data and you get a different tree. A random forest fixes

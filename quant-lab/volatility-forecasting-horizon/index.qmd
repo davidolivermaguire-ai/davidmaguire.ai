@@ -15,15 +15,19 @@ image-alt: "Out-of-sample volatility forecast skill by horizon: HAR and GARCH be
 toc: true
 ---
 
+::: {.callout-note}
+**Pilot experiment.** Run for an earlier version of my proposal ([archived](../../phd/archive.qmd)), so hypothesis labels such as H2 refer to that version. It is kept because its result shaped the [current design](../../phd/index.qmd). References to the equation or machine-learning library and the capstone are to earlier working, now archived.
+:::
+
 ## Research question
 
-Across the [libraries](../../ml/index.qmd) and the [capstone](../../capstone.qmd), one finding recurs:
+Across the [libraries](../../ml/index.qmd) and the capstone, one finding recurs:
 **volatility is forecastable** where direction is not. But "forecastable" is a slogan until you put a
 number on it. This experiment asks the precise questions a risk system actually needs answered: *how
 many days ahead* does a volatility forecast carry real information, *how fast* does that skill decay, and
-*which model* — a simple parametric [GARCH](../../equations/garch/index.qmd), the realized-volatility
+*which model* — a simple parametric GARCH, the realized-volatility
 workhorse **HAR**, an exponential-weighted average, or naive persistence — does it best? The answer sets
-the horizon over which the [proposal's](../../phd/index.qmd) Regime Agent can genuinely see.
+the horizon over which the [proposal's](../../phd/archive.qmd) Regime Agent can genuinely see.
 
 ## Hypothesis
 
@@ -100,7 +104,7 @@ its advantage over naive persistence is not at short horizons (where persistence
 to-quarterly ones (where persistence, blind to mean reversion, falls apart). For the proposal this is a
 concrete design input: the Regime Agent's volatility foresight is real but **short** — a horizon of about
 a month — which is precisely why the architecture pairs a slow regime label with a fast
-[online change-point detector](../../ml/change-point-detection/index.qmd), and why risk controls must be
+online change-point detector, and why risk controls must be
 reactive rather than relying on long-range volatility prediction.
 
 ## Limitations
@@ -108,7 +112,7 @@ reactive rather than relying on long-range volatility prediction.
 - **The daily proxy is noisy.** A single day's squared return is a high-variance estimate of that day's variance, which is why absolute $R^2$ against it is near zero even for good models (Andersen & Bollerslev's "answering the skeptics" point) — the true forecast skill is masked by proxy noise. Intraday **realized variance** from 5-minute returns would raise every number here; the persistence-relative and QLIKE comparisons are the proxy-robust reads I rely on instead.
 - **One asset, one split.** A single index and a single 65/35 train/test cut; a rolling-origin evaluation and cross-asset replication would sharpen the confidence intervals (not computed here).
 - **GARCH parameters are frozen on the training set.** Re-estimating on an expanding window would let the model adapt to a shifting volatility regime and likely help at longer horizons.
-- **No jumps or leverage term.** A GJR/EGARCH (asymmetric) or a HAR with a jump component would fit the leverage effect this site has [documented](../../ml/shap-values/index.qmd) and is a natural extension.
+- **No jumps or leverage term.** A GJR/EGARCH (asymmetric) or a HAR with a jump component would fit the leverage effect this site has documented and is a natural extension.
 - **Simple HAR.** Log-RV or a HARQ (measurement-error-corrected) specification is the modern standard and would be the fairer test of HAR's ceiling.
 
 ## What I learned

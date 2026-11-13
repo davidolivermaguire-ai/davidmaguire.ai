@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Liquidity-Stress Anomaly Detection"
 subtitle: "Learning what 'normal' market conditions look like, and flagging the departures — the unsupervised tripwire of the liquidity specialist"
 description: "The liquidity specialist's detector: unsupervised anomaly detection on microstructure-stress features. An Isolation Forest recovers injected anomalies at 0.95 precision/recall, and on the Nasdaq it flags 5% of days that concentrate 5.4× into known crises and precede sharply higher volatility (41.6% vs 17.3% forward). Crucially, 18% of its flags are 'quiet illiquidity' — wide intraday ranges with no big close-to-close move — exactly the stress a simple return threshold misses."
@@ -9,6 +10,10 @@ image: fig-liquidity-anomaly.png
 image-alt: "Three panels: an Isolation Forest recovering injected anomalies in a synthetic cloud; the anomaly score over time clustering in real crises; and a range-versus-return scatter where the detector flags wide-range, small-return 'quiet illiquidity' days a return threshold would miss."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [cross-asset](../cross-asset-dependence/index.qmd) and [structural-change](../cusum-drift/index.qmd)
 specialists watch *relationships* and *breaks*; the **liquidity specialist** watches *conditions* — is the

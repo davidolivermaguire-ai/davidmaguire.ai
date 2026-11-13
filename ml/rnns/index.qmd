@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Recurrent Neural Networks"
 subtitle: "Processing sequences step by step with a hidden state — memory, and the gradient that won't reach back"
 description: "An RNN reads a sequence one step at a time, carrying a hidden state as memory, with the same weights shared across time. Backpropagation through time, the vanishing/exploding gradient that caps its memory, and an honest Nasdaq sequence test."
@@ -9,6 +10,10 @@ image: fig-rnns.png
 image-alt: "An unrolled RNN sharing weights across timesteps beside a log-scale plot showing the gradient through time vanishing, staying flat, or exploding with the recurrent weight"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [convolutional network](../cnns/) handles a sequence by sliding a fixed window across it. A
 recurrent network takes the other, more natural route: it reads the sequence **one step at a time**,

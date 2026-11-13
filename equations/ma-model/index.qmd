@@ -1,4 +1,5 @@
 ---
+search: false
 title: "The MA Model (Moving Average)"
 subtitle: "A series built from its own past shocks — finite memory, and the mirror image of AR"
 description: "The moving-average model: y_t = μ + ε_t + θ ε_{t-1}. Regression on past shocks (not values), why its ACF cuts off after lag q, invertibility, the AR(∞) duality, and why it isn't the SMA/EMA."
@@ -9,6 +10,10 @@ image: fig-ar-vs-ma.png
 image-alt: "Two correlograms: an AR(1) ACF decaying geometrically above an MA(1) ACF that spikes once then cuts to zero"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 A warning first: the "MA" in an MA *model* is **not** the moving average that
 [smooths a price](../moving-averages/). That one averages past *prices*; this one is a

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Mean Return"
 subtitle: "The first moment of a return series — and why it is not the growth you earned"
 description: "The arithmetic mean return: estimator of E[r], its gap to compound growth (the volatility drag), and a worked Nasdaq-100 example — by hand, in Python, and in Excel."
@@ -9,6 +10,10 @@ image: fig-ndx-mean-return.png
 image-alt: "Nasdaq-100 daily returns over Jul 2025–Jun 2026 with the arithmetic mean marked"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 ## The equation
 

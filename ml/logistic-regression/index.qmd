@@ -10,6 +10,10 @@ image-alt: "A linear decision boundary over overlapping up/down days beside a RO
 toc: true
 ---
 
+::: {.callout-note}
+**Note.** Written as part of earlier, broader working that is now archived, so references to the equation or machine-learning library and the capstone point to that work. The method itself is part of the [current proposal](../../phd/index.qmd).
+:::
+
 Logistic regression is [linear regression's](../linear-regression/) classifier cousin: it takes
 the same linear score $w\cdot x + b$ and, instead of using it as a prediction, squashes it through
 the [sigmoid](../../equations/sigmoid/) into a probability between 0 and 1. Train it by minimising

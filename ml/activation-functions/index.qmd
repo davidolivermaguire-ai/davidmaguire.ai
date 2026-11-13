@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Activation Functions"
 subtitle: "The nonlinearity that makes depth work — and why ReLU unlocked deep learning"
 description: "Activation functions inject the nonlinearity without which a deep network collapses to a single linear map. Sigmoid, tanh, ReLU and its variants, the vanishing-gradient problem that stalled deep learning, and why ReLU fixed it."
@@ -9,6 +10,10 @@ image: fig-activation-functions.png
 image-alt: "The sigmoid, tanh, ReLU and leaky-ReLU curves beside a log-scale plot of gradient magnitude collapsing with depth for sigmoid but holding for ReLU"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [neural network](../neural-networks/) page made one claim it left unproven: the nonlinear
 **activation** is "what makes it work — without it, a stack of linear layers collapses into a single

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Multi-Agent Systems & Credit Assignment"
 subtitle: "When several agents share one P&L — Markov games, and the fair attribution of a joint outcome"
 description: "The proposal is a team of agents that together produce one P&L; the Review & Learning Agent must say who earned it. Markov games are the formal framework, and Shapley values the fair attribution. Applied to a four-agent Nasdaq strategy, credit assignment overturns the naïve story: leave-one-out gets vol-targeting's sign wrong, and the same agents earn opposite credit under a drawdown objective — with the efficiency axiom verified to machine precision."
@@ -9,6 +10,10 @@ image: fig-multi-agent-systems.png
 image-alt: "Shapley credit-assignment bars for four trading agents beside a plot showing that leave-one-out credit gets an agent's sign wrong while the Shapley value is the fair average across all coalition orders"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every entry in this tier so far concerned a *single* decision-maker. But the [proposal's
 architecture](../../phd/index.qmd) is not one agent — it is a **team**: a Regime Agent, a News Agent, an

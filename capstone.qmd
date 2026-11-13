@@ -1,9 +1,14 @@
 ---
+search: false
 title: "Capstone — One Market, Every Model"
 subtitle: "What 74 entries add up to: the findings of the two libraries, and the risk-governed decision system built on them"
 description: "The synthesis of the whole site: 37 equations and 37 machine-learning models, every one tested against the same Nasdaq-100 data. The consistent verdicts — direction is unpredictable at every level of sophistication, volatility is structured and forecastable — the constructive decision-systems tier built on them, and a reading path through it all."
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](phd/index.qmd).
+:::
 
 Between them, the [Equation Library](equations/index.qmd) and the
 [Machine Learning Library](ml/index.qmd) now contain **74 entries** — 37 mathematical

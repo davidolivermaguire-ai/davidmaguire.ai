@@ -1,4 +1,5 @@
 ---
+search: false
 title: "GARCH"
 subtitle: "Modelling the volatility, not the mean — why calm follows calm and storms follow storms"
 description: "GARCH(1,1): σ²_t = ω + α ε²_{t-1} + β σ²_{t-1}. Conditional variance, volatility clustering, the reaction/persistence split, why α+β matters, fat tails from normal shocks, and a Nasdaq fit."
@@ -9,6 +10,10 @@ image: fig-garch-vol.png
 image-alt: "Nasdaq daily returns above the GARCH conditional volatility, which spikes at the return clusters and mean-reverts"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every model so far has chased the *mean* of returns — and found almost nothing, because
 returns are close to unpredictable. GARCH changes the target. It gives up on forecasting the

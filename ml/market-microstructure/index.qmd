@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Market Microstructure & Execution Modelling"
 subtitle: "The last mile — the spread you pay, the price you move, and how to liquidate optimally"
 description: "A signal is worthless if execution costs eat the edge. Market microstructure is the anatomy of a traded price — spread, order flow, impact — and optimal execution is the discipline of trading a position at least cost. The Almgren–Chriss efficient frontier of execution, its closed-form trajectory verified against a numerical optimizer to machine precision, and the square-root impact law calibrated to the Nasdaq."
@@ -9,6 +10,10 @@ image: fig-market-microstructure.png
 image-alt: "Optimal execution trajectories from TWAP to front-loaded, the efficient frontier of execution cost versus timing risk, and the concave square-root law of market impact"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every model in this tier decided *what* position to hold; none asked what it costs to *get there*. That is
 the domain of **market microstructure** — the mechanics of how orders become trades and trades become

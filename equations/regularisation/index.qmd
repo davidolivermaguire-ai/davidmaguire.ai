@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Regularisation"
 subtitle: "Penalising complexity to fight overfitting — trading a little bias for a lot less variance"
 description: "Regularisation adds a complexity penalty λR(θ) to the loss, so a model fits the data while staying simple. The bias-variance dial, weight shrinkage, why markets demand it, and an honest Nasdaq overfitting experiment."
@@ -9,6 +10,10 @@ image: fig-regularisation.png
 image-alt: "An overfit wiggly curve vs a smooth regularised fit, beside a Nasdaq train/test R² curve closing the overfitting gap"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [cost function](../cost-function/) entry promised that the training objective isn't always
 the whole story — that a penalty term often rides alongside the loss. Regularisation is that

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Agent Memory & Planning"
 subtitle: "How an agent carries state and decomposes goals — and why both are autonomy dials a market system keeps short"
 description: >
@@ -11,6 +12,10 @@ author: "David Maguire"
 categories: [agents, safety]
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 [Tools](../tool-using-agents/index.qmd) give an agent hands. **Memory** gives it continuity — the ability
 to carry what it has learned across steps and sessions — and **planning** gives it reach: the ability to

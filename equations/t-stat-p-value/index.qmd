@@ -1,4 +1,5 @@
 ---
+search: false
 title: "t-statistic, p-value & Confidence Interval"
 subtitle: "Is the result real or noise? — the standard error, and the three numbers that decide"
 description: "Statistical significance for a mean or a strategy: the standard error, the t-statistic, the p-value, and the confidence interval. Why the t-stat of a year's return equals its Sharpe, and why proving an edge takes so long."
@@ -9,6 +10,10 @@ image: fig-years-to-significance.png
 image-alt: "Years of track record needed for statistical significance falling steeply as the Sharpe ratio rises"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Every backtest produces a number — a [mean return](../mean-return/), an alpha, a
 Sharpe. The only question that matters is whether it is a real edge or a lucky draw.

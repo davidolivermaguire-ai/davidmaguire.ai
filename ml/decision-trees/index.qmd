@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Decision Trees"
 subtitle: "A flowchart of if-then splits — nonlinear, interpretable, and prone to overfitting"
 description: "Decision trees recursively split feature space to cut impurity (Gini/entropy). Nonparametric and interpretable, they capture nonlinearities — but a single tree overfits, memorising the Nasdaq's noise while generalising to the base rate."
@@ -9,6 +10,10 @@ image: fig-decision-trees.png
 image-alt: "A tree overfitting curve (train to 100%, test flat) beside axis-aligned rectangular decision regions"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Decision trees are the first *nonlinear* model in this library — and the first that can't be
 written as a single equation. A tree is a flowchart of yes/no questions ("is today's return above

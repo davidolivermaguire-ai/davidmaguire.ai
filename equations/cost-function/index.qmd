@@ -1,4 +1,5 @@
 ---
+search: false
 title: "The Cost Function"
 subtitle: "The thing a model minimises — how learning becomes optimisation"
 description: "The cost function J(θ): one number scoring how wrong a model is, as a function of its parameters. Loss vs cost, convex vs non-convex landscapes, why the choice of cost defines the model, and Nasdaq examples."
@@ -9,6 +10,10 @@ image: fig-cost-landscape.png
 image-alt: "A one-parameter cost parabola beside a two-parameter cost surface (a bowl) with the minimum marked"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 Everything in machine learning starts here. A model has knobs — its parameters — and a
 **cost function** is the single number that says how badly those knobs are set: how far the

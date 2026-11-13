@@ -1,38 +1,64 @@
 ---
 title: "About"
-description: "Who I am, and why I'm working through quantitative finance from first principles."
+description: "Background, qualifications, and how I approach learning and research."
 toc: false
 ---
 
-I'm David Maguire. I work in data and analytics in banking, and in my own time
-I've become increasingly absorbed by quantitative finance — markets as a problem
-in statistics and machine learning. This site is my open notebook for working
-through that interest properly: the mathematics, the models, and the experiments,
-from first principles.
+I'm David Maguire. I have worked in financial services for around fifteen years and now work in data and
+analytics in banking. I came into the industry straight from school, and built my academic grounding
+alongside work, most recently through an MSc in Financial Services.
 
-What draws me in is the honesty the subject demands. Financial data is mostly
-noise, so the real question is never "does this work on the backtest?" but "would
-it survive out-of-sample, on data it has never seen?" I'm less interested in
-clever strategies than in understanding *why* something works or fails — the
-assumptions underneath a model, and where they break down.
+Over the past year I have been preparing a PhD proposal in quantitative finance. The question I keep
+returning to is not whether a model looks good on a backtest, but whether it would survive on data it has
+never seen, and whether a result is real or an artefact of how many things were tried. That shapes how I
+work: state the hypothesis first, compare against a fair benchmark, and report nulls and corrections as
+readily as positives. My [pilot experiments](quant-lab/index.qmd) include two of my own earlier results
+that fairer re-tests overturned, and those corrections changed the direction of the
+[proposal](phd/index.qmd).
 
-So I'm learning it from the ground up: re-deriving the equations, re-implementing
-the models, and testing ideas honestly rather than taking results on faith. I'm
-also studying the field formally, through an MSc in Financial Services and a
-Professional Diploma in AI Models and Programming in Financial Services.
+## Qualifications
 
-The direction I'm most curious about is where AI meets markets — how large
-language models and agents might support decision-making, provided they can be
-made transparent and kept under proper control.
+| Award | Year | Result |
+|---|:--:|---|
+| MSc in Financial Services, IOB (a recognised college of UCD) | 2026 | First Class Honours (GPA 3.91) |
+| Professional Diploma in AI Models and Programming in Financial Services, IOB | 2026 | Distinction (GPA 4.13) |
+| Professional Diploma in Banking, IOB | 2025 | Merit (GPA 3.67) |
+
+: {.striped}
+
+I also hold the Chartered Banker designation.
+
+### Selected modules
+
+| Module | Year | Grade |
+|---|:--:|:--:|
+| Python Programming | 2026 | A+ |
+| SQL Programming | 2026 | A+ |
+| AI and Analytics Models in Financial Services | 2026 | A |
+| Strategic Decision Making | 2026 | A− |
+| Risk Management in Financial Institutions | 2025 | A− |
+| Bank Capital and Asset Liability Management | 2025 | A− |
+
+: {.striped}
+
+## Where I need to grow
+
+The proposal sits where quantitative finance meets AI, and I am deliberately strengthening the parts my
+background covers least: financial econometrics and forecast evaluation, and the established
+asset-pricing and forecasting literature, which I am working through from AJG-ranked journals. The
+[core reading](phd/index.qmd#core-reading) is listed with the proposal.
 
 ## How this site was built
 
-I build this site with AI assistance — for writing code, generating figures, and drafting prose —
+I use AI tools in building this site — for writing code, generating figures, and drafting prose —
 working from my own research questions, design choices, and interpretation. That does not lower the bar
 each entry has to clear: every number is computed and checked in code before it goes up, every model is
 one I can derive and defend from first principles, and the judgement throughout — what to test, what it
 means, and what to conclude — is mine. I use these tools deliberately and say so openly; they help me
 build faster, but they do not stand in for the understanding this site exists to demonstrate.
+
+Earlier and broader working, including an equation library, a machine-learning library and notes for a
+previous version of the proposal, has been archived so the site stays focused on the current research.
 
 ## Contact
 

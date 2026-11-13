@@ -1,4 +1,5 @@
 ---
+search: false
 title: "CAGR"
 subtitle: "The smooth annual growth rate — what your money actually compounded at"
 description: "Compound Annual Growth Rate: the constant yearly rate that connects a start value to an end value. Why it is the geometric mean, why it sits below the arithmetic average (volatility drag), and why it says nothing about the path."
@@ -9,6 +10,10 @@ image: fig-cagr.png
 image-alt: "NDX growth of one dollar with the smooth constant-CAGR curve through the same endpoints"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 "Total return over ten years" is a useless number on its own — was that 10% a year,
 or one lucky spike? CAGR turns any start-to-end growth into a single, comparable

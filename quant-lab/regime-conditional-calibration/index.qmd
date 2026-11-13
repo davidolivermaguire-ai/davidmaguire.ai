@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Does Regime-Conditioning Improve Probabilistic Forecasts?"
 subtitle: "Testing H2 — regime adds nothing to position sizing, but it sharpens the odds of a dangerous day"
 description: >
@@ -14,6 +15,10 @@ image: fig-regime-conditional-calibration.png
 image-alt: "Regime-conditional tail-probability forecasts have more resolution and better within-regime calibration than unconditional or volatility-conditional forecasts"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 ::: {.callout-important appearance="simple"}
 **Superseded.** The headline claim on this page — that regime-conditioning beats a volatility

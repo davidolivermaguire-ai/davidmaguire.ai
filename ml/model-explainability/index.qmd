@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Model Explainability"
 subtitle: "Opening the black box — what the model uses, how it uses it, and why the default answer misleads"
 description: "Explainability turns 'the model predicts X' into 'the model predicts X because…'. Global versus local explanations, why impurity-based feature importance is biased, permutation importance, partial dependence — demonstrated on a Nasdaq volatility model with a planted noise feature."
@@ -9,6 +10,10 @@ image: fig-model-explainability.png
 image-alt: "Impurity importance crediting a random noise feature while permutation importance zeroes it, beside a partial-dependence curve showing predicted volatility risk rising with recent volatility"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The last few pages asked whether a backtest is *honest*. This one asks something different: what is the
 model actually **doing**? A [random forest](../random-forests/) or [gradient-boosted](../xgboost/) model

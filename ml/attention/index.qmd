@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Attention"
 subtitle: "Content-based retrieval — the mechanism, the √d scaling, and self vs cross"
 description: "Attention is a differentiable, content-based lookup: a query retrieves a similarity-weighted blend of values. Scaled dot-product attention and why the √d matters, multi-head attention, and the difference between self- and cross-attention."
@@ -9,6 +10,10 @@ image: fig-attention.png
 image-alt: "A plot showing unscaled attention saturating with dimension while √d-scaled attention stays stable, beside a soft-dictionary-lookup bar chart of attention weights"
 toc: true
 ---
+
+::: {.callout-note}
+**Archived.** This page is part of earlier working and is no longer maintained. See the [current PhD proposal](../../phd/index.qmd).
+:::
 
 The [transformer](../transformers/) page used self-attention as a black box: "every position attends to
 every other." This page opens the box. Attention is a **general mechanism**, older than the transformer
