@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Xiao, Sun, Luo & Wang (2024) — TradingAgents: Multi-Agents LLM Financial Trading Framework"
 description: "The closest precedent to my proposal, and its foil: a swarm of LLM agents deliberating in natural language toward trades. Notes on what it gets right, and the design choices I deliberately reject."
 date: 2026-07-22

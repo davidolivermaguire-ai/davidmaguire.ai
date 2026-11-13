@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Ang, Hodrick, Xing & Zhang (2006) — The Cross-Section of Volatility and Expected Returns"
 description: "The idiosyncratic-volatility puzzle: high-idio-vol stocks earn abnormally LOW returns. Notes, critique, and how it held up."
 date: 2026-06-28

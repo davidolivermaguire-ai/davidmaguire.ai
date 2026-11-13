@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>PhD Architecture · David Maguire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the architecture figure grouped into five lifecycle phase bands, with the evidence column alongside; a briefing panel opens for any component or phase. */
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --fg:#16202b; --muted:#566274; --line:#d6dbe3; --edge:#5f6b7b;
+  --accent:#1f4f8a; --accent-bg:#e7eef8;
+  --band:#eceff4; --band2:#f7f8fa;
+  --op:#2e6bb0; --op-bg:#e8f0fa; --op-line:#8fb0d8;
+  --ex:#b4621a; --ex-bg:#fcf0e2; --ex-line:#e2b27f;
+  --rs:#2f7d55; --rs-bg:#e7f3ec; --rs-line:#93c6a9;
+  --train:#4f7fbf; --val:#9bb7dd; --test:#d98a3d; --hold:#4a4f63; --live:#2f7d55;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --surface:#161d27; --fg:#e4e9f0; --muted:#98a4b4; --line:#2b3544; --edge:#8592a3;
+  --accent:#8db8ec; --accent-bg:#17283d;
+  --band:#1a222d; --band2:#141a23;
+  --op:#7fb0ea; --op-bg:#15263b; --op-line:#35557d;
+  --ex:#e9a565; --ex-bg:#2e2216; --ex-line:#7a5530;
+  --rs:#7ccaa0; --rs-bg:#142a20; --rs-line:#35694d;
+  --train:#5f8fd0; --val:#3a5b86; --test:#d98a3d; --hold:#9aa0b4; --live:#5fb889;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --surface:#161d27; --fg:#e4e9f0; --muted:#98a4b4; --line:#2b3544; --edge:#8592a3;
+  --accent:#8db8ec; --accent-bg:#17283d;
+  --band:#1a222d; --band2:#141a23;
+  --op:#7fb0ea; --op-bg:#15263b; --op-line:#35557d;
+  --ex:#e9a565; --ex-bg:#2e2216; --ex-line:#7a5530;
+  --rs:#7ccaa0; --rs-bg:#142a20; --rs-line:#35694d;
+  --train:#5f8fd0; --val:#3a5b86; --test:#d98a3d; --hold:#9aa0b4; --live:#5fb889;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.58}
+.wrap{max-width:1480px;margin:0 auto;padding-block:26px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(23px,2.7vw,34px);line-height:1.15;margin:6px 0 10px;text-wrap:balance;max-width:30ch}
+.bigq{font-size:16.5px;max-width:78ch;margin:0 0 14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted);margin-bottom:16px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid}
+.sw.op{background:var(--op-bg);border-color:var(--op-line)} .sw.ex{background:var(--ex-bg);border-color:var(--ex-line)} .sw.rs{background:var(--rs-bg);border-color:var(--rs-line)}
+.ln{display:inline-block;width:22px;border-top:2px dashed}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media (min-width:1200px){.grid{grid-template-columns:minmax(0,1.3fr) minmax(400px,1fr)}}
+.figure{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+.scroll{overflow-x:auto}
+svg.arch{display:block;width:100%;min-width:720px;height:auto}
+.hint{font-size:12.5px;color:var(--muted);margin:8px 4px 0}
+
+/* SVG */
+.band rect{fill:var(--band)} .band.alt rect{fill:var(--band2)}
+.band{cursor:pointer}
+.band:hover rect{fill:var(--accent-bg)}
+.band.sel rect{fill:var(--accent-bg)}
+.ph-num{font-family:var(--f-mono);font-size:11px;fill:var(--muted);letter-spacing:.08em}
+.ph-name{font-family:var(--f-body);font-weight:700;font-size:13.5px;fill:var(--fg)}
+.colhead{font-family:var(--f-mono);font-size:11px;fill:var(--rs);letter-spacing:.08em}
+.node{cursor:pointer}
+.node rect.b{stroke-width:1.4;transition:stroke-width .15s}
+.node.op rect.b{fill:var(--op-bg);stroke:var(--op-line)}
+.node.ex rect.b{fill:var(--ex-bg);stroke:var(--ex-line)}
+.node.rs rect.b{fill:var(--rs-bg);stroke:var(--rs-line)}
+.node:hover rect.b{stroke-width:2.4}
+.node.sel.op rect.b{stroke:var(--op);stroke-width:3}
+.node.sel.ex rect.b{stroke:var(--ex);stroke-width:3}
+.node.sel.rs rect.b{stroke:var(--rs);stroke-width:3}
+.n-num{font-family:var(--f-mono);font-size:11.5px;fill:var(--muted);letter-spacing:.05em}
+.n-title{font-family:var(--f-body);font-weight:700;font-size:16px;fill:var(--fg)}
+.n-line{font-family:var(--f-body);font-size:13px;fill:var(--fg);opacity:.85}
+.pill rect{fill:var(--ex)} .pill text{font-family:var(--f-mono);font-size:11px;font-weight:500;fill:var(--ex-bg)}
+.pill.g rect{fill:var(--rs)} .pill.g text{fill:var(--rs-bg)}
+.edge{fill:none;stroke:var(--edge);stroke-width:1.6;opacity:.8}
+.edge.rail{stroke-dasharray:4 4}
+.edge.loop{stroke:var(--rs);stroke-dasharray:7 4;opacity:.95}
+.edge.hot{stroke:var(--accent);stroke-width:2.6;opacity:1}
+.rail-lbl{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted);letter-spacing:.1em}
+.node:focus-visible,.band:focus-visible{outline:none}
+.node:focus-visible rect.b,.band:focus-visible rect{stroke:var(--accent);stroke-width:3}
+
+/* Panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px 20px;min-width:0;scroll-margin-top:16px}
+@media (min-width:1200px){.panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow:auto}}
+.p-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.badge{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.badge.op{color:var(--op);background:var(--op-bg);border-color:var(--op-line)}
+.badge.ex{color:var(--ex);background:var(--ex-bg);border-color:var(--ex-line)}
+.badge.rs{color:var(--rs);background:var(--rs-bg);border-color:var(--rs-line)}
+.panel h2{font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.18;margin:8px 0 6px;text-wrap:balance}
+.one{font-size:16.5px;line-height:1.5;margin:0 0 4px;max-width:66ch}
+.panel h3{font-family:var(--f-mono);font-weight:500;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px;padding-top:14px;border-top:1px solid var(--line)}
+.panel p{margin:0 0 10px;max-width:68ch}
+.panel ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.panel li::marker{color:var(--muted)}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:9px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px}
+ol.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;width:22px;height:22px;border-radius:50%;background:var(--accent-bg);color:var(--accent);display:grid;place-items:center;margin-top:2px}
+ol.steps b{font-weight:600}
+.obj{background:var(--accent-bg);border-radius:8px;padding:11px 13px}
+.talk{margin:14px 0 4px;background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px}
+.talk-k{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.talk p{margin:0;font-size:16px;line-height:1.55;font-style:italic}
+.refa{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.jr{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.jr.nr{color:var(--fg);font-size:13px}
+.example{border-left:3px solid var(--ex-line);padding:2px 0 2px 12px;color:var(--muted);font-size:14.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;border:1px solid var(--line);border-radius:5px;padding:2px 9px;background:var(--bg)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13.8px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.k{font-weight:600}
+.box{border:1px solid var(--ex-line);background:var(--ex-bg);border-radius:8px;padding:12px 14px;margin:0 0 10px}
+.box .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ex);margin-bottom:4px}
+.box.g{border-color:var(--rs-line);background:var(--rs-bg)} .box.g .k{color:var(--rs)}
+.box.n{border-color:var(--line);background:var(--bg)} .box.n .k{color:var(--muted)}
+.box p{margin:0 0 6px}.box p:last-child{margin:0}
+.qa{display:grid;gap:12px}
+.qa div{border-left:3px solid var(--line);padding-left:12px}
+.qa .q{font-weight:600;margin:0 0 2px}.qa .a{margin:0}
+.links{display:flex;flex-wrap:wrap;gap:6px}
+.lb{font:500 13px var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}
+.lb:hover{border-color:var(--edge)}
+.lb small{font-family:var(--f-mono);color:var(--muted);margin-right:5px}
+.lb:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.refs li{font-size:13.5px}.refs a{color:var(--accent)}
+details{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:0 14px}
+summary{cursor:pointer;padding:11px 0;font-weight:600;font-size:14px}
+details ul{margin:0 0 14px!important;font-size:14px}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+
+/* Timeline */
+.tl{display:grid;gap:5px;min-width:520px;padding:10px}
+.tl-row,.tl-axis{display:grid;grid-template-columns:86px repeat(14,minmax(0,1fr));gap:3px;align-items:center}
+.tl-row .lab{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.seg{height:20px;border-radius:3px;font-family:var(--f-mono);font-size:10px;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden;white-space:nowrap}
+.seg.tr{background:var(--train)}.seg.va{background:var(--val);color:var(--fg)}.seg.te{background:var(--test)}.seg.ho{background:var(--hold);color:var(--bg)}.seg.li{background:var(--live)}
+.seg.gap{background:repeating-linear-gradient(45deg,var(--line) 0 3px,transparent 3px 6px)}
+.tl-axis{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.tl-axis .now{grid-column:15 / 16;border-left:2px solid var(--fg);padding-left:4px;color:var(--fg)}
+.key{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:8px 0}
+.key span{display:inline-flex;gap:6px;align-items:center}
+.key i{display:inline-block;width:13px;height:9px;border-radius:2px}
+.defs{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.def{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.def b{display:flex;gap:8px;align-items:center;margin-bottom:2px;font-size:14px}
+.def b i{display:inline-block;width:11px;height:11px;border-radius:2px;flex:0 0 auto}
+.def p{margin:0;font-size:13.8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">PhD proposal · Queen’s University Belfast · David Maguire</div>
+  <h1>Evidence-grounded multi-agent LLM decision making in financial markets</h1>
+  <p class="bigq"><b>The big question:</b> if AI agents are given solid numerical forecasts and clearly defined evidence, and are made to challenge each other before deciding, do they make better trading decisions than simpler approaches? And is any improvement worth what it costs?</p>
+  <div class="legend" aria-label="Legend">
+    <span><i class="sw op"></i>Operational component</span>
+    <span><i class="sw ex"></i>Experimental mechanism (tested in the research)</span>
+    <span><i class="sw rs"></i>Evidence and research</span>
+    <span><i class="ln" style="border-color:var(--rs)"></i>Feedback loop</span>
+    <span><i class="ln" style="border-color:var(--edge)"></i>Audit log</span>
+  </div>
+
+  <div class="grid">
+    <section class="figure" aria-label="System architecture">
+      <div class="scroll"><svg class="arch" id="arch" viewBox="0 -28 1000 780" role="img" aria-label="Architecture diagram: eleven components grouped into five phases, with an evidence column alongside"></svg></div>
+      <p class="hint">Click a component for its detail, or a phase name on the left for an overview of that phase. Box 10 explains how the system is tested on unseen data.</p>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+</div>
+
+<script>
+const REFS={"ab": ["Ang and Bekaert (2002)", "Ang, A. and Bekaert, G. (2002), “International Asset Allocation With Regime Shifts”, Review of Financial Studies, 15(4), 1137–1187.", "Review of Financial Studies", "4*", "https://business.columbia.edu/faculty/research/international-asset-allocation-regime-shifts"], "btz": ["Bollerslev, Tauchen and Zhou (2009)", "Bollerslev, T., Tauchen, G. and Zhou, H. (2009), “Expected Stock Returns and Variance Risk Premia”, Review of Financial Studies, 22(11), 4463–4492.", "Review of Financial Studies", "4*", "https://doi.org/10.1093/rfs/hhp008"], "dm": ["Diebold and Mariano (1995)", "Diebold, F. X. and Mariano, R. S. (1995), “Comparing Predictive Accuracy”, Journal of Business & Economic Statistics, 13(3), 253–263.", "Journal of Business & Economic Statistics", "4", "https://doi.org/10.1080/07350015.1995.10524599"], "fk": ["Fischer and Krauss (2018)", "Fischer, T. and Krauss, C. (2018), “Deep learning with long short-term memory networks for financial market predictions”, European Journal of Operational Research, 270(2), 654–669.", "European Journal of Operational Research", "4", "https://doi.org/10.1016/j.ejor.2017.11.054"], "gp": ["Gârleanu and Pedersen (2013)", "Gârleanu, N. and Pedersen, L. H. (2013), “Dynamic Trading with Predictable Returns and Transaction Costs”, Journal of Finance, 68(6), 2309–2340.", "Journal of Finance", "4*", "https://doi.org/10.1111/jofi.12080"], "gr": ["Gneiting and Raftery (2007)", "Gneiting, T. and Raftery, A. E. (2007), “Strictly Proper Scoring Rules, Prediction, and Estimation”, Journal of the American Statistical Association, 102(477), 359–378.", "Journal of the American Statistical Association", "4", "https://doi.org/10.1198/016214506000001437"], "gkx": ["Gu, Kelly and Xiu (2020)", "Gu, S., Kelly, B. and Xiu, D. (2020), “Empirical Asset Pricing via Machine Learning”, Review of Financial Studies, 33(5), 2223–2273.", "Review of Financial Studies", "4*", "https://doi.org/10.1093/rfs/hhaa009"], "hamilton": ["Hamilton (1989)", "Hamilton, J. D. (1989), “A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle”, Econometrica, 57(2), 357–384.", "Econometrica", "4*", "https://doi.org/10.2307/1912559"], "lmw": ["Lo, Mamaysky and Wang (2000)", "Lo, A. W., Mamaysky, H. and Wang, J. (2000), “Foundations of Technical Analysis: Computational Algorithms, Statistical Inference, and Empirical Implementation”, Journal of Finance, 55(4), 1705–1765.", "Journal of Finance", "4*", "https://doi.org/10.1111/0022-1082.00265"], "stw": ["Sullivan, Timmermann and White (1999)", "Sullivan, R., Timmermann, A. and White, H. (1999), “Data-Snooping, Technical Trading Rule Performance, and the Bootstrap”, Journal of Finance, 54(5), 1647–1691.", "Journal of Finance", "4*", "https://doi.org/10.1111/0022-1082.00163"], "whaley": ["Whaley (2009)", "Whaley, R. E. (2009), “Understanding the VIX”, The Journal of Portfolio Management, 35(3), 98–105.", "Journal of Portfolio Management", "3", "https://doi.org/10.3905/JPM.2009.35.3.098"]};
+
+const PHASES=[
+ {id:1,name:"Data Provision",lines:["Data","Provision"],y:10,h:110,nodes:[1],
+  one:"Gather market data, check its quality, timestamp it and transform it into model inputs, so every later stage works only from what was known at the time.",
+  why:"Hidden look-ahead bias, using information that was not yet available, is the most common way trading research fools itself. This phase makes it impossible and makes every result repeatable."},
+ {id:2,name:"Model Build",lines:["Model","Build"],y:130,h:120,nodes:[2,3],
+  one:"Turn data into evidence. Machine learning and deep learning models are built, tested and tracked to produce probability-based forecasts, and the semantic layer packages those forecasts and market facts with clear definitions.",
+  why:"Language models are weak at finding patterns in numbers and can misread figures. Specialist models do the numbers; the semantic layer makes sure every agent reads the same evidence the same way."},
+ {id:3,name:"Model Implementation",lines:["Model","Implementation"],y:260,h:240,nodes:[4,5,6],
+  one:"Apply LLM agents to that evidence to reach a decision, then pass the decision through fixed risk controls and a realistic market simulator.",
+  why:"This is where the core research question is tested: does structured debate between distinct LLMs beat the same models combined independently, or strong numerical models, with the same information and budget? Risk controls and the simulator are identical for every variant, so they never explain the difference."},
+ {id:4,name:"Model Monitoring",lines:["Model","Monitoring"],y:510,h:110,nodes:[7],
+  one:"Track open positions planned against actual, and react to observable changes by holding, reducing, closing or reconsidering.",
+  why:"Every decision is a forecast with conditions attached. Monitoring checks whether those conditions still hold, and tests whether reacting to change beats a fixed review schedule after costs."},
+ {id:5,name:"Model Recalibration",lines:["Model","Recalibration"],y:630,h:110,nodes:[8],
+  one:"Between test windows, retrain the models and update how much each model in the LLM panel is trusted, using forecast accuracy rather than individual wins and losses.",
+  why:"Markets change and models go stale, but updating after every trade chases noise and breaks fair comparison. Scheduled, versioned recalibration lets the system learn without leaking the future."}
+];
+
+const N={
+1:{phase:1,layer:"op",title:"Point-in-time market data",box:[160,20,460,90],lines:["US equity prices, volume and VIX","Availability checks · derived indicators · versioned snapshots"],
+ one:"Collect market data and make sure every number is exactly what was known at the time, with no accidental peeking at the future.",
+ purpose:"Everything later in the system is only as trustworthy as its data. The aim is a dataset an examiner could audit and rerun to get identical numbers.",
+ steps:[["Gather","Daily US equity market data: open, close and volume for each instrument, plus the VIX index as a measure of market-wide expected volatility. Market data only; no news or text data at this stage."],["Check quality","Find and handle missing values, stale feeds, outliers, and corporate events such as splits and dividends."],["Timestamp","Record three times for each data point: when it describes, when it was published, and when the system received it."],["Transform","Derive model inputs such as returns, distance from moving averages, volatility and RSI, using only data from before each decision. Examples are shown below."],["Freeze a version","Save a fixed snapshot so any experiment can be rerun exactly."]],
+ features:[["Raw market data",["Open","Close","Volume","VIX"],"Daily prices and trading activity, plus market-wide expected volatility"],["Returns",["Return_1D","Return_5D","Return_20D"],"Price change over a day, a week and a month"],["Trend",["Distance_MA20","Distance_MA50"],"How far price sits above or below its 20-day and 50-day moving averages"],["Volatility",["Volatility_20"],"How much price has moved over the last 20 sessions"],["Volume",["Volume_Change"],"Whether trading activity is rising or falling"],["Momentum",["RSI_14"],"Whether recent moves look stretched, either overbought or oversold"],["Market stress",["VIX_Level","VIX_Change_5D"],"The level of expected market volatility and how it has changed over five sessions"]],
+ design:["Initial focus is US equities. The specific instruments will be agreed with supervisors.","The engine is built to be instrument-agnostic, so other asset classes such as currencies or commodities remain open for consideration.","Whatever set is chosen is agreed and locked before any testing, so results cannot be influenced by picking markets that happened to work.","Choosing instruments that do not all move together gives the experiments more statistical power.","Market data only at this stage. News and other text sources are deliberately out of scope to keep the study manageable, and could be a later extension.","Public or appropriately licensed data only."],
+ objective:"A clean, timestamped, versioned dataset that can be audited and rerun.",
+ measures:[["Data coverage","How complete the history is for each instrument"],["Missing and stale data rate","How often gaps needed handling"],["Look-ahead checks","Automated tests that no input uses future information. Target: zero failures"],["Reproducibility","Rerunning from a snapshot gives identical results"]],
+ contrib:{kind:"n",k:"Foundation",text:"Not an experiment itself. It underpins every experiment, and the point-in-time data audit forms part of the reproducible evaluation protocol the research delivers."},
+ qa:[["Which markets will you use?","US equities to begin with, with the specific instruments open for discussion. Because the engine is instrument-agnostic, currencies or commodities could be considered too. What matters is that the set is fixed before testing and includes instruments that do not all move together."],["Why no news data?","It is deliberately out of scope for now. Historical news is hard to timestamp reliably and often has licensing limits. Market data alone is enough to test the core research questions, and news could be added later as an extension."],["Why not just download prices from a free site?","Free data rarely records when each figure became available, often mishandles splits and dividends, and may not allow research use. Those gaps are where hidden look-ahead bias comes from."]],
+ why:[["VIX as an input", "whaley", "VIX measures the market’s expected 30-day volatility, derived from S&P 500 option prices. It is a risk gauge, not a forecast of direction, so it is used as context rather than as a buy or sell signal."], ["Implied and realised volatility together", "btz", "The gap between implied and realised variance, the variance risk premium, carries information about future stock returns, which is why both are captured."], ["Trend, momentum and RSI indicators", "lmw", "Technical patterns can contain statistically detectable information when they are tested rigorously rather than judged by eye."], ["A small, fixed indicator set", "stw", "Searching across many trading rules produces spurious winners (data snooping), so the indicator set is kept small and fixed before testing."]],
+ refs:[],
+ tech:["Historical window fixed after the data audit and before strategy evaluation, sized by reliable coverage rather than a convenient performance period.","Versioned columnar files for market data.","Missing or stale evidence triggers a predefined cash or no-change response, recorded as part of the policy being evaluated.","Data redistribution limits respected through schemas, acquisition instructions or synthetic examples."]},
+
+2:{phase:2,layer:"ex",tag:"E0",title:"ML and deep learning",box:[160,140,220,100],lines:["Traditional ML + deep learning","Train · test · track performance"],
+ one:"Build, train and test machine learning and deep learning models on the 01 data, keep the best version of each, and record how they perform so we know when they need recalibrating.",
+ purpose:"These models do the numerical work. The aim is a small, well-understood set of tested models with probability-based outputs, plus a clear record of how each performs over time. Model choices are open and will be shaped with supervisors.",
+ steps:[["Prepare", "Take the 01 inputs and split them into training, validation and test periods."], ["Train", "Fit a small set of candidate models, from simple baselines up to deep learning."], ["Test", "Score each model on data it has not seen, against a simple benchmark."], ["Select", "Keep the best-performing, best-calibrated version of each model."], ["Record", "Log each version’s scores and calibration over time. This is what 08 uses to tell when a model has gone stale."]],
+ blocks:[{"h": "Candidate models", "head": ["Family", "Examples"], "rows": [["Traditional ML", "Initial suggestions: regularised logistic regression, boosted trees. Alternative: random forest"], ["Deep learning", "Initial suggestion: a compact LSTM. Alternatives: GRU, small Transformer"], ["Regime models", "Optional filtered regime probabilities (hidden Markov model) if the pilot shows a credible improvement"], ["Numerical ensembles", "Fixed-weight and past-performance-weighted combinations of the models: the benchmark the LLM decisions must beat"]], "note": "Exact models to be agreed with supervisors after the pilot. The commitment is to include both ML and deep learning."}],
+ example:"Outputs are probabilities and ranges rather than single numbers: for example “a 62% chance of a positive week” rather than “+0.4%”. That shows how confident the model is, and it can be checked against what actually happened.",
+ contract:{"label": "Recorded for every model version", "items": ["Version", "Training period", "Inputs used", "Test scores", "Calibration"]},
+ design:["Models are trained and tuned on past data only, never on the period they are tested on.", "Every model tried is recorded, not just the best one.", "If a simpler model wins, that is a valid result."],
+ objective:"The best tested version of each model, with outputs and a performance record that shows when it needs recalibrating.",
+ measures:[["Brier score", "Accuracy of probability forecasts"], ["Calibration", "Whether 70% forecasts happen about 70% of the time"], ["Against a benchmark", "Whether the model beats a simple baseline on unseen data"], ["Performance drift", "Whether scores worsen over time, the signal for recalibration in 08"]],
+ contrib:{"kind": "e", "k": "Experiment E0 · RQ4", "q": "Does deep learning add value over traditional machine learning on this data?", "note": "How the agents use these forecasts is tested later, in 04."},
+ qa:[["Why not just use deep learning?", "Daily market data gives relatively few examples, and simpler models often do as well. The study tests that rather than assuming it."], ["How do you avoid overfitting?", "Models are tuned only on past data, tested on unseen periods, and every attempt is recorded."], ["How do you know when a model is stale?", "Its scores on new data are tracked window by window. If accuracy or calibration drifts, 08 retrains it."]],
+ tech:["Purged walk-forward cross-validation for tuning.", "Calibration by isotonic or Platt scaling; conformal prediction for forecast ranges.", "Feature importance (for example SHAP) recorded per model version.", "Prediction targets and horizon (for example five sessions) are starting assumptions, open for discussion.", "Single-instrument against multi-stock panel modelling is a design choice to agree; a panel gives far more training data for deep learning."],
+ why:[["Nonlinear machine learning, such as boosted trees", "gkx", "Nonlinear methods such as trees and neural networks improve return prediction over linear models, so they set a demanding benchmark."], ["A compact LSTM for deep learning", "fk", "Applies LSTM networks to predicting stock returns and compares them with memory-free methods such as random forests and logistic regression."], ["Probability forecasts, scored by Brier", "gr", "Proper scoring rules such as the Brier score reward honest, well-calibrated probabilities, so models are judged on probabilities rather than single predictions."], ["Optional regime probabilities", "hamilton", "The standard method for modelling hidden switches between market states."], ["Why regimes matter", "ab", "Regime shifts in volatility and correlation matter for asset allocation, which motivates regime-aware forecasts."]],
+ refs:[]},
+
+3:{phase:2,layer:"ex",tag:"E1",title:"Semantic layer",box:[400,140,220,100],lines:["Dictionary, formulas, lineage","Guardrails for LLM agents"],
+ one:"The single source of truth between the numbers in 01 and 02 and the agents in 04. It records what every value means, how it was calculated, where it came from and how reliable it is, and sets the rules for how agents may use it.",
+ purpose:"LLM agents can misread figures or claim more than the data supports. The semantic layer gives them one consistent, checkable meaning for every input and model output, so the debate in 04 is grounded in evidence rather than guesswork. It works like a BI semantic layer, built for LLM agents rather than dashboards.",
+ steps:[["Define", "Document every 01 input and 02 model output: meaning, units, formula and how to read it."], ["Link", "Attach lineage and reliability: source, transformation, model version, as-of time and recent track record."], ["Package", "For each decision, assemble an evidence packet holding the relevant values with their meaning attached."], ["Check", "Validate agent claims against the layer: every claim must trace back to a real evidence ID."]],
+ blocks:[{"h": "What the semantic layer holds", "head": ["Element", "What it holds", "Example"], "rows": [["Data dictionary (01)", "Each input’s meaning, units, window and how to read it", "RSI_14: 14-session momentum on a 0–100 scale; above 70 is often read as stretched"], ["Model output dictionary (02)", "Each model output, its horizon and how to interpret it", "P(up, 5D) = 0.62: a 62% chance of a positive week, from a calibrated model"], ["Formulas", "The calculation behind each variable and model", "Return_5D = Close_t ÷ Close_t−5 − 1; Volatility_20 = st. dev. of daily returns × √252"], ["Data lineage", "Source → transformation → model version → output, with as-of times", "VIX_Change_5D ← VIX close (source, date) ← calculation v1.2"], ["Reliability", "Each model’s recent track record from 02", "Calibration drifting for 3 windows: treat with caution"], ["Fact against interpretation", "Keeps measured values, model estimates and agent opinions apart", "High VIX is a fact; “the market expects a fall” is an interpretation"], ["Relationships", "How signals connect and where they conflict", "Trend is up but momentum is stretched; ML and DL forecasts disagree"]]}],
+ contract:{"label": "Every evidence packet item carries", "items": ["Evidence ID", "Definition", "Value", "Lineage", "As-of time", "Reliability"]},
+ designLabel:"Guardrails for the LLM agents",
+ design:["Cite or don’t claim: agents may only reference evidence IDs that exist in the layer.", "No invented numbers: agents read values; they never calculate or make them up.", "As-of only: agents see only what was available at the decision time.", "Known pitfalls: the layer records what an indicator does not mean, for example that high volatility can precede rises as well as falls.", "Limits of inference: no causal claims, and no more certainty than the calibration supports.", "The layer defines these rules; 04 and 05 enforce them through format checks and claim validation."],
+ objective:"One versioned, checkable meaning for every input and model output, packaged so the agents in 04 reason only over grounded evidence.",
+ measures:[["Evidence validity", "Share of agent claims that trace back to real evidence"], ["Unsupported claims", "How often agents assert something the evidence does not support"], ["Decision consistency", "Whether the same evidence leads to the same decision across reruns"], ["Dictionary coverage", "Share of inputs and model outputs fully documented"]],
+ contrib:{"kind": "e", "k": "Experiment E1 · RQ2", "q": "Does a semantic layer improve the quality and consistency of agent decisions?", "note": "Tested by giving agents the same facts with and without the semantic layer."},
+ qa:[["Isn’t this just a data dictionary?", "A data dictionary is one part. The layer adds formulas, lineage, reliability and rules for use, and the research tests whether that measurably changes AI decisions."], ["How do you stop the LLM making things up?", "Agents can only cite evidence that exists in the layer, never generate numbers, and every claim is checked against it before a decision goes forward."], ["How do you test whether it helps?", "Run the same agents on the same facts with and without the layer, and compare evidence validity, unsupported claims and consistency."]],
+ tech:["Stored as a versioned, machine-readable file (for example JSON or YAML) that the agents read and that also renders as documentation, so the two cannot drift apart.", "A change to any definition creates a new layer version; results record which version they used.", "In E1 the comparison arm receives the same facts and context length, so the test isolates the value of meaning rather than of extra information.", "Interpretation guidance is descriptive, not a trading rule."],
+ why:[["Separating facts from interpretation", "whaley", "VIX is often misread as a directional signal. Recording what an indicator does and does not mean is the semantic layer’s job."], ["Defining calibrated probabilities", "gr", "Defines what a well-calibrated probability forecast is, which the layer records for every model output."], ["A shared evidence layer for LLMs", null, "Part of the research gap, tested directly in E1.", "No established AJG-ranked work yet"]],
+ refs:[]},
+
+4:{phase:3,layer:"ex",tag:"E2",title:"Structured LLM decision process",box:[160,270,460,100],lines:["Panel of distinct LLMs, same evidence","Independent views → debate → revise → allocate"],
+ one:"A panel of distinct LLMs from different providers reads the same evidence packet. Each model forms an independent view, they challenge each other once, revise if the evidence justifies it, and a fixed rule combines their views into a position.",
+ talk:"The same evidence packet goes to a panel of different LLMs, for example from three providers. Each gives its own recommendation first, sealed, before seeing the others. They then challenge each other once and can revise, but only by citing evidence. A fixed rule combines their views and can stay in cash if they disagree. The question is whether that exchange beats simply combining their independent views, and whether either beats strong numerical models.",
+ purpose:"This is the core of the research. It tests whether a structured exchange between different LLMs improves decisions beyond the same models combined independently, and beyond strong numerical ensembles. Using the same panel in both conditions means any change can be attributed to the interaction, not to which models were chosen.",
+ steps:[["Independent views", "Each model answers alone. First answers are sealed before any model sees the others."], ["Challenge", "Each model sees the others’ answers and raises evidence-based challenges."], ["Revise once", "Each model may change its view, but only by citing evidence. Being outnumbered is not a reason."], ["Combine", "A pre-agreed allocation rule weights each model by its track record, penalises disagreement and can stay in cash. The result goes to 05."]],
+ blocks:[{"h": "How the panel is set up", "head": ["Design choice", "Why"], "rows": [["Distinct models from different providers", "Tests whether genuine model diversity exposes weak assumptions"], ["Identical instructions and evidence", "Differences reflect model judgement, not different inputs"], ["Same panel with and without debate", "Any change can be attributed to the interaction, not to model selection"], ["Versions and prompts held fixed per window", "A model or prompt change is logged as a new experimental variant"], ["No assigned roles", "Avoids confusing model differences with role differences. A rotating challenger role is an optional sensitivity check"]], "note": "Specific models will be chosen before testing, based on suitability, reproducibility and cost."}, {"h": "Worked example", "intro": "One US equity, illustrative values. Evidence: 62% chance of a positive week · RSI_14 = 74 · VIX up 18% over five days · regime 55% calm · forecast model calibration flagged as drifting.", "head": ["Step", "Model A", "Model B", "Model C"], "rows": [["Independent view", "Buy, 62%", "Small buy: accepts 62%, but sizes down because volatility is rising", "Cash, 45%"], ["Challenge", "", "", "“The forecast model’s calibration has drifted for three windows”"], ["Revised view", "Small buy, 57%, citing the drift flag", "Unchanged", "Unchanged"]], "note": "Model B shows the difference between disagreeing about the forecast and disagreeing about the action. Combined: a small position, about a quarter of maximum size, with an exit if VIX closes above 25."}],
+ contract:{"label": "Every model answer contains", "items": ["Action", "Probability", "Evidence cited", "Strongest counterargument", "What would prove it wrong", "Proposed size"]},
+ why:[["Structured debate between distinct LLMs", null, "These studies build multi-agent trading systems from role-based agents. Whether exchange between distinct models helps under matched information and budgets is the open question this study tests. They will be critically reviewed when the originality claim is finalised.", "Recent multi-agent LLM research, e.g. TradingAgents and FinCon (preprint and conference work, not AJG-ranked)"], ["Comparing against strong numerical models", "gkx", "Machine learning sets a demanding baseline, so any LLM gain has to beat strong forecasts, not weak ones."]],
+ designLabel:"Guardrails",
+ design:["First answers are sealed before the debate, so the effect of debate can be measured.", "Revisions must cite evidence; agreeing with the majority is not enough.", "One round of revision keeps the debate bounded and affordable.", "Staying in cash is a valid outcome when the models disagree.", "No LLM places trades directly; the rules in 05 have the final say."],
+ objective:"Find out whether a bounded exchange between different LLMs improves decisions beyond the same models combined independently, and beyond strong numerical ensembles.",
+ measures:[["Revision quality", "Whether changes of mind moved towards the right answer"], ["Conformity rate", "How often models changed view without new evidence"], ["Model differences", "Whether one model consistently dominates, or the combination adds value"], ["Abstention accuracy", "Whether staying in cash was the right call"], ["Cost per decision", "Calls, tokens, latency and monetary cost"]],
+ contrib:{"kind": "e", "k": "Experiment E2 · RQ1 (primary)", "q": "Does bounded debate between distinct LLMs improve decision reliability and net risk-adjusted performance, compared with the same models combined independently and with adaptive numerical ensembles?", "note": "Primary statistical test: the paired Brier score difference between independent aggregation and debate (see 10)."},
+ qa:[["Isn’t this just TradingAgents or FinCon?", "Those systems build teams of role-based agents. This study tests distinct LLMs on identical evidence, comparing the same panel with and without debate under matched budgets."], ["Why different LLMs rather than roles?", "Different models may genuinely read the same evidence differently, and that disagreement is what the study measures. Roles on one model would mostly test prompting."], ["What if one model is simply the best?", "That is measured separately. If one model dominates and debate adds nothing, that is a useful finding."], ["What stops the models just agreeing with each other?", "First answers are sealed, revisions must cite evidence, and the conformity rate is measured."]],
+ tech:["E2 comparisons: each LLM alone, independent multi-LLM aggregation and debate, against fixed and adaptive numerical ensembles; run with ML evidence and with ML plus deep learning evidence; risk limits held constant.", "Token-matched and equal-call versions separate the effect of debate from extra computing.", "A model-independent interface delivers the same evidence packet to every model; any provider-specific formatting is logged and checked for equivalence.", "Agent confidence is treated as unverified until checked against outcomes.", "A rotating challenger role is an optional sensitivity analysis.", "Invalid outputs or an unavailable model trigger a predefined cash or no-change response.", "Starting setting is long or cash without leverage."],
+ refs:[]},
+
+5:{phase:3,layer:"op",title:"Deterministic controls",box:[160,390,220,100],lines:["Fixed size and exposure rules","Approve, cap or veto each trade"],
+ one:"The agents propose, the rules decide. A short list of fixed rules, written in code rather than AI, that every proposed trade must pass before anything happens.",
+ talk:"Once the agents have decided, nothing goes straight to the market. Every proposal passes through fixed rules: is the answer valid, is it within position and exposure limits, does it have an exit condition, is the data current. Each trade is approved, capped or vetoed, and if anything fails it defaults to cash. The rules are the same for every version I test, so they keep it safe and keep the comparison fair.",
+ purpose:"Deterministic means the same input always gets the same answer, unlike the AI agents, whose answers can vary. The rules exist for safety, so a wrong or malformed AI answer never becomes a trade; for fairness, because every version tested faces identical rules; and for auditability, because every decision is logged with its reason.",
+ steps:[["Check the answer", "Is the agent output complete and correctly formatted?"], ["Apply the limits", "Allowed actions, position size, total exposure, exit condition and fresh data."], ["Decide", "Approve, cap to the limit, or veto."], ["Fall back safely", "If anything fails, default to cash or no change, and log the reason."]],
+ blocks:[{"h": "What the rules check", "head": ["Check", "Plain meaning", "Example"], "rows": [["Valid answer", "Is the agent output complete and correctly formatted?", "Missing a probability or exit condition means no trade"], ["Allowed action", "Only actions within scope", "Long or cash only; no leverage or short selling to start"], ["Position size", "Cap on any one holding", "No more than a set share of the portfolio in one instrument"], ["Total exposure", "Cap on overall investment", "Never more than a set share invested at once"], ["Exit condition", "Every position needs a stated exit", "Taken from the agents’ “what would prove it wrong”"], ["Fresh data", "Decision based on current data", "Stale or missing data means no trade"]], "note": "Limits are illustrative, to be agreed with supervisors and then fixed before testing."}],
+ example:"Continuing from 04: the agents proposed a small position, about a quarter of maximum size, with an exit if VIX closes above 25. All checks pass, so it is approved and sent to the simulator in 06. Had an agent proposed 150% of capital, the size and exposure rules would cap it to the limit and log why.",
+ design:["Same rules for every version tested, so they can never be the reason one version wins.", "Agents cannot get around the limits by proposing a new strategy.", "Every approval, cap and veto is logged with the proposal it applied to."],
+ objective:"No trade outside the agreed limits, and identical risk treatment for every version being compared.",
+ measures:[["Limit breaches", "Target: zero"], ["Veto and cap rate", "How often agents propose something the rules block, a useful signal of agent reliability"], ["Fallback rate", "How often the safe default is triggered"]],
+ contrib:{"kind": "n", "k": "Control, held constant", "text": "Not an experiment. Keeping the rules identical across every version is what makes the comparisons fair. The veto rate per setup is a small piece of evidence in its own right."},
+ qa:[["Why not let the AI manage risk itself?", "Risk limits need to be predictable and auditable, and identical across every version tested."], ["What does deterministic mean here?", "Fixed rules that give the same answer every time, as opposed to the AI agents."], ["What are the actual limits?", "Illustrative for now. They will be set with supervisors before testing and then held fixed."]],
+ tech:["Agent outputs are validated against a fixed schema before any rule is applied; malformed responses never become orders.", "Limits, allowed actions and fallback behaviour are fixed in the registered protocol before testing.", "Fallback outcomes are recorded as part of the policy being evaluated."],
+ why:[["Limits on position size and trading", "gp", "Trading costs make aggressive repositioning expensive; the optimal strategy trades only partway towards its target, so fixed limits on size and turnover are grounded in theory."]],
+ refs:[]},
+
+6:{phase:3,layer:"op",title:"Market simulator",box:[400,390,220,100],lines:["Next available price","Realistic costs, paper only"],
+ one:"Realistic trading, without real money. Approved trades become positions and returns at prices that were actually available, after realistic costs.",
+ talk:"Approved trades go into a market simulator rather than real markets. Each trade fills at the next price that was actually available, not the price that triggered the decision, and every trade pays realistic costs: the spread, slippage and fees. Positions are valued every day. I also rerun everything with higher costs, because a result that only works with cheap trading isn’t a real result.",
+ purpose:"Ignoring costs, or trading at prices you could not actually have got, is one of the most common ways backtests flatter a strategy. The simulator makes sure every result is realistic and net of costs.",
+ steps:[["Receive the approved trade", "From the deterministic controls in 05."], ["Fill at the next available price", "The decision uses data up to today’s close, so the trade fills at the next session’s open. This avoids look-ahead bias."], ["Apply costs", "Spread, slippage and fees on every trade."], ["Value positions daily", "Including any cash return."], ["Pass it on", "Positions go to 07 for monitoring, and everything is logged to 09."]],
+ blocks:[{"h": "Costs included", "head": ["Cost", "Plain meaning"], "rows": [["Spread", "The gap between the buying and selling price"], ["Slippage", "The price moving between decision and fill"], ["Fees", "Broker and exchange charges"], ["Market impact", "Our own trade moving the price. Negligible at research size in liquid US equities, but noted"]], "note": "Values are illustrative and will be set from published spreads and fees."}],
+ example:"Continuing from 05: the small position was approved after Monday’s close. It fills at Tuesday’s open, slightly above Monday’s close, and pays spread, slippage and fees on entry. From then on it is valued daily, and 07 watches for the exit condition of VIX closing above 25.",
+ designLabel:"What the simulator does not do",
+ design:["No real money and no live broker: paper trading only.", "Daily data only, so no intraday modelling.", "Market impact is assumed small at research size.", "Every comparison is rerun at two and three times normal costs; an advantage that disappears was not robust."],
+ objective:"Results that reflect what a real portfolio would have earned after costs, simulated identically for every version tested.",
+ measures:[["Cost drag", "How much return is lost to costs"], ["Cost sensitivity", "Whether results survive higher costs"], ["Turnover", "How much each version trades"], ["Execution gap", "Difference between the price at decision and the price actually filled"]],
+ contrib:{"kind": "n", "k": "Control, held constant", "text": "Not an experiment. Every version is simulated identically, so comparisons are made after realistic costs."},
+ qa:[["Why not trade real money?", "The research is about fair evidence, not profit. Live paper trading later still tests the system on genuinely unseen data."], ["Why fill at the next open, not the close?", "The decision used the close, so trading at that same price would assume information you did not have in time."], ["How do you know the costs are realistic?", "They are set from published spreads and fees for liquid US equities, and the stress test shows what happens if they are higher."]],
+ tech:["Dividend and price adjustment conventions chosen to avoid double counting.", "Daily mark-to-market of open positions, including cash returns.", "The same simulator runs the live paper-trading phase, so historical and live results are comparable."],
+ why:[["Modelling trading costs explicitly", "gp", "Transaction costs materially change how a predictable signal should be traded. Ignoring them overstates what a signal is worth."]],
+ refs:[]},
+
+7:{phase:4,layer:"ex",tag:"E3",title:"Position monitoring",blocksFirst:true,box:[160,520,460,90],lines:["Daily automated checks, agent reassessment","Hold, reduce, close or reopen"],
+ one:"Once a position is open, an automated monitor checks it every day after the close. Hard exits happen automatically; softer changes bring the agents back to reassess.",
+ talk:"Once a position is open, an automated monitor checks it every day after the close: is it behaving as planned, and has anything changed? If the agents’ own exit condition is hit, it closes automatically. If something softer changes, such as the forecast flipping or volatility jumping, the same agents are brought back to reassess. Every action still passes the rules and fills at the next open. I don’t intervene in individual trades; my role is oversight. The experiment tests whether this adaptive approach beats a simple weekly review, after costs.",
+ purpose:"Every decision is a forecast with conditions attached. Monitoring checks planned against actual and reacts when conditions change, without anyone needing to watch screens.",
+ blocks:[{"h": "Who does what", "head": ["Role", "Who", "When"], "rows": [["Watch", "Automated monitor: plain code, not AI", "Once a day, after the close"], ["Decide", "The same LLM panel from 04, with an updated evidence packet", "Only when a trigger fires or at a scheduled review"], ["Approve", "Fixed rules in 05", "Every time"], ["Execute", "Simulator in 06, at the next open", "Every time"], ["Oversee", "Me: reviewing logs and results, running the system", "No trade-by-trade decisions"]], "note": "Stepping in on individual trades would mean the results partly reflect my judgement rather than the agents’. A stop switch exists for operational failures, such as a broken data feed, and any use is logged."}],
+ steps:[["New data", "Daily data arrives after the close (01)."], ["Rescore", "Models are rescored (02) and the semantic layer refreshes (03)."], ["Check triggers", "The monitor compares planned against actual and checks the triggers below."], ["Act if needed", "Hard exit: automatic close. Soft trigger: agents reconvene (04). Either way the rules check it (05) and it fills at the next open (06)."]],
+ blocks2:[{"h": "What the monitor watches for", "head": ["Trigger", "What happens"], "rows": [["Exit condition hit, e.g. VIX closes above 25", "Automatic close, no debate. The agents’ own stated exit, carried out by the rules"], ["Forecast reversal, e.g. 02 probability falls below 50%", "Agents reconvene and reassess"], ["Volatility jump", "Agents reconvene and reassess"], ["Horizon reached (five sessions)", "Agents reassess, or the position closes"], ["Scheduled review, e.g. weekly", "Agents reassess"]], "note": "Trigger levels are illustrative and will be fixed before testing."}],
+ example:"Continuing from 06. Day 3: VIX rises to 22 and the forecast drops from 57% to 49%. A trigger fires, the agents reconvene and reduce to half size; the rules approve and it fills at the next open. Day 5: VIX closes at 26, the exit condition is hit, and the position closes automatically at the next open.",
+ designLabel:"Guardrails",
+ design:["No manual intervention in individual trades.", "Every action, including a new position, passes the rules in 05 and fills through 06.", "Monitoring uses only newly available information.", "Extra trading and AI costs from reviews count against the adaptive approach."],
+ objective:"Find out whether reacting to observable change beats a simple fixed review, once the extra trading and AI costs are counted.",
+ measures:[["Planned against actual", "How often forecasts and exit conditions played out as stated"], ["Drawdown", "Whether monitoring limits losses"], ["Turnover", "Extra trading caused by monitoring"], ["Cost per review", "Extra trading and AI cost of each reassessment"]],
+ contrib:{"kind": "e", "k": "Experiment E3 · RQ3", "q": "Do daily trigger checks with agent reassessment beat a weekly review with fixed exits, after costs?", "note": "Everything else, including inputs, entry decisions and risk rules, is held the same."},
+ qa:[["Who actually makes the call?", "Code watches, the agents decide when something changes, the rules approve, and the simulator executes. Hard exits are automatic."], ["Why not monitor intraday?", "The whole system runs on daily data with next-open fills. Intraday checks would add cost and complexity for little benefit over a five-session horizon."], ["Why don’t you step in yourself?", "Then the results would partly reflect my judgement, and the experiment would no longer be testing the agents. My role is oversight."]],
+ tech:["Triggers, review schedule and exit rules are fixed in the registered protocol before testing.", "The fixed comparison arm must be meaningfully slower, such as weekly, so the test has a real contrast.", "Analysis covers paired portfolio returns, cost sensitivity, regime breakdown and live paper-trading records."],
+ why:[["Reacting when volatility changes", "ab", "Regime shifts change the appropriate allocation, which motivates rechecking positions when market conditions move."]],
+ refs:[]},
+
+8:{phase:5,layer:"rs",tag:"Loop",title:"Model recalibration",box:[160,640,460,90],lines:["Scheduled retraining, drift flagged in between","New version only if it beats the old on unseen data"],
+ one:"Keeps the forecasting models and agent weights current. Models are retrained at the end of each test window, flagged in between if they drift, and a new version only replaces the old one if it does better on unseen data.",
+ talk:"Markets change, so models go stale. The forecasting models are retrained at the end of each test window, and in between their performance is tracked. If one starts to drift, it’s flagged straight away so the agents treat it with caution, and it’s retrained at the next window. A new version only replaces the old one if it does better on unseen data. The language model itself is never retrained; it stays frozen so the comparisons are fair. And it learns from forecast accuracy, not from individual wins and losses, which are mostly luck.",
+ purpose:"Models that never update go stale, but updating after every trade chases noise and breaks fair comparison. This gives the system a disciplined, scheduled way to learn.",
+ blocksFirst:true,
+ blocks:[{"h": "What gets recalibrated", "head": ["Item", "Recalibrated?", "How"], "rows": [["ML and DL models (02)", "Yes", "Retrained on the latest data; probabilities recalibrated"], ["LLM panel weights (04)", "Yes", "How much the allocation rule trusts each model in the panel, updated from its track record"], ["Reliability entries (03)", "Yes", "The semantic layer is refreshed with each model’s latest scores"], ["The LLM itself", "No", "The language model and its prompts stay frozen. Changing them is a new experiment, not recalibration"]]}, {"h": "When it happens", "head": ["Mechanism", "What it means"], "rows": [["Scheduled", "At the end of every walk-forward window, for example every quarter, the models are retrained"], ["Flagged", "In between, if a model drifts it is flagged straight away and marked “treat with caution” in the semantic layer. Retraining waits for the next window boundary"]], "note": "The drift flag Model C raised in the 04 example comes from here."}],
+ steps:[["Detect", "Check drift signals from the 02 performance record."], ["Flag", "Mark the model as low reliability in the semantic layer, so the agents are cautious."], ["Retrain", "At the window boundary, retrain on all data up to that point."], ["Challenger against current version", "The new version replaces the old one only if it does better on unseen validation data."], ["Version and freeze", "Log the new configuration and lock it for the next window."]],
+ blocks2:[{"h": "What identifies the need", "head": ["Signal", "Plain meaning"], "rows": [["Calibration drift", "70% forecasts now come true only 55% of the time"], ["Below baseline", "The model no longer beats the simple benchmark"], ["Performance decay", "Scores have worsened steadily through the window"], ["Regime change", "The regime model indicates the market has moved into a new state"], ["Input drift", "Incoming data looks unlike the training data, for example volatility outside the trained range"]], "note": "Thresholds are illustrative and fixed in advance. A model that keeps failing to beat the baseline across several windows is retired: recorded, not deleted."}],
+ example:"Continuing the thread: during the window the forecast model’s calibration drifted, it was flagged, and the agents saw the caution in 04. At the boundary it was retrained; the new version’s calibration was back within tolerance, so it replaced the old one. Model A’s weight in the allocation rule was trimmed slightly because its recent calls had been overconfident.",
+ designLabel:"Guardrails",
+ design:["The LLM and its prompts are frozen; only forecasting models and agent weights are recalibrated.", "No retraining in the middle of a test window.", "No learning from individual winning or losing trades.", "Every version is logged, including retired models."],
+ objective:"Keep the system current without leaking future information or overfitting to recent luck.",
+ measures:[["Calibration before and after", "How much recalibration restores forecast reliability"], ["Flag rate", "How often models drift between windows"], ["New against old", "Whether new versions beat the ones they replace on unseen data"], ["Weight stability", "How much agent weights change between windows"]],
+ contrib:{"kind": "g", "k": "Research output", "text": "Part of the reproducible evaluation protocol: a documented, versioned way to keep models current without compromising fair comparison."},
+ qa:[["Are you retraining the LLM?", "No. It stays frozen so the comparisons are fair. Only the forecasting models and the agent weights are recalibrated."], ["Why not retrain continuously?", "Retraining mid-window would blur cause and effect and risks using information too early. Drift is flagged immediately; retraining waits for the boundary."], ["Why not learn from wins and losses?", "A single trade over a few days is mostly luck. Forecast accuracy and calibration carry far more information per decision."], ["How do you decide a model is redundant?", "If it fails to beat the simple baseline across several windows, it is retired and recorded."]],
+ tech:["Each recalibration creates a new versioned configuration in the experiment store.", "Test-window results never feed back into development, and the sealed holdout informs no update.", "Optional extension: agents given a time-limited memory of their own past decisions, compared against frozen agents. Close to FinCon’s approach, so not claimed as core novelty."],
+ why:[["Recalibrating when regimes change", "hamilton", "Markets switch between states with different behaviour, so a model fitted in one state can go stale in another."], ["Calibration as the drift signal", "gr", "Proper scoring rules give a principled measure of when probability forecasts have deteriorated."]],
+ refs:[]},
+
+9:{phase:"R",layer:"rs",title:"Experiment and audit store",box:[690,20,290,210],lines:["Every input, version and decision","First and revised agent answers","Rule outcomes, fills and costs","Triggers, flags and retraining","Every variant, including failures"],
+ one:"The system’s memory. Every stage from 01 to 08 writes to one record, so any decision can be traced, measured and rerun.",
+ talk:"Every stage writes to one record. For any decision I can trace exactly what data it used, which model versions, what each model said before and after the debate, what the rules did, the price it filled at and what happened next. It also records every version I try, including the ones that fail, so the results can be corrected for how many ideas were tested. That is what makes the work reproducible and auditable.",
+ purpose:"It holds the evidence that every other section depends on. Without it, most of the measures on this page could not be calculated, and no result could be checked.",
+ blocksFirst:true,
+ blocks:[{"h": "What it records", "head": ["From", "What is recorded"], "rows": [["01–03", "Data snapshot, model versions, semantic layer version, and the evidence packet sent to the agents"], ["04", "Each model’s sealed first answer, challenges, revised answer and the combined decision, plus LLM and prompt version and AI cost"], ["05", "Approve, cap or veto, with the reason"], ["06", "Fill price, costs and daily valuation"], ["07", "Triggers fired, reassessments and automatic exits"], ["08", "Drift flags, retraining, old against new version results, retired models"], ["All", "Every variant tried, including the ones that failed"]]}],
+ steps:[["Log", "Every stage writes its inputs, outputs and timestamps."], ["Link", "Each decision is linked to its evidence packet, model versions and resulting position."], ["Register", "Every variant, prompt change and model search is added to the trial register."], ["Version", "Any change creates a new version rather than overwriting an old one."]],
+ example:"Tracing the running trade: Tuesday’s buy, with its evidence packet, model versions and drift flag; each model’s answer before and after debate; the rule approval; the fill price and costs; the day 3 reduction trigger; the day 5 automatic exit; and, at the window boundary, the retrained model that replaced the drifting one. One query reconstructs the whole story.",
+ designLabel:"Why it matters",
+ design:["Many measures depend on it: revision quality and conformity (04), veto rate (05), planned against actual (07) and flag rate (08) all need stored first answers, vetoes and triggers.", "It feeds recalibration: the performance record 08 uses to spot drift lives here.", "Reproducibility: any result can be traced to its exact inputs and versions and rerun.", "Honesty about trials: counting every attempt lets 10 correct for how many ideas were tested.", "Proof of no look-ahead: timestamps show every decision used only information available at the time.", "LLMs do not always give the same answer twice, so the exact outputs are stored and the analysis uses what was actually said."],
+ objective:"Any reported result can be traced to its inputs, versions and decisions, and rerun.",
+ measures:[["Traceability", "Share of decisions fully linked to evidence and versions. Target: 100%"], ["Reproducibility", "Reruns from stored inputs match the original results"], ["Log completeness", "No gaps in the record across stages"], ["Trial count", "Total variants tried, needed to correct for testing many ideas"]],
+ contrib:{"kind": "g", "k": "Research output", "text": "The core of the reproducible evaluation protocol, reusable by others evaluating LLM trading agents."},
+ qa:[["How do we know you didn’t cherry-pick?", "Every variant is in the trial register, including failures, and 10 corrects the results for the number of attempts."], ["What if the LLM gives a different answer next time?", "The exact answers it gave are stored, so the analysis is based on what was actually said, not on a rerun."], ["Isn’t that a lot of data?", "No. Daily decisions are small, and it is a standard relational database plus versioned files."]],
+ tech:["Relational experiment store linking each decision to its evidence snapshot, prompt, model identifier, cost and resulting position.", "Versioned columnar files for market data.", "Where data licences restrict redistribution, references and acquisition instructions are stored rather than raw vendor data.", "A model adapter keeps changes of AI provider separate from the decision process."],
+ why:[["Recording every trial", "stw", "Searching across many rules inflates apparent performance; correcting for it requires knowing every rule that was tried."]],
+ refs:[]},
+
+10:{phase:"R",layer:"rs",title:"Controlled evaluation",box:[690,260,290,220],lines:["Walk-forward and sealed holdout","Matched information and budgets","Bootstrap uncertainty and trials","Benchmarks, calibration and Sharpe","Regime and exposure attribution"],
+ one:"Where the research questions are answered. Every version is run on the same days with the same information, budget, rules and costs, and judged only on data it has never seen.",
+ talk:"This is where the research questions are answered. Every version, from no AI up to full debate, is run on the same days with the same information, the same AI budget, the same rules and the same costs, and judged only on data it has never seen. The plan is locked before the main test, every attempt is counted, and results come with confidence intervals rather than single numbers. Because LLMs may have seen historical data during training, the strongest evidence comes from live paper trading, where decisions are made before the outcome exists.",
+ purpose:"Everything from 01 to 09 produces decisions; this is where they are judged. It answers the standard concerns about trading research: look-ahead, overfitting, testing too many ideas, statistical significance, benchmark choice, and whether the LLM has already seen the history.",
+ timeline:true,
+ blocksFirst:true,
+ blocks:[{"h": "What is compared", "head": ["Experiment", "Versions compared"], "rows": [["E0 (02)", "Traditional ML against deep learning"], ["E1 (03)", "Agents with the semantic layer against the same facts without it"], ["E2 (04)", "Each LLM alone, the same panel combined independently, and the panel after debate, against fixed and adaptive numerical ensembles"], ["E3 (07)", "Weekly review with fixed exits against daily triggers with agent reassessment"]]}],
+ stepsLabel:"What makes it fair",
+ steps:[["Unseen data only", "Results count only on test windows, the sealed holdout and live paper trading."], ["Same information", "Every version gets the same evidence."], ["Same AI budget", "Debate cannot win just by using more computing."], ["Same rules and costs", "05 and 06 are identical for every version."], ["Plan locked in advance", "Comparisons, measures and thresholds are fixed before the main test."], ["Every attempt counted", "The register in 09 allows correction for how many ideas were tried."]],
+ blocks2:[{"h": "Benchmarks every version must beat", "head": ["Benchmark", "Why"], "rows": [["Fixed and adaptive numerical ensembles", "ML and deep learning forecasts combined by fixed or past-performance weights: the main quantitative benchmark"], ["Simple trend rule", "A well-known, cheap rule that is hard to beat"], ["Buy and hold", "Shows whether any active decision-making adds value at all"]]}],
+ example:"Illustrative only, not a result: “Debate against vote: Sharpe difference +0.2, 95% range −0.1 to +0.5. Not yet conclusive.” Results are reported this way, including when the answer is not clear.",
+ objective:"Comparisons an examiner would accept as fair: matched, out of sample, benchmarked, and honest about uncertainty.",
+ measures:[["Brier score difference (primary test)", "Paired difference between independent aggregation and debate, measured on every decision, so it has far more statistical power"], ["Net Sharpe ratio and drawdown", "Headline economic result: return per unit of risk and worst fall, after trading and inference costs"], ["Calibration", "Whether stated probabilities match what happened"], ["Exposure attribution", "Whether gains came from skill or from simply being in a rising market"], ["Confidence intervals", "Every result comes with a range, not a single number"], ["Inference cost per decision", "So any gain can be weighed against its cost"]],
+ contrib:{"kind": "g", "k": "Research output", "text": "Answers RQ1 to RQ4. The evaluation design itself, with matched budgets, contamination checks and walk-forward testing, is part of the contribution."},
+ qa:[["Why isn’t a normal backtest enough for LLMs?", "LLMs are trained on internet text that may include what happened in markets, so in a historical test the AI might effectively remember the answer. Walk-forward testing reduces tuning bias, and live paper trading removes the memory problem."], ["How do you know it isn’t luck?", "Results come with confidence intervals that respect how returns cluster over time, and are corrected for the number of ideas tried."], ["How much data do you need?", "More than people expect for Sharpe ratios, which is why decision-level measures such as calibration are also primary, and why instruments that do not all move together help."], ["What counts as success?", "A clear, honest answer either way. A well-supported “no” is still a valid result."]],
+ tech:["Rolling training and validation windows precede untouched test windows; overlapping outcome labels are purged with a temporal gap.", "Uncertainty by block bootstrap, which resamples chunks of time so serial dependence is preserved.", "Multiple-testing control using a bootstrap reality check (Sullivan, Timmermann and White, 1999).", "Historical LLM runs flagged as potentially contaminated where training cutoffs are unknown or overlap test outcomes; identifier masking is a diagnostic, not proof.", "Power: for equal-volatility variants with daily return correlation ρ, IR of the difference ≈ ΔSR / √(2(1 − ρ)); years for 80% power at 5% ≈ (2.8 / IR)². A Sharpe difference of 0.3 needs roughly 35, 17 and 9 years at ρ = 0.8, 0.9 and 0.95.", "Sparse regime samples reported as exploratory."],
+ why:[["Brier score as a primary measure", "gr", "Proper scoring rules reward accurate, honest probabilities and cannot be gamed by over- or under-confidence."], ["Testing whether one forecast beats another", "dm", "The standard test for whether a difference in forecast accuracy is statistically significant."], ["Correcting for testing many ideas", "stw", "A bootstrap-based correction for data snooping across many strategies."], ["Strong numerical benchmarks", "gkx", "Machine learning forecasts set the bar LLM decisions must beat."], ["Results after trading costs", "gp", "Economic conclusions are only meaningful net of the costs of trading."]],
+ refs:[]},
+
+11:{phase:"R",layer:"rs",title:"Research outputs",box:[690,510,290,220],lines:["E2 Value of structured debate","E1 Value of semantic grounding","E3 Value of adaptive monitoring","E0 Value of deep learning","Reusable protocol and semantic layer"],
+ one:"The system is the instrument; the research is what it lets me measure. The output is controlled, reproducible evidence of when evidence-grounded LLM agents improve financial decisions, when they do not, and whether any gain is worth its cost.",
+ talk:"This isn’t a software project. The system is the instrument; the research is what it lets me measure. Established research, such as Gu, Kelly and Xiu, and Fischer and Krauss, shows that machine learning and deep learning can forecast returns. But a forecast alone does not decide whether to open, size, keep or close a position. That decision layer is where LLM agents are now being tried, and where controlled evidence appears to be missing: comparisons rarely hold information and computing budget equal, and an LLM may already remember the history it is tested on. So my contribution is a controlled, reproducible study of when evidence-grounded agents actually improve decisions. There are four questions. The primary one is whether bounded debate between distinct LLMs beats the same models combined independently, and strong numerical ensembles, with the same information and budget. The others ask whether a semantic layer reduces unsupported claims, whether adaptive monitoring beats fixed rules after costs, and whether deep learning adds value over traditional machine learning. Each answer is useful whichever way it goes: if debate helps, we learn when and why; if it does not, practitioners learn not to pay for it. Alongside the findings, two pieces are reusable by others: the evaluation protocol, and the semantic layer specification. The exact novelty claim will be sharpened through the literature review with you, but the gap appears clear: so far the field has systems rather than controlled evidence.",
+ purpose:"To show what new knowledge this produces. Building the system is necessary but is not the contribution; the controlled comparisons and the methods behind them are.",
+ blocksFirst:true,
+ blocks:[{"h": "Research, not a software project", "head": ["", "A software project", "This research"], "rows": [["Goal", "Build a system that works", "Answer specific questions with evidence"], ["Success", "It runs, or it makes money", "A clear, defensible answer either way"], ["Output", "Code", "Findings, methods and a reusable protocol"], ["A negative result", "Failure", "A valid finding, if the design explains why"]]}, {"h": "Where it sits in the literature", "head": ["What established research shows", "What appears to be missing"], "rows": [["Nonlinear ML and deep learning can forecast returns (Gu, Kelly and Xiu 2020; Fischer and Krauss 2018)", "Whether LLM reasoning adds anything once strong numerical forecasts are available"], ["Volatility and the VIX carry risk information (Whaley 2009; Bollerslev, Tauchen and Zhou 2009)", "How LLMs interpret risk measures that are easily misread as directional signals"], ["Regimes shift and matter for allocation (Hamilton 1989; Ang and Bekaert 2002)", "Whether LLM decisions hold up when regimes and forecast reliability change"], ["Technical signals can carry information, but searching many rules misleads (Lo, Mamaysky and Wang 2000; Sullivan, Timmermann and White 1999)", "Evaluations of LLM agents with a full register of every trial"], ["Proper scoring and forecast comparison (Gneiting and Raftery 2007; Diebold and Mariano 1995)", "Calibrated, statistically tested comparisons of LLM decisions"], ["Trading costs shape optimal trading (Gârleanu and Pedersen 2013)", "LLM decision results reported net of trading and inference costs"], ["Recent multi-agent LLM trading systems, e.g. TradingAgents and FinCon (preprint and conference work)", "Controlled tests of whether debate helps, with information and budget matched"]], "note": "Journal ratings: ABS/AJG 2024. Recent LLM work is not AJG-ranked and will be critically reviewed when the originality claim is finalised."}],
+ rqs:true,
+ refList:true,
+ blocks3:[{"h": "Useful whatever the answer", "head": ["Experiment", "If yes", "If no"], "rows": [["E2 Structured debate (primary)", "When and why debate improves decisions, and what it costs", "Practitioners learn not to pay for multi-agent debate; we learn where it breaks"], ["E1 Semantic grounding", "Evidence that defined meaning makes AI decisions more reliable", "Shows that clean data alone is enough, or where meaning fails to help"], ["E3 Adaptive monitoring", "When reacting to change pays after costs", "Fixed rules are sufficient; adaptation adds cost without value"], ["E0 Deep learning", "Where deep learning adds forecasting value on daily equity data", "Simpler models suffice at this data scale, a useful boundary result"]]}, {"h": "Expected contributions", "head": ["Contribution", "Type", "Built in"], "rows": [["Evidence on structured debate between LLM agents", "Empirical (primary)", "04, 10"], ["Evidence on semantic grounding of LLM decisions", "Empirical", "03, 10"], ["Evidence on adaptive monitoring after costs", "Empirical", "07, 10"], ["Evidence on deep learning against traditional ML for probabilistic forecasts", "Empirical", "02, 10"], ["A reproducible evaluation protocol for LLM trading agents", "Methodological", "09, 10"], ["A semantic layer specification for LLM financial reasoning", "Methodological", "03"]]}, {"h": "Who it matters to", "head": ["Audience", "Why"], "rows": [["Researchers", "Controlled evidence on LLM reasoning under uncertainty, and a reusable way to evaluate it"], ["Practitioners", "Whether multi-agent AI is worth its cost in investment decisions"], ["Risk and governance", "A worked example of auditable, rule-bounded AI decision-making"]]}],
+ designLabel:"What this research does not claim",
+ design:["It does not assume LLM agents beat simpler methods.", "Building a multi-agent system is not claimed as novel.", "It is not a product; any commercial use stays separate from the academic conclusions, including publishing negative results.", "The exact novelty claim will be sharpened through the literature review with supervisors."],
+ objective:"Defensible answers to four research questions, plus methods others can reuse, whichever way the results go.",
+ measures:[],
+ contrib:null,
+ qa:[["Isn’t this just a software project?", "No. The system is the instrument. The contribution is controlled evidence on four questions, and the methods to test them fairly."], ["What is actually new?", "Not the agents themselves. What is new is a matched, contamination-aware, fully audited test of whether evidence grounding and debate improve decisions, with an allocation rule that can abstain."], ["What if nothing works?", "Then that is the finding, and it is useful: it tells researchers and practitioners where these methods stop adding value. The design is built to explain why."], ["Why a PhD rather than an industry project?", "Industry rarely publishes controlled negative results or full trial registers. A PhD gives the independence and rigour to do both."]],
+ tech:[],
+ refs:[]}
+};
+
+const RQS=[["RQ1","Primary","Does bounded debate between distinct LLMs, using identical evidence, improve decision reliability and net risk-adjusted performance compared with the same models combined independently and with adaptive numerical ensembles?",4,"E2"],
+ ["RQ2","Supporting","Does clearly labelled evidence reduce unsupported claims and make decisions more consistent?",3,"E1"],
+ ["RQ3","Supporting","Does reacting to market changes beat fixed review schedules after costs?",7,"E3"],
+ ["RQ4","Supporting","Does deep learning add value beyond simpler machine learning, and does it change how much debate helps?",2,"E0"]];
+
+const EDGES=[
+ {a:1,b:2,d:"M270,110 L270,136"},{a:1,b:3,d:"M510,110 L510,136"},{a:2,b:3,d:"M380,190 L396,190"},
+ {a:3,b:4,d:"M510,240 L510,266"},{a:4,b:5,d:"M270,370 L270,386"},{a:5,b:6,d:"M380,440 L396,440"},
+ {a:6,b:7,d:"M510,490 L510,516"},{a:7,b:8,d:"M390,610 L390,636"},
+ {a:7,b:4,loop:true,d:"M160,565 L146,565 L146,320 L156,320"},
+ {a:8,b:2,loop:true,d:"M160,685 L132,685 L132,190 L156,190"},
+ {a:[1,3,4,6,7,8],b:9,rail:true,d:"M620,65 L650,65 M620,190 L650,190 M620,320 L650,320 M620,440 L650,440 M620,565 L650,565 M620,685 L650,685 L650,65 L686,65"},
+ {a:9,b:10,d:"M835,230 L835,256"},{a:10,b:11,d:"M835,480 L835,506"}
+];
+
+const svg=document.getElementById('arch'), panel=document.getElementById('panel'), NS="http://www.w3.org/2000/svg";
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LAYER={op:"Operational",ex:"Experimental",rs:"Evidence and research"};
+
+// bands
+const bandEls={};
+PHASES.forEach((p,i)=>{
+  const g=el('g',{class:'band'+(i%2?' alt':''),tabindex:'0',role:'button','aria-label':`Phase ${p.id} ${p.name}`},svg);
+  el('rect',{x:0,y:p.y,width:632,height:p.h,rx:8},g);
+  const cy=p.y+p.h/2;
+  const a=el('text',{class:'ph-num',x:12,y:cy-16},g); a.textContent=`PHASE ${p.id}`;
+  p.lines.forEach((l,j)=>{const t=el('text',{class:'ph-name',x:12,y:cy+2+j*17},g);t.textContent=l});
+  g.addEventListener('click',()=>show('p'+p.id,true));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show('p'+p.id,true)}});
+  bandEls[p.id]=g;
+});
+const ch=el('text',{class:'colhead',x:690,y:-8},svg); ch.textContent="EVIDENCE AND EVALUATION";
+
+// markers
+const defs=el('defs',{},svg);
+[['ah','var(--edge)'],['ahh','var(--accent)'],['ahl','var(--rs)']].forEach(([id,c])=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'8',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},defs);el('path',{d:'M0,0 L10,5 L0,10 z',style:`fill:${c}`},m)});
+const baseMk=e=>e.loop?'url(#ahl)':'url(#ah)';
+const edgeEls=EDGES.map(e=>el('path',{d:e.d,class:'edge'+(e.rail?' rail':'')+(e.loop?' loop':''),'marker-end':baseMk(e)},svg));
+const rl=el('text',{class:'rail-lbl',x:'667',y:'375',transform:'rotate(-90 667 375)','text-anchor':'middle'},svg); rl.textContent="LOGS EVERY STAGE";
+
+// nodes
+const nodeEls={};
+Object.entries(N).forEach(([id,n])=>{
+  const [x,y,w,h]=n.box, g=el('g',{class:'node '+n.layer,tabindex:'0',role:'button','aria-label':`${id} ${n.title}`},svg);
+  el('rect',{class:'b',x,y,width:w,height:h,rx:7},g);
+  const nm=el('text',{class:'n-num',x:x+14,y:y+21},g); nm.textContent=String(id).padStart(2,'0');
+  if(n.tag){const p=el('g',{class:'pill'+(n.layer==='rs'?' g':'')},g);const pw=n.tag.length>2?42:32;el('rect',{x:x+w-pw-10,y:y+8,width:pw,height:19,rx:4},p);const t=el('text',{x:x+w-pw/2-10,y:y+21.5,'text-anchor':'middle'},p);t.textContent=n.tag}
+  const t=el('text',{class:'n-title',x:x+14,y:y+44},g); t.textContent=n.title;
+  const big=h>=180;
+  n.lines.forEach((l,i)=>{const tt=el('text',{class:'n-line',x:x+14,y:y+(big?72:65)+i*(big?24:19)},g);tt.textContent=l});
+  g.addEventListener('click',()=>show(+id,true));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(+id,true)}});
+  nodeEls[id]=g;
+});
+
+function nb(id){const up=new Set(),down=new Set();EDGES.forEach(e=>{const as=[].concat(e.a);if(e.b===id)as.forEach(a=>up.add(a));if(as.includes(id))down.add(e.b)});return{up:[...up],down:[...down]}}
+const list=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+const lb=(id,pre)=>`<button class="lb" data-go="${id}"><small>${pre}</small>${esc(typeof id==='string'?PHASES[+id.slice(1)-1].name:N[id].title)}</button>`;
+const phaseLabel=n=>n.phase==="R"?"Evidence and evaluation":`Phase ${n.phase} · ${PHASES[n.phase-1].name}`;
+
+function timeline(){
+  const row=(lab,s)=>`<div class="tl-row"><span class="lab">${lab}</span>${s}</div>`;
+  const sp=n=>n?`<span style="grid-column:span ${n}"></span>`:'';
+  const sg=(c,n,t)=>`<span class="seg ${c}" style="grid-column:span ${n}">${t||''}</span>`;
+  let h='';for(let k=0;k<4;k++)h+=row(`Window ${k+1}`,sp(k)+sg('tr',5,'train')+sg('va',1,'val')+sg('gap',1)+sg('te',1,'test')+sp(6-k));
+  h+=row('Final check',sp(11)+sg('ho',2,'holdout')+sp(1));h+=row('Live',sp(13)+sg('li',1,'live'));
+  return `<h3>Testing on unseen data</h3><div class="tbl"><div class="tl">${h}<div class="tl-axis"><span></span><span style="grid-column:span 13">past data, used for the backtest →</span><span class="now">today</span></div></div></div>
+  <div class="key"><span><i style="background:var(--train)"></i>Training</span><span><i style="background:var(--val)"></i>Validation</span><span><i style="background:repeating-linear-gradient(45deg,var(--line) 0 3px,transparent 3px 6px)"></i>Gap</span><span><i style="background:var(--test)"></i>Test (unseen)</span><span><i style="background:var(--hold)"></i>Sealed holdout</span><span><i style="background:var(--live)"></i>Live paper trading</span></div>
+  <p style="font-size:13.5px;color:var(--muted)">Each row is one walk-forward step. The training window rolls forward and each orange test window is data nothing in the system has seen. Between steps, component 8 recalibrates the models. Proportions are illustrative.</p>`;
+}
+function termsHtml(){
+  return `<div class="defs">
+   <div class="def"><b><i style="background:var(--train)"></i>Training data</b><p>The past data a model learns from, never anything after its cut-off.</p></div>
+   <div class="def"><b><i style="background:var(--val)"></i>Validation data</b><p>A later slice used only to choose settings such as model size. Not used for final judgement.</p></div>
+   <div class="def"><b>Gap</b><p>A short buffer so outcomes that overlap the boundary cannot leak from test into training.</p></div>
+   <div class="def"><b><i style="background:var(--test)"></i>Test window</b><p>The next period, unseen by any part of the system. Only these results count.</p></div>
+   <div class="def"><b>Walk-forward</b><p>Step forward, retrain, test the next unseen window, repeat. This is the backtest, and it mimics running the system through time.</p></div>
+   <div class="def"><b><i style="background:var(--hold)"></i>Sealed holdout</b><p>A final period locked away and examined once, after every design decision is frozen.</p></div>
+   <div class="def"><b><i style="background:var(--live)"></i>Live paper trading</b><p>The frozen system decides before outcomes happen. The cleanest evidence, because the AI cannot have memorised the future.</p></div>
+  </div>
+  <h3>Backtest, walk-forward, holdout and live compared</h3><div class="tbl"><table><thead><tr><th>Approach</th><th>What it means</th></tr></thead><tbody>
+   <tr><td class="k">Ordinary backtest</td><td>One strategy over all history. Easy to tune, often without realising, until it looks good. Shown for contrast; not used as evidence.</td></tr>
+   <tr><td class="k">Walk-forward test</td><td>Repeatedly trains on the past and tests on the next unseen window. Every result is out of sample.</td></tr>
+   <tr><td class="k">Sealed holdout</td><td>One untouched final check.</td></tr>
+   <tr><td class="k">Live paper trading</td><td>Decisions made before outcomes exist, removing any chance the AI remembers what happened.</td></tr></tbody></table></div>`;
+}
+
+function rqsHtml(){
+  return `<h3>Research questions</h3><div class="qa">${RQS.map(r=>`<div><p class="q">${r[0]} · ${r[1]} · ${r[4]}</p><p class="a">${esc(r[2])}</p><p style="margin:6px 0 0">${lb(r[3],'tested in')}</p></div>`).join('')}</div>`;
+}
+
+function contribHtml(c){
+  if(!c) return '';
+  let h=`<h3>Research contribution</h3><div class="box ${c.kind==='e'?'':c.kind}"><div class="k">${esc(c.k)}</div>`;
+  if(c.q) h+=`<p><b>${esc(c.q)}</b></p>`;
+  if(c.text) h+=`<p>${esc(c.text)}</p>`;
+  h+=`</div>`;
+  if(c.rows) h+=`<div class="tbl"><table><thead><tr><th>Comparison</th><th>What it shows</th></tr></thead><tbody>${c.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</tbody></table></div>`;
+  if(c.note) h+=`<p style="margin-top:10px;font-size:14px;color:var(--muted)">${esc(c.note)}</p>`;
+  return h;
+}
+
+const blocksHtml=bs=>{let h='';bs.forEach(b=>{h+=`<h3>${esc(b.h)}</h3>${b.intro?`<p style="font-size:14px">${esc(b.intro)}</p>`:''}<div class="tbl"><table><thead><tr>${b.head.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map((c,j)=>`<td${j?'':' class="k"'}>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${b.note?`<p style="margin-top:8px;font-size:13.5px;color:var(--muted)">${esc(b.note)}</p>`:''}`});
+return h;};
+const whyHtml=rows=>`<h3>Why these choices: supported by research</h3><div class="tbl"><table><thead><tr><th>Choice</th><th>Evidence</th><th>What it shows</th></tr></thead><tbody>${rows.map(r=>{const R=r[1]?REFS[r[1]]:null;const ev=R?`<a class="refa" href="${R[4]}" target="_blank" rel="noopener">${esc(R[0])}</a><span class="jr">${esc(R[2])} · AJG ${R[3]}</span>`:`<span class="jr nr">${esc(r[3]||'')}</span>`;return `<tr><td class="k">${esc(r[0])}</td><td>${ev}</td><td>${esc(r[2])}</td></tr>`}).join('')}</tbody></table></div><p style="margin-top:8px;font-size:13px;color:var(--muted)">Journal ratings: ABS/AJG 2024. Ratings apply to journals, not individual papers.</p>`;
+const refListHtml=()=>`<h3>Selected references (AJG-ranked journals)</h3><div class="tbl"><table><thead><tr><th>Reference</th><th>AJG 2024</th></tr></thead><tbody>${Object.values(REFS).map(R=>`<tr><td>${esc(R[1])} <a class="refa" href="${R[4]}" target="_blank" rel="noopener">Article link</a></td><td style="white-space:nowrap">${R[3]}</td></tr>`).join('')}</tbody></table></div>`;
+function nodeHtml(id){
+  const n=N[id];
+  let h=`<div class="p-top"><span class="badge">${String(id).padStart(2,'0')}</span><span class="badge ${n.layer}">${LAYER[n.layer]}</span>${n.phase==="R"?"":`<span class="badge">${esc(phaseLabel(n))}</span>`}${n.tag&&n.tag!=='Loop'?`<span class="badge ex">Experiment ${n.tag}</span>`:''}</div>
+  <h2>${esc(n.title)}</h2><p class="one">${esc(n.one)}</p>${false&&n.talk?`<div class="talk"><div class="talk-k">Talk track for the meeting</div><p>${esc(n.talk)}</p></div>`:''}
+  <h3>Purpose</h3><p>${esc(n.purpose)}</p>`;
+  if(n.blocks&&n.blocksFirst) h+=blocksHtml(n.blocks);
+  if(n.steps) h+=`<h3>${esc(n.stepsLabel||'What happens')}</h3><ol class="steps">${n.steps.map(s=>`<li><span><b>${esc(s[0])}.</b> ${esc(s[1])}</span></li>`).join('')}</ol>`;
+  if(n.timeline) h+=timeline();
+  if(n.blocks&&!n.blocksFirst) h+=blocksHtml(n.blocks);
+  if(n.blocks2) h+=blocksHtml(n.blocks2);
+  if(n.features) h+=`<h3>Example inputs captured</h3><div class="tbl"><table><thead><tr><th>Group</th><th>Examples</th><th>What it captures</th></tr></thead><tbody>${n.features.map(f=>`<tr><td class="k">${esc(f[0])}</td><td><div class="chips">${f[1].map(c=>`<span class="chip" style="font-family:var(--f-mono);font-size:12px">${esc(c)}</span>`).join('')}</div></td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div><p style="margin-top:8px;font-size:13.5px;color:var(--muted)">Illustrative, not exhaustive. Every derived input is calculated only from data available before the decision.</p>`;
+  if(n.example) h+=`<p class="example" style="margin-top:12px">${esc(n.example)}</p>`;
+  if(n.contract) h+=`<h3>${esc(n.contract.label)}</h3><div class="chips">${n.contract.items.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>`;
+  if(n.why) h+=whyHtml(n.why);
+  if(n.rqs) h+=rqsHtml();
+  if(n.blocks3) h+=blocksHtml(n.blocks3);
+  if(n.refList) h+=refListHtml();
+  if(n.design) h+=`<h3>${esc(n.designLabel||'Key design choices and safeguards')}</h3>${list(n.design)}`;
+  h+=`<h3>Objective</h3><p class="obj">${esc(n.objective)}</p>`;
+  if(n.measures.length) h+=`<h3>Expected measurable results</h3><div class="tbl"><table><thead><tr><th>Measure</th><th>What it tells you</th></tr></thead><tbody>${n.measures.map(m=>`<tr><td class="k">${esc(m[0])}</td><td>${esc(m[1])}</td></tr>`).join('')}</tbody></table></div>`;
+  h+=contribHtml(n.contrib);
+  h+=`<h3>Common questions</h3><div class="qa">${n.qa.map(q=>`<div><p class="q">${esc(q[0])}</p><p class="a">${esc(q[1])}</p></div>`).join('')}</div>`;
+  const c=nb(id); if(c.up.length||c.down.length) h+=`<h3>Connected components</h3><div class="links">${c.up.map(u=>lb(u,'from')).join('')}${c.down.map(d=>lb(d,'to')).join('')}</div>`;
+  if(n.timeline) h+=`<details><summary>What each term means</summary><div style="padding-bottom:14px">${termsHtml()}</div></details>`;
+  if(n.tech.length) h+=`<details><summary>Technical detail</summary>${list(n.tech)}</details>`;
+  return h;
+}
+
+function phaseHtml(pid){
+  const p=PHASES[pid-1];
+  return `<div class="p-top"><span class="badge">Phase ${p.id} of 5</span></div><h2>${esc(p.name)}</h2><p class="one">${esc(p.one)}</p>
+  <h3>Why this phase matters</h3><p>${esc(p.why)}</p>
+  <h3>Components in this phase</h3><div class="qa">${p.nodes.map(i=>`<div><p class="q">${lb(i,String(i).padStart(2,'0'))}</p><p class="a" style="margin-top:4px">${esc(N[i].one)}</p></div>`).join('')}</div>`;
+}
+
+const ORDER=[1,2,3,4,5,6,7,8,9,10,11];
+let cur=4;
+function show(key,scroll){
+  cur=key; const isP=typeof key==='string';
+  Object.entries(nodeEls).forEach(([k,g])=>g.classList.toggle('sel',+k===key));
+  Object.entries(bandEls).forEach(([k,g])=>g.classList.toggle('sel',key==='p'+k));
+  EDGES.forEach((e,i)=>{const hot=!isP&&(e.b===key||[].concat(e.a).includes(key));edgeEls[i].classList.toggle('hot',hot);edgeEls[i].setAttribute('marker-end',hot?'url(#ahh)':baseMk(e))});
+  let h=isP?phaseHtml(+key.slice(1)):nodeHtml(key);
+  const i=isP?ORDER.indexOf(PHASES[+key.slice(1)-1].nodes[0])-0.5:ORDER.indexOf(key);
+  const prev=ORDER[(Math.ceil(i)-1+11)%11], next=ORDER[(Math.floor(i)+1)%11];
+  h+=`<div class="nav">${lb(prev,'←')}${lb(next,'→')}</div>`;
+  panel.innerHTML=h; panel.scrollTop=0;
+  panel.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const g=b.dataset.go;show(g.startsWith('p')?g:+g,true)}));
+  const slug=isP?key:'c'+key; try{history.replaceState(null,'','#'+slug)}catch(e){}
+  if(scroll&&window.innerWidth<1200) panel.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+const hs=(location.hash||'').slice(1);
+if(/^p[1-5]$/.test(hs)) show(hs,false); else if(/^c([1-9]|1[01])$/.test(hs)) show(+hs.slice(1),false); else show(4,false);
+</script>
+</body>
+</html>

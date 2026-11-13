@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Literature Review"
 subtitle: "The intellectual foundations of adaptive, regime-aware, risk-governed market decision-making — and where this proposal sits among them"
 description: >
@@ -19,7 +20,7 @@ central argument is that the contribution is *not* another such system — those
 proliferating — but a **control-first, regime-aware, risk-governed and rigorously-evaluated** one, and that
 the newest and most sceptical papers in the field have independently begun to document exactly why that is
 the gap worth filling. Throughout, claims are connected to the
-[evidence already built](../index.qmd#what-is-already-built-the-evidence-tracker) on this site, because a
+[evidence already built](../archive.qmd#what-is-already-built-the-evidence-tracker) on this site, because a
 literature review that also *tests* the literature is the discipline the whole proposal argues for.
 
 ## 1. Market efficiency and the boundaries of predictability
@@ -171,7 +172,7 @@ architecture** — one where an LLM informs but never acts, where hard determini
 constrained RL learner, where regime awareness is real-time and its value is *tested* rather than assumed, and
 where every claim is deflated and reported with its nulls. That integration, positioned modestly as a bet on
 robustness and decision quality rather than on beating the efficient market, is the proposal's contribution —
-and, unusually for a proposal, the majority of its components are [already built and tested](../index.qmd#what-is-already-built-the-evidence-tracker)
+and, unusually for a proposal, the majority of its components are [already built and tested](../archive.qmd#what-is-already-built-the-evidence-tracker)
 on this site. This review is the seed of the formal Chapter 2; the notes below develop individual papers in
 depth.
 

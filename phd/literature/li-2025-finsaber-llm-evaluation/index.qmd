@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Li, Kim, Cucuringu & Ma (2025) — Can LLM-based Financial Investing Strategies Outperform the Market in the Long Run?"
 description: "The rigorous evaluation that dismantles LLM-trading hype — and, in doing so, documents the exact gap my proposal fills: LLM strategies fail to adapt across regimes. The most important paper for my positioning."
 date: 2026-07-28

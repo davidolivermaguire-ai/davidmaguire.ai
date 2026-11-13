@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Hamilton (1989) — A New Approach to the Analysis of Nonstationary Time Series and the Business Cycle"
 description: "The founding model of quantitative regime analysis: a series whose parameters switch between hidden Markov states. Notes, critique, and the smoothing-vs-filtering distinction my proposal turns on."
 date: 2026-07-02

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Bailey & López de Prado (2014) — The Deflated Sharpe Ratio"
 description: "How to judge a backtest's Sharpe against the best you'd expect from luck given how many things you tried. Notes, the √(2 ln N) intuition, and the discipline the whole Quant Lab is built on."
 date: 2026-07-14

@@ -1,4 +1,5 @@
 ---
+search: false
 title: "Moreira & Muir (2017) — Volatility-Managed Portfolios"
 description: "Scaling exposure by inverse variance raises Sharpe and produces alpha — a striking claim I could reproduce and stress-test directly. Notes, the Cederburg critique, and what my own experiment found."
 date: 2026-07-08
