@@ -1,0 +1,107 @@
+---
+title: "Fixed and Adaptive Ensembles"
+subtitle: "The numerical benchmark LLM decisions must beat"
+description: "Combining several models' probability forecasts, with fixed weights or with weights that follow recent accuracy. What it assumes, how it works, and how its forecasts are explained."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+It combines the probability forecasts of several models, such as the logistic regression, gradient-boosted
+trees and LSTM, into one forecast. This matters twice in the research: a combination is often more reliable
+than any single model, and the adaptive version is the strongest purely numerical benchmark that the LLM
+decisions have to beat.
+
+## 2. What assumptions does it make?
+
+- The models' errors are **not perfectly correlated**, so averaging cancels some of them out.
+- For the adaptive version, a model's **recent accuracy** says something about its accuracy in the near
+  future.
+- Weights are set using **only outcomes already known** at the time of the forecast.
+
+## 3. What data does it need?
+
+Each model's out-of-sample probability forecasts for every stock and day, and the realised outcomes. Because
+the target looks five sessions ahead, the outcome of a forecast made on day $t$ is only known on day
+$t + 5$, so weights on day $t$ can only use forecasts made up to day $t - 5$.
+
+## 4. How does it learn?
+
+The **fixed** ensemble gives every model the same weight:
+
+$$
+\bar p_t = \frac{1}{M}\sum_{m=1}^{M} p_{m,t}.
+$$
+
+The **adaptive** ensemble weights each model by its recent Brier score, measured over the last $W$ days
+whose outcomes are known:
+
+$$
+B_{m,t} = \frac{1}{W}\sum_{s = t-h-W+1}^{t-h} \left(p_{m,s} - y_s\right)^2, \qquad
+w_{m,t} = \frac{e^{-\kappa B_{m,t}}}{\sum_{n} e^{-\kappa B_{n,t}}}, \qquad
+\bar p_t = \sum_m w_{m,t}\, p_{m,t},
+$$
+
+where $h = 5$ is the forecast horizon and $\kappa$ controls how strongly weight shifts towards the recently
+better models. With $\kappa = 0$ it reduces to the fixed ensemble.
+
+## 5. What are its strengths?
+
+- **Diversification.** Errors that differ between models partly cancel.
+- **Simple and transparent.** Every combined forecast is an explicit weighted average.
+- **Adapts.** The adaptive version shifts weight as models gain or lose reliability.
+
+## 6. What are its weaknesses?
+
+- **Little gain from similar models.** If the models make the same mistakes, combining them adds little.
+- **Chasing noise.** Short windows or a large $\kappa$ make weights jump around in response to luck.
+- **Less sharp.** Averaging probabilities can produce a forecast that is more cautious than any of its
+  members, so the combination is checked for calibration like any other model.
+
+## 7. How could it apply to markets?
+
+Both ensembles are numerical benchmarks in the [architecture](../../phd/architecture.html) (02, 10). The
+primary research question asks whether LLM debate improves on independent aggregation **and** on adaptive
+numerical ensembles. If the LLMs cannot beat a well-tuned weighted average of the numerical forecasts, their
+added cost is not justified.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+import pandas as pd
+
+def ensembles(preds: pd.DataFrame, y: pd.Series, window=63, horizon=5, kappa=50.0):
+    """preds: one column per model, rows in date order for one stock (or daily averages).
+    Returns the fixed and adaptive ensemble forecasts. Weights use only outcomes already known."""
+    fixed = preds.mean(axis=1)
+    sq_err = preds.sub(y, axis=0) ** 2
+    recent = sq_err.rolling(window).mean().shift(horizon)   # Brier over days whose outcome is known
+    weights = np.exp(-kappa * recent)
+    weights = weights.div(weights.sum(axis=1), axis=0)
+    adaptive = (weights * preds).sum(axis=1).where(weights.notna().all(axis=1), fixed)
+    return fixed, adaptive, weights
+```
+
+## 9. How are its outputs explained?
+
+Each combined forecast is a weighted average, so it breaks down exactly into each model's share,
+$w_{m,t}\,p_{m,t}$. A hypothetical example for one stock on one day:
+
+| Model | Forecast | Weight | Share of ensemble |
+|---|:--:|:--:|:--:|
+| Logistic regression | 0.55 | 0.40 | 0.220 |
+| Gradient-boosted trees | 0.61 | 0.35 | 0.214 |
+| LSTM | 0.58 | 0.25 | 0.145 |
+| **Ensemble** | | | **0.579** |
+
+: Illustrative values only. {.striped}
+
+The weights, the window they were estimated over and each model's recent Brier score are recorded with the
+forecast. Plotted over time, the weights also show which models the ensemble has trusted and when, which is
+itself evidence for the semantic layer and the LLMs.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

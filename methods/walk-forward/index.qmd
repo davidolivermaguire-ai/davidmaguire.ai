@@ -1,0 +1,110 @@
+---
+title: "Walk-Forward Testing with Purging"
+subtitle: "Testing only on data the models have not seen"
+description: "How the data is split into training, validation and test periods that move forward through time, with gaps that stop overlapping labels leaking information."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+A model can look excellent on data it has already seen and fail on new data. Walk-forward testing makes
+every reported result **out of sample**: the model is trained on the past, tested on the next period it has
+never seen, then moved forward and repeated, the way it would be used in practice. Purging removes a
+subtler leak that ordinary splits miss.
+
+## 2. What assumptions does it make?
+
+- The recent past is a **reasonable guide** to the period that follows, at least over one test window.
+- **Time order** is never broken: nothing from after a forecast date is used to make that forecast.
+- Window lengths and the number of windows are **fixed in advance**, so they cannot be tuned to make results
+  look better.
+
+## 3. What data does it need?
+
+The dated panel of [indicators](../market-indicators/index.qmd) and labels, the label horizon $h$ (five
+sessions), and the chosen window lengths, for example three years of training, six months of validation and
+three months of testing.
+
+## 4. How does it work?
+
+Each step splits time into consecutive blocks, separated by gaps:
+
+$$
+\underbrace{[\,t_0,\; t_1 - h\,)}_{\text{train}}
+\;\;\underbrace{[\,t_1 - h,\; t_1\,)}_{\text{purge gap}}
+\;\;\underbrace{[\,t_1,\; t_2 - h\,)}_{\text{validation}}
+\;\;\underbrace{[\,t_2 - h,\; t_2\,)}_{\text{purge gap}}
+\;\;\underbrace{[\,t_2,\; t_3\,)}_{\text{test}}
+$$
+
+The gap matters because the label for day $t$ depends on prices up to day $t + h$. Without a gap, the last
+training labels would be built from prices that fall inside the validation or test period, quietly leaking
+the future into training. After each step, all boundaries move forward by the length of the test block and
+the models are retrained. A final period at the end, the **sealed holdout**, is used once, after every
+design decision has been fixed.
+
+## 5. What are its strengths?
+
+- **Honest.** Every reported forecast was made with only the information available at the time.
+- **Realistic.** It mirrors how the system would actually be retrained and used.
+- **Shows stability.** Results for each step reveal whether performance is consistent or driven by one
+  lucky period.
+
+## 6. What are its weaknesses?
+
+- **Less data per model.** Each model only sees the history before its test block.
+- **Design choices can still leak.** Repeatedly changing a model after seeing test results is a form of
+  overfitting the test periods; the sealed holdout and a record of every trial guard against this.
+- **Window lengths involve trade-offs.** Longer training is more stable but slower to adapt, so lengths are
+  fixed before testing rather than tuned.
+
+## 7. How could it apply to markets?
+
+It governs every model in the [architecture](../../phd/architecture.html): the forecasters in 02 are trained
+and calibrated this way, the recalibration schedule in 08 follows the window boundaries, and every result in
+10 comes from the test blocks, the sealed holdout or prospective paper trading.
+
+## 8. What does the Python code look like?
+
+```python
+import pandas as pd
+
+def walk_forward_splits(dates, train=756, valid=126, test=63, horizon=5, holdout=252):
+    """Yield (train, valid, test) date ranges with purge gaps. The last `holdout` days are sealed.
+    dates: sorted unique trading dates."""
+    dates = pd.DatetimeIndex(dates)
+    usable = dates[:len(dates) - holdout]
+    start = 0
+    while start + train + valid + test <= len(usable):
+        t1 = start + train            # first validation day
+        t2 = t1 + valid               # first test day
+        yield (usable[start:t1 - horizon],          # train, ending before the first purge gap
+               usable[t1:t2 - horizon],             # validation, ending before the second gap
+               usable[t2:t2 + test])                # test
+        start += test                               # roll forward by one test block
+
+# for train_d, valid_d, test_d in walk_forward_splits(panel.index.unique()):
+#     fit on panel.loc[train_d], tune and calibrate on panel.loc[valid_d], forecast panel.loc[test_d]
+```
+
+## 9. How are its outputs explained?
+
+Every forecast is stored with the boundaries of the windows used to produce it, so anyone can check that it
+used only earlier data. Results are reported per step as well as overall. A hypothetical example:
+
+| Step | Training ends | Test period | Brier score |
+|:--:|:--:|:--:|:--:|
+| 1 | Dec 2018 | Q1 2019 | 0.2462 |
+| 2 | Mar 2019 | Q2 2019 | 0.2471 |
+| 3 | Jun 2019 | Q3 2019 | 0.2448 |
+
+: Illustrative values only. {.striped}
+
+A timeline of the windows, with the sealed holdout marked, appears in the testing section of the
+[architecture](../../phd/architecture.html), so a reviewer can see at a glance what each model saw and
+when.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

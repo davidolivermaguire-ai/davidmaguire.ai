@@ -1,0 +1,133 @@
+---
+title: "Gradient-Boosted Trees"
+subtitle: "The nonlinear benchmark forecast"
+description: "Gradient boosting builds a forecast from many small decision trees, each correcting the last. What it assumes, how it learns, and how its forecasts are explained."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+It estimates the same probability as the [logistic regression](../logistic-regression/index.qmd), whether a
+stock's next five-session return will beat trading costs, but without assuming the relationship is linear.
+It can find effects that depend on each other, such as momentum mattering more when volatility is low,
+without those interactions being written in by hand.
+
+## 2. What assumptions does it make?
+
+- Relationships learned in the training window **persist** into the test period.
+- Each row is treated as **independent**, the same simplification as logistic regression, handled the same
+  way: a gap between training and test periods, and uncertainty estimates that allow for dependence.
+- Each day's indicators capture what matters. The trees see a snapshot, not a sequence; any history has to
+  be built into the inputs, such as 5-day and 20-day returns.
+- There is enough data in each region of the input space to learn from. Splits on rare conditions, such as
+  extreme VIX readings, rest on few observations.
+
+## 3. What data does it need?
+
+The same table as the logistic regression: one row per stock per day, with the
+[market indicators](../market-indicators/index.qmd) and the label. Trees are unaffected by the scale of the
+inputs, so no standardisation is needed. A validation window after the training window is used to decide
+when to stop adding trees and to calibrate the output.
+
+## 4. How does it learn?
+
+The forecast is built up from many small trees. Writing the log-odds after $m$ trees as $F_m(\mathbf{x})$,
+
+$$
+F_m(\mathbf{x}) = F_{m-1}(\mathbf{x}) + \eta\, f_m(\mathbf{x}), \qquad p = \frac{1}{1 + e^{-F_M(\mathbf{x})}} .
+$$
+
+Each new tree $f_m$ is fitted to the errors of the current forecast. For log loss, the error for each row
+is simply
+
+$$
+g_t = y_t - p_t ,
+$$
+
+so each tree learns where the current forecast is too high or too low. The learning rate $\eta$, tree size,
+the minimum number of rows per leaf and random subsampling all limit how closely the model can fit noise.
+Trees stop being added when the loss on the validation window stops improving.
+
+## 5. What are its strengths?
+
+- **Nonlinear effects and interactions** are found automatically.
+- **Strong on tabular data.** It is a standard benchmark for this kind of problem, and Gu, Kelly and Xiu
+  (2020) find nonlinear methods of this kind improve on linear models in asset pricing.
+- **Robust inputs.** Unaffected by scale, and little affected by outlying values.
+
+## 6. What are its weaknesses?
+
+- **Overfits noise easily.** Daily returns carry a weak signal, so regularisation and early stopping are
+  essential rather than optional.
+- **Probabilities need calibrating.** Raw outputs are often over- or under-confident, so they are adjusted
+  on held-out data before use.
+- **Harder to interpret** than a linear model, and can change noticeably when retrained on slightly
+  different data.
+- **Cannot extrapolate.** For input values beyond anything seen in training, it falls back on the nearest
+  values it has seen.
+
+## 7. How could it apply to markets?
+
+It is the nonlinear benchmark in the [architecture](../../phd/architecture.html) (02). If it cannot beat the
+logistic regression on Brier score, the extra complexity is not justified. Its calibrated probability, with
+the model version and the contributions explained below, goes into the evidence the LLMs read.
+
+## 8. What does the Python code look like?
+
+Fit with early stopping on the first half of the validation window, then calibrate on the second half, so
+neither step is judged on data it was tuned on.
+
+```python
+import lightgbm as lgb
+from sklearn.isotonic import IsotonicRegression
+
+def fit_gbt(train, valid, features):
+    """train and valid are consecutive date windows with a purge gap between them."""
+    half = len(valid) // 2
+    stop_set, cal_set = valid.iloc[:half], valid.iloc[half:]
+    model = lgb.LGBMClassifier(
+        n_estimators=2000, learning_rate=0.02, num_leaves=15, min_child_samples=200,
+        subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=1.0, verbose=-1)
+    model.fit(train[features], train["target"],
+              eval_set=[(stop_set[features], stop_set["target"])], eval_metric="binary_logloss",
+              callbacks=[lgb.early_stopping(100, verbose=False)])
+    raw = model.predict_proba(cal_set[features])[:, 1]
+    calibrator = IsotonicRegression(out_of_bounds="clip").fit(raw, cal_set["target"])
+    return model, calibrator
+
+def predict_gbt(model, calibrator, test, features):
+    return calibrator.predict(model.predict_proba(test[features])[:, 1])
+
+def explain_gbt(model, rows, features):
+    """Per-forecast contributions to the log-odds (SHAP values); the last column is the baseline."""
+    return model.predict_proba(rows[features], pred_contrib=True)
+```
+
+## 9. How are its outputs explained?
+
+Tree ensembles can still be broken down forecast by forecast. SHAP values split each forecast's log-odds
+into a baseline plus one contribution per indicator,
+
+$$
+F(\mathbf{x}_t) = \phi_0 + \sum_j \phi_{t,j},
+$$
+
+so the same kind of table as for the logistic regression can be produced for any stock on any day. A
+hypothetical example:
+
+| Indicator | Value | Contribution to log-odds |
+|---|:--:|:--:|
+| Return_20D | +6.1% | +0.05 |
+| Volatility_20 | 38% | −0.09 |
+| VIX_Change_5D | +14% | −0.06 |
+
+: Illustrative values only. {.striped}
+
+Unlike a linear model, the same indicator value can contribute differently on different days, because the
+trees let it interact with the others. The contributions, model version, number of trees and recent
+calibration are recorded with every forecast, so a reviewer or an LLM can see what drove it.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

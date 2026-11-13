@@ -1,0 +1,115 @@
+---
+title: "Diebold–Mariano Test"
+subtitle: "Is one forecast really better than another?"
+description: "The Diebold–Mariano test asks whether a difference in forecast accuracy is larger than chance would produce, allowing for overlapping forecasts and dependence over time."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+Two forecasters will almost never score exactly the same, so the question is whether a difference is larger
+than chance would produce. The Diebold–Mariano test (Diebold and Mariano, 1995) answers that for any loss,
+including the Brier score, while allowing for the fact that consecutive days' forecast errors are related.
+In this research it judges whether debate genuinely improves on independent aggregation, and whether any
+LLM-based forecast genuinely improves on the numerical ensembles.
+
+## 2. What assumptions does it make?
+
+- The **loss differential** between the two forecasters has a stable mean and variance over the test
+  period.
+- Its dependence over time **dies out** after a limited number of days. With five-session targets,
+  forecasts on neighbouring days overlap, so dependence of at least four days is expected and allowed for.
+- Both forecasters are scored on **the same events**.
+
+## 3. What data does it need?
+
+Each forecaster's loss on each day, for example the squared error $(p_t - y_t)^2$, on the same stocks and
+days. With many stocks, the losses are averaged across stocks each day to give one daily series per
+forecaster.
+
+## 4. How does it work?
+
+The loss differential on day $t$ is
+
+$$
+d_t = L(p_{1,t}, y_t) - L(p_{2,t}, y_t),
+$$
+
+and the null hypothesis is that its expected value is zero: neither forecaster is better. The test
+statistic divides the average differential by its standard error, estimated with a long-run variance that
+allows for dependence up to $h - 1$ days:
+
+$$
+\text{DM} = \frac{\bar d}{\sqrt{\hat\Omega / T}}, \qquad
+\hat\Omega = \hat\gamma_0 + 2\sum_{j=1}^{h-1}\hat\gamma_j ,
+$$
+
+where $\hat\gamma_j$ is the sample autocovariance of $d_t$ at lag $j$. In large samples DM is approximately
+standard normal. The long-run variance can occasionally come out negative in short samples; if so, the
+result is reported as unreliable rather than forced. For smaller samples, the Harvey, Leybourne and Newbold adjustment rescales it and compares
+it with a $t$ distribution with $T - 1$ degrees of freedom.
+
+## 5. What are its strengths?
+
+- **Works with any loss**, including the Brier score used throughout the research.
+- **Allows for overlapping forecasts** and dependence over time, which simpler tests ignore.
+- **Simple and widely understood**, so results are easy to interpret and compare.
+
+## 6. What are its weaknesses?
+
+- **Tests average accuracy over the whole period.** A forecaster can win in some conditions and lose in
+  others, so results are also broken down by regime and by whether the numerical forecasts agree.
+- **Low power in noisy data.** Real but small differences may not reach significance over a limited test
+  period, which is why the pilot study estimates the precision achievable.
+- **Many comparisons inflate false positives.** Running many pairwise tests makes some significant by
+  chance, so the number of comparisons is recorded and corrected for.
+
+## 7. How could it apply to markets?
+
+It provides the significance test for the primary research question (10): the paired Brier score difference
+between the same LLM panel's independent aggregated forecasts and its forecasts after debate. The same test
+compares each LLM-based forecast with the fixed and adaptive numerical ensembles.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+from scipy import stats
+
+def diebold_mariano(loss_1, loss_2, h=5):
+    """Two-sided DM test with the Harvey-Leybourne-Newbold small-sample adjustment.
+    loss_1, loss_2: daily losses in date order. Negative statistic: forecaster 1 is more accurate."""
+    d = np.asarray(loss_1, float) - np.asarray(loss_2, float)
+    T, d_bar = len(d), d.mean()
+    dc = d - d_bar
+    gamma = [np.dot(dc[j:], dc[:T - j]) / T for j in range(h)]
+    omega = gamma[0] + 2 * sum(gamma[1:])
+    dm = d_bar / np.sqrt(omega / T)
+    hln = dm * np.sqrt((T + 1 - 2 * h + h * (h - 1) / T) / T)
+    p_value = 2 * stats.t.sf(abs(hln), df=T - 1)
+    return hln, p_value
+
+# Daily Brier losses averaged across stocks, for independent aggregation and for debate:
+# stat, p = diebold_mariano(loss_independent, loss_debate)
+```
+
+## 9. How are its outputs explained?
+
+The result is reported as the size of the difference, its direction and how confident we can be in it, not
+just a p-value. A hypothetical example:
+
+| Comparison | Mean Brier difference | DM statistic | p-value |
+|---|:--:|:--:|:--:|
+| Debate against independent aggregation | −0.0012 | −2.31 | 0.021 |
+| Debate against adaptive ensemble | −0.0004 | −0.78 | 0.436 |
+
+: Illustrative values only. A negative difference favours debate. {.striped}
+
+Read together, this hypothetical result would say that debate improved on the same models working
+independently, but not on the best numerical benchmark. That distinction, rather than a single headline
+number, is what the research is designed to report.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

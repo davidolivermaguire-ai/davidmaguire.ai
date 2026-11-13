@@ -1,0 +1,148 @@
+---
+title: "Long Short-Term Memory Network (LSTM)"
+subtitle: "The compact deep-learning forecast"
+description: "An LSTM reads a sequence of recent days rather than a single snapshot. What it assumes, how it learns, and how its forecasts are explained."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+It estimates the same probability as the other forecasters, whether a stock's next five-session return will
+beat trading costs, but from the **sequence** of the last few weeks of indicators rather than one day's
+snapshot. It can, in principle, learn patterns in how indicators evolve, such as volatility rising for
+several days before a move, without those patterns being designed by hand.
+
+## 2. What assumptions does it make?
+
+- The **order** of recent observations carries information beyond what the engineered indicators already
+  summarise.
+- There is **enough data** to learn many parameters. A single stock's daily history is small for a neural
+  network, so sequences are pooled across many stocks.
+- Relationships in the training window **persist** into the test period, as for every model here.
+- Inputs are on **comparable scales**, so they are standardised using training-window statistics only.
+
+## 3. What data does it need?
+
+For each stock and day, the previous $L$ days of [market indicators](../market-indicators/index.qmd), for
+example $L = 20$, forming an input of shape $L \times k$ for $k$ indicators, with the same five-session label.
+Sequences are built within each stock, never across two stocks, and never using any day after the forecast
+date.
+
+## 4. How does it learn?
+
+At each step $s$ in the sequence, the network updates a memory cell $\mathbf{c}_s$ and a hidden state
+$\mathbf{h}_s$ through three gates that decide what to forget, what to add and what to output:
+
+$$
+\begin{aligned}
+\mathbf{f}_s &= \sigma(W_f[\mathbf{h}_{s-1}, \mathbf{x}_s] + \mathbf{b}_f), &
+\mathbf{i}_s &= \sigma(W_i[\mathbf{h}_{s-1}, \mathbf{x}_s] + \mathbf{b}_i), \\
+\tilde{\mathbf{c}}_s &= \tanh(W_c[\mathbf{h}_{s-1}, \mathbf{x}_s] + \mathbf{b}_c), &
+\mathbf{c}_s &= \mathbf{f}_s \odot \mathbf{c}_{s-1} + \mathbf{i}_s \odot \tilde{\mathbf{c}}_s, \\
+\mathbf{o}_s &= \sigma(W_o[\mathbf{h}_{s-1}, \mathbf{x}_s] + \mathbf{b}_o), &
+\mathbf{h}_s &= \mathbf{o}_s \odot \tanh(\mathbf{c}_s).
+\end{aligned}
+$$
+
+The final hidden state gives the forecast, $p = \sigma(\mathbf{w}^\top \mathbf{h}_L + b)$. All weights are learned
+by minimising log loss with gradient descent, backpropagating through the sequence. Dropout, weight decay,
+a small network and early stopping on a validation window limit overfitting.
+
+## 5. What are its strengths?
+
+- **Learns from sequences** directly, without every pattern being engineered in advance.
+- **Shares learning across stocks** when trained on a pooled panel.
+- **Flexible.** It can represent relationships that neither a linear model nor a tree ensemble can.
+
+## 6. What are its weaknesses?
+
+- **Data hungry** relative to the weak signal in daily returns, so it can fit noise convincingly.
+- **Training is random.** Different random starting points give different models, so several are trained
+  and their forecasts averaged, and the spread between them is reported.
+- **Hard to interpret**, and its probabilities usually need calibrating.
+- **Costlier** to train and tune than the other models.
+
+## 7. How could it apply to markets?
+
+It is the deep-learning forecaster in the [architecture](../../phd/architecture.html) (02). Kept deliberately
+small, it tests whether learning from sequences adds anything over the logistic regression and the
+gradient-boosted trees. Fischer and Krauss (2018) apply LSTM networks to stock return prediction; here the
+point is to test whether it helps under the study's own conditions, not to assume it will.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+import torch
+from torch import nn
+
+def make_sequences(stock_df, features, L=20):
+    """stock_df: one stock's rows in date order, already standardised. Returns (X, y, dates)."""
+    values, labels = stock_df[features].to_numpy(np.float32), stock_df["target"].to_numpy(np.float32)
+    X = np.stack([values[t - L + 1:t + 1] for t in range(L - 1, len(values))])
+    return X, labels[L - 1:], stock_df.index[L - 1:]
+
+class LSTMForecaster(nn.Module):
+    def __init__(self, n_features, hidden=16, dropout=0.2):
+        super().__init__()
+        self.lstm = nn.LSTM(n_features, hidden, batch_first=True)
+        self.head = nn.Sequential(nn.Dropout(dropout), nn.Linear(hidden, 1))
+
+    def forward(self, x):                      # x: [batch, L, n_features]
+        _, (h, _) = self.lstm(x)
+        return self.head(h[-1]).squeeze(-1)    # log-odds
+
+def train_lstm(X_tr, y_tr, X_va, y_va, seed=0, epochs=50, patience=5):
+    torch.manual_seed(seed)
+    model = LSTMForecaster(X_tr.shape[2])
+    opt = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
+    loss_fn = nn.BCEWithLogitsLoss()
+    X_tr, y_tr, X_va, y_va = map(torch.from_numpy, (X_tr, y_tr, X_va, y_va))
+    best, best_state, waited = float("inf"), None, 0
+    for _ in range(epochs):
+        model.train()
+        for idx in torch.randperm(len(X_tr)).split(256):
+            opt.zero_grad()
+            loss_fn(model(X_tr[idx]), y_tr[idx]).backward()
+            opt.step()
+        model.eval()
+        with torch.no_grad():
+            val = loss_fn(model(X_va), y_va).item()
+        if val < best:
+            best, best_state, waited = val, {k: v.clone() for k, v in model.state_dict().items()}, 0
+        else:
+            waited += 1
+            if waited >= patience:
+                break
+    model.load_state_dict(best_state)
+    return model
+
+# Train several seeds and average their probabilities:
+# probs = np.mean([torch.sigmoid(train_lstm(..., seed=s)(X_te)).detach().numpy() for s in range(5)], axis=0)
+```
+
+## 9. How are its outputs explained?
+
+An LSTM cannot be broken down exactly like a linear model, so its explanations are approximate and are
+labelled as such. Two are recorded:
+
+- **Permutation importance.** On the validation window, each indicator is shuffled in turn and the rise in
+  Brier score is measured. A large rise means the forecast depends on that indicator.
+- **Seed spread.** The disagreement between models trained from different random starting points shows how
+  much of a forecast is signal and how much is noise in training.
+
+| Indicator shuffled | Rise in Brier score |
+|---|:--:|
+| Volatility_20 | +0.0021 |
+| VIX_Change_5D | +0.0014 |
+| RSI_14 | +0.0003 |
+
+: Illustrative values only. {.striped}
+
+These, with the model version, sequence length and calibration record, travel with each forecast, so the
+semantic layer can tell the LLMs both what the LSTM forecasts and how far to trust it.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

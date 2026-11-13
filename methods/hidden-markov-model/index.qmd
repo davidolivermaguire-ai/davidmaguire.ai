@@ -1,0 +1,120 @@
+---
+title: "Hidden Markov Model"
+subtitle: "Optional regime probabilities"
+description: "A hidden Markov model estimates the probability that the market is in a calm or stressed state. What it assumes, how it learns, and why only filtered probabilities are used."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+Markets behave differently in calm and stressed periods, but the state is never observed directly. A hidden
+Markov model estimates the **probability** that the market is in each state on each day, from data that is
+observed, such as index returns and changes in the VIX. Hamilton (1989) set out this approach for
+switching between regimes.
+
+## 2. What assumptions does it make?
+
+- There is a **small, fixed number of states**, usually two or three, chosen in advance.
+- The market moves between states with **constant transition probabilities**: today's state depends only
+  on yesterday's.
+- Within each state, the observations follow a **normal distribution** with their own average and
+  volatility.
+- The model's parameters stay **stable** over the training window.
+
+## 3. What data does it need?
+
+Market-wide daily series rather than single stocks, for example the S&P 500 index return and the log change
+in the VIX, giving one regime estimate per day that applies to every stock. The model is fitted on the
+training window only.
+
+## 4. How does it learn?
+
+The model has starting probabilities $\boldsymbol\pi$, a transition matrix $A$ with
+$A_{jk} = P(s_t = k \mid s_{t-1} = j)$, and an average $\boldsymbol\mu_k$ and covariance $\Sigma_k$ for each state.
+These are estimated by the expectation-maximisation (Baum–Welch) algorithm.
+
+The regime probability used each day comes from the **forward filter**, which uses only data up to that
+day:
+
+$$
+\alpha_t(k) \;\propto\; b_k(\mathbf{x}_t)\sum_j \alpha_{t-1}(j)\,A_{jk},
+\qquad P(s_t = k \mid \mathbf{x}_1, \dots, \mathbf{x}_t) = \frac{\alpha_t(k)}{\sum_j \alpha_t(j)},
+$$
+
+where $b_k(\mathbf{x}_t)$ is the likelihood of today's observation under state $k$. Standard software also
+offers **smoothed** probabilities, which use later data to revise earlier days. Those are excluded, because
+they would let the future leak into past decisions.
+
+## 5. What are its strengths?
+
+- **Interpretable.** States can be read directly as calm or stressed, by their volatility.
+- **Probabilistic.** It gives a degree of belief rather than a hard label, which suits the semantic layer.
+- **Captures persistence.** Volatile periods tend to last, and the transition matrix measures how long.
+
+## 6. What are its weaknesses?
+
+- **Arbitrary number of states**, and states can swap labels between refits, so they are re-ordered by
+  volatility each time.
+- **Normal distributions understate extreme moves.**
+- **Recognises change late.** A filtered estimate needs several days of evidence before it shifts.
+- **May add little beyond volatility itself**, which is why it is optional in the proposal and kept only if
+  the pilot shows a credible improvement.
+
+## 7. How could it apply to markets?
+
+If kept, the regime probability is an optional input to the forecasting models (02), context in the
+evidence the LLMs read (03), the basis for breaking results down by regime in the third supporting research
+question, and one of the signals for model recalibration (08). Ang and Bekaert (2002) show why regime shifts
+matter for allocation decisions.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+from hmmlearn.hmm import GaussianHMM
+from scipy.stats import multivariate_normal
+
+def fit_hmm(X_train, n_states=2, seed=0):
+    """X_train: array [days, 2], e.g. index return and VIX log-change. Training window only."""
+    model = GaussianHMM(n_components=n_states, covariance_type="full", n_iter=200, random_state=seed)
+    model.fit(X_train)
+    order = np.argsort([np.trace(c) for c in model.covars_])   # state 0 = calmest
+    return model, order
+
+def filtered_probabilities(model, X, order):
+    """Forward filter: each day's probabilities use only data up to that day. No smoothing."""
+    alpha = None
+    out = np.empty((len(X), model.n_components))
+    for t, x in enumerate(X):
+        like = np.array([multivariate_normal.pdf(x, model.means_[k], model.covars_[k])
+                         for k in range(model.n_components)])
+        prior = model.startprob_ if alpha is None else alpha @ model.transmat_
+        alpha = like * prior
+        alpha /= alpha.sum()
+        out[t] = alpha[order]
+    return out   # column 0: P(calm), column 1: P(stressed)
+
+# Run the filter over the whole history up to each test day; it only ever looks backwards.
+```
+
+## 9. How are its outputs explained?
+
+Each state is described by what it means in market terms: its average return, its volatility and how long
+it typically lasts, which follows from the transition matrix as $1 / (1 - A_{kk})$ days. A hypothetical
+example:
+
+| State | Annualised volatility | Typical duration | Today's probability |
+|---|:--:|:--:|:--:|
+| Calm | 12% | about 40 days | 0.70 |
+| Stressed | 32% | about 12 days | 0.30 |
+
+: Illustrative values only. {.striped}
+
+The semantic layer records these descriptions with the probability, together with a note that the estimate
+is filtered and that it reacts with a lag, so neither a reviewer nor an LLM mistakes it for a forecast of
+direction.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```

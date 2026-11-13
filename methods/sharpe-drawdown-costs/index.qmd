@@ -1,0 +1,134 @@
+---
+title: "Sharpe Ratio, Drawdown and Trading Costs"
+subtitle: "The economic result, net of costs"
+description: "How returns are measured after trading and inference costs, and how the Sharpe ratio and maximum drawdown summarise them, with uncertainty that allows for dependence over time."
+toc: true
+toc-depth: 2
+---
+
+## 1. What problem does it solve?
+
+Better forecasts only matter if they lead to better results once real costs are paid. This note covers how
+the positions chosen by each version of the system are turned into returns **after trading costs and LLM
+inference costs**, and how those returns are summarised: the Sharpe ratio for return per unit of risk, and
+maximum drawdown for the worst loss along the way.
+
+## 2. What assumptions does it make?
+
+- Trades are executed at the **next session's price**, never the price that triggered the decision.
+- Trading costs are a **known fraction** of the value traded, stress-tested at higher levels.
+- The Sharpe ratio treats volatility as the measure of risk, which **understates** fat tails and
+  sudden losses; that is why drawdown is reported alongside it.
+
+## 3. What data does it need?
+
+Daily target positions from each version of the system, daily stock returns, a cash rate, an assumed cost
+per unit traded, and the recorded LLM inference cost of each decision.
+
+## 4. How does it work?
+
+With position weights $w_{i,t}$ in each stock, chosen at day $t$'s close and held over day $t + 1$, the
+portfolio's net return is
+
+$$
+r^{\text{net}}_{t+1} = \sum_i w_{i,t}\, r_{i,t+1}
+\;-\; c \sum_i \left|w_{i,t} - w_{i,t-1}\right|
+\;-\; \frac{\text{inference cost}_t}{\text{capital}_t},
+$$
+
+where $c$ is the cost per unit of value traded. The annualised Sharpe ratio uses returns in excess of cash,
+
+$$
+\text{SR} = \sqrt{252}\,\frac{\overline{r^{\text{net}} - r^{f}}}{\operatorname{sd}\!\left(r^{\text{net}} - r^{f}\right)},
+$$
+
+and drawdown measures how far the portfolio value $W_t$ sits below its previous peak:
+
+$$
+\text{DD}_t = 1 - \frac{W_t}{\max_{s \le t} W_s}, \qquad \text{MaxDD} = \max_t \text{DD}_t .
+$$
+
+Uncertainty in the Sharpe ratio, and in the difference between two versions, comes from a block bootstrap,
+which resamples blocks of consecutive days so the dependence between days is kept.
+
+## 5. What are its strengths?
+
+- **Standard and comparable.** The Sharpe ratio is widely understood and puts versions with different risk
+  on the same footing.
+- **Honest about costs.** Charging both trading and inference costs stops a version that trades heavily or
+  calls the LLMs often from looking better than it is.
+- **Drawdown speaks to real experience**: how bad things got, not just average risk.
+
+## 6. What are its weaknesses?
+
+- **Noisy.** Telling two strategies apart by Sharpe ratio can take many years of data, which is why the
+  [Brier score](../brier-score/index.qmd) is the primary statistical test and Sharpe the headline economic
+  result.
+- **Inflated by selection.** The best of many tried strategies looks good by chance alone (Sullivan,
+  Timmermann and White, 1999), so every trial is recorded.
+- **Sensitive to cost assumptions**, which is why results are rerun at higher costs. Gârleanu and Pedersen
+  (2013) show how strongly trading costs shape the best way to trade on a predictable signal.
+
+## 7. How could it apply to markets?
+
+These are the economic results in the [architecture](../../phd/architecture.html): the simulator (06) produces
+the net returns, and evaluation (10) reports Sharpe ratio, drawdown and turnover for every version, with
+block-bootstrap intervals for the differences between them.
+
+## 8. What does the Python code look like?
+
+```python
+import numpy as np
+import pandas as pd
+
+def net_returns(weights: pd.DataFrame, returns: pd.DataFrame, cost=0.0010, inference=None, capital=1e6):
+    """weights: target weight per stock, set at each close.
+    returns: each stock's daily return, indexed by the day it is earned."""
+    held = weights.shift(1).fillna(0)                       # positions chosen yesterday, held today
+    gross = (held * returns).sum(axis=1)
+    turnover = weights.diff().abs().sum(axis=1).shift(1).fillna(0)
+    net = gross - cost * turnover
+    if inference is not None:
+        net -= inference.shift(1).fillna(0) / capital
+    return net
+
+def sharpe(excess):
+    return np.sqrt(252) * excess.mean() / excess.std()
+
+def max_drawdown(net):
+    wealth = (1 + net).cumprod()
+    return (1 - wealth / wealth.cummax()).max()
+
+def block_bootstrap_ci(excess_a, excess_b, block=20, n=5000, seed=0):
+    """95% interval for the difference in Sharpe ratio between versions A and B.
+    Both series are resampled with the same blocks of consecutive days, keeping them paired."""
+    rng = np.random.default_rng(seed)
+    a, b = np.asarray(excess_a), np.asarray(excess_b)
+    starts = np.arange(len(a) - block + 1)
+    diffs = []
+    for _ in range(n):
+        idx = np.concatenate([np.arange(s, s + block) for s in rng.choice(starts, len(a) // block)])
+        diffs.append(np.sqrt(252) * (a[idx].mean() / a[idx].std() - b[idx].mean() / b[idx].std()))
+    return np.percentile(diffs, [2.5, 97.5])
+```
+
+## 9. How are its outputs explained?
+
+Each version's result is broken down into where the return came from and where it went, so a difference can
+be traced to forecasting, trading or inference. A hypothetical example:
+
+| Version | Gross return | Trading costs | Inference costs | Net return | Sharpe | Max drawdown |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|
+| Adaptive ensemble | 7.4% | −0.9% | 0.0% | 6.5% | 0.58 | −14% |
+| LLM debate | 8.1% | −1.3% | −0.6% | 6.2% | 0.55 | −12% |
+
+: Illustrative annual values only. {.striped}
+
+In this hypothetical case the LLM version forecast slightly better before costs but traded more and paid for
+inference, ending marginally behind with a slightly shallower drawdown. Reporting the breakdown, the interval
+for the difference, and the equity and drawdown curves makes that kind of trade-off visible rather than
+hiding it in a single number.
+
+```{=html}
+<a href="../index.html" class="back-to-methods" aria-label="Back to Methods">&larr; Methods</a>
+```
